@@ -149,6 +149,8 @@ proc BuildTests {} {
           [string match *ETX-2I-10G_LY* $gaSet(DutInitName)]==1 || \
           [string match *ETX-2I-10G-B_LY* $gaSet(DutInitName)]==1} {
         set gaSet(enSerNum) 1
+      } else {
+        set gaSet(enSerNum) 0  
       }
       if {$gaSet(enSerNum) eq "1" } {
         lappend lTests WriteSerialNumber
