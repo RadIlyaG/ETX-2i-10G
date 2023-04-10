@@ -1,0 +1,11 @@
+set gaGui(xy) +408+396
+set gaSet(entDUT) "ETX-2I-10G-B/8.5/AC/8SFPP/PTP"
+set gaSet(DutInitName) "ETX-2I-10G-B.8.5.AC.8SFPP.PTP.tcl"
+set gaSet(performShortTest) "0"
+set gaSet(eraseTitle) "0"
+set gaSet(ddrMultyQty) "5"
+set gaSet(scopeModel) "Tds520A"
+set gaSet(enSerNum) "0"
+set gaSet(enJat) "0"
+set gaSet(enPll) "1"
+set gaSet(rbTestMode) "Full"

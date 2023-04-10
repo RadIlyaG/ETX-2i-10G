@@ -1,0 +1,96 @@
+con port 
+eth 0/2 
+shutdown
+functional-mode user
+no shutdown
+exit all
+
+con bridge 1
+port 1  no shutdown
+port 2  no shutdown
+port 3  no shutdown
+port 4  no shutdown
+port 5  no shutdown
+port 6  no shutdown
+port 7  no shutdown
+port 8  no shutdown
+vlan-aware
+no filter
+exit all
+
+con flows classifier-profile "v100" match-any  match vlan 100
+con flows classifier-profile all match-any  match  all
+con flows flow b8
+classifier "all"
+vlan-tag push vlan 100 p-bit fix 7
+ingress-port ethernet 0/8
+egress-port bridge-port 1 8
+reverse-direction block 0/1
+no shutdown
+exit all
+
+
+con flows flow b7
+classifier "all"
+vlan-tag push vlan 100 p-bit fix 6
+ingress-port ethernet 0/7
+egress-port bridge-port 1 7
+reverse-direction block 0/1
+no shutdown
+exit all
+
+con flows flow b6
+classifier "all"
+vlan-tag push vlan 100 p-bit fix 5
+ingress-port ethernet 0/6
+egress-port bridge-port 1 6
+reverse-direction block 0/1
+no shutdown
+exit all
+
+con flows flow b5
+classifier "all"
+vlan-tag push vlan 100 p-bit fix 4
+ingress-port ethernet 0/5
+egress-port bridge-port 1 5
+reverse-direction block 0/1
+no shutdown
+exit all
+
+con flows flow b4
+classifier "all"
+vlan-tag push vlan 100 p-bit fix 3
+ingress-port ethernet 0/4
+egress-port bridge-port 1 4
+reverse-direction block 0/1
+no shutdown
+exit all
+
+
+con flows flow b3
+classifier "all"
+vlan-tag push vlan 100 p-bit fix 2
+ingress-port ethernet 0/3
+egress-port bridge-port 1 3
+reverse-direction block 0/1
+no shutdown
+exit all
+
+con flows flow b2
+classifier "all"
+vlan-tag push vlan 100 p-bit fix 1
+ingress-port ethernet 0/2
+egress-port bridge-port 1 2
+reverse-direction block 0/1
+no shutdown
+exit all
+
+con flows flow b1
+classifier "all"
+vlan-tag push vlan 100 p-bit fix 0
+ingress-port ethernet 0/1
+egress-port bridge-port 1 1
+reverse-direction block 0/1
+no shutdown
+exit all
+

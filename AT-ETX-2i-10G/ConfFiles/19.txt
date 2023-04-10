@@ -1,0 +1,208 @@
+
+config port ethernet 0/2
+shutdown
+functional-mode user
+no shutdown
+exit all
+config flows
+
+classifier-profile "1" match-any
+match all
+exit
+flow "1"
+        classifier "1"
+        no policer
+        ingress-port ethernet 0/17
+        egress-port ethernet 0/18 queue 1 block 0/1
+        no shutdown
+exit
+flow "2"
+        classifier "1"
+        no policer
+        ingress-port ethernet 0/18
+        egress-port ethernet 0/17 queue 1 block 0/1
+        no shutdown
+exit
+flow "3"
+        classifier "1"
+        no policer
+        ingress-port ethernet 0/19
+        egress-port ethernet 0/20 queue 1 block 0/1
+        no shutdown
+exit
+flow "4"
+        classifier "1"
+        no policer
+        ingress-port ethernet 0/20
+        egress-port ethernet 0/19 queue 1 block 0/1
+        no shutdown
+exit	
+flow "5"
+        classifier "1"
+        no policer
+        ingress-port ethernet 0/21
+        egress-port ethernet 0/22 queue 1 block 0/1
+        no shutdown
+           exit
+  flow "6"
+        classifier "1"
+        no policer
+        ingress-port ethernet 0/22
+        egress-port ethernet 0/21 queue 1 block 0/1
+        no shutdown
+exit
+flow "7"
+        classifier "1"
+        no policer
+        ingress-port ethernet 0/23
+        egress-port ethernet 0/24 queue 1 block 0/1
+        no shutdown
+exit
+flow "8"
+        classifier "1"
+        no policer
+        ingress-port ethernet 0/24
+        egress-port ethernet 0/23 queue 1 block 0/1
+        no shutdown
+exit
+flow "9"
+        classifier "1"
+        no policer
+        ingress-port ethernet 0/25
+        egress-port ethernet 0/26 queue 1 block 0/1
+        no shutdown
+exit
+flow "10"
+        classifier "1"
+        no policer
+        ingress-port ethernet 0/26
+        egress-port ethernet 0/25 queue 1 block 0/1
+        no shutdown
+exit	
+flow "11"
+        classifier "1"
+        no policer
+        ingress-port ethernet 0/27
+        egress-port ethernet 0/5 queue 1 block 0/1
+        no shutdown
+exit
+flow "12"
+        classifier "1"
+        no policer
+        ingress-port ethernet 0/5
+        egress-port ethernet 0/27 queue 1 block 0/1
+        no shutdown
+exit
+flow "13"
+        classifier "1"
+        no policer
+        ingress-port ethernet 0/6
+        egress-port ethernet 0/7 queue 1 block 0/1
+        no shutdown
+exit
+flow "14"
+        classifier "1"
+        no policer
+        ingress-port ethernet 0/7
+        egress-port ethernet 0/6 queue 1 block 0/1
+        no shutdown
+exit
+flow "15"
+        classifier "1"
+        no policer
+        ingress-port ethernet 0/8
+        egress-port ethernet 0/9 queue 1 block 0/1
+        no shutdown
+exit
+flow "16"
+        classifier "1"
+        no policer
+        ingress-port ethernet 0/9
+        egress-port ethernet 0/8 queue 1 block 0/1
+        no shutdown
+exit
+flow "17"
+        classifier "1"
+        no policer
+        ingress-port ethernet 0/10
+        egress-port ethernet 0/11 queue 1 block 0/1
+        no shutdown
+exit
+flow "18"
+        classifier "1"
+        no policer
+        ingress-port ethernet 0/11
+        egress-port ethernet 0/10 queue 1 block 0/1
+        no shutdown
+exit
+flow "19"
+        classifier "1"
+        no policer
+        ingress-port ethernet 0/12
+        egress-port ethernet 0/13 queue 1 block 0/1
+        no shutdown
+exit
+flow "20"
+        classifier "1"
+        no policer
+        ingress-port ethernet 0/13
+        egress-port ethernet 0/12 queue 1 block 0/1
+        no shutdown
+exit
+flow "21"
+        classifier "1"
+        no policer
+        ingress-port ethernet 0/14
+        egress-port ethernet 0/15 queue 1 block 0/1
+        no shutdown
+exit
+flow "22"
+        classifier "1"
+        no policer
+        ingress-port ethernet 0/15
+        egress-port ethernet 0/14 queue 1 block 0/1
+        no shutdown
+exit
+flow "23"
+        classifier "1"
+        no policer
+        ingress-port ethernet 0/16
+        egress-port ethernet 0/28 queue 1 block 0/1
+        no shutdown
+exit
+flow "24"
+        classifier "1"
+        no policer
+        ingress-port ethernet 0/28
+        egress-port ethernet 0/16 queue 1 block 0/1
+        no shutdown
+exit
+flow "25"
+        classifier "1"
+        no policer
+        ingress-port ethernet 0/1
+        egress-port ethernet 0/2 queue 1 block 0/1
+        no shutdown
+exit
+flow "26"
+        classifier "1"
+        no policer
+        ingress-port ethernet 0/2
+        egress-port ethernet 0/1 queue 1 block 0/1
+        no shutdown
+exit
+flow "27"
+        classifier "1"
+        no policer
+        ingress-port ethernet 0/3
+        egress-port ethernet 0/4 queue 1 block 0/1
+        no shutdown
+exit
+flow "28"
+        classifier "1"
+        no policer
+        ingress-port ethernet 0/4
+        egress-port ethernet 0/3 queue 1 block 0/1
+        no shutdown
+exit
+

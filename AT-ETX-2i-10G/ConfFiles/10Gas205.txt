@@ -1,0 +1,32 @@
+exit all
+configure system clock
+domain 1
+source 1 rx-port ethernet 0/27
+priority 1
+wait-to-restore 0
+quality-level prc
+exit all
+configure system clock
+domain 1
+source 2 rx-port ethernet 0/16
+priority 2
+wait-to-restore 0
+quality-level prc
+exit all
+configure port
+l2cp-profile SSM
+mac 0x02 peer
+exit
+ethernet 0/27
+l2cp profile SSM
+tx-ssm
+exit
+ethernet 0/16
+l2cp profile SSM
+tx-ssm
+exit all
+configure system clock station 1/1
+shutdown
+line-code hdb3
+no shutdown
+exit all

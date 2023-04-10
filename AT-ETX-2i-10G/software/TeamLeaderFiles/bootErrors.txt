@@ -1,0 +1,7 @@
+Hardware malfunction
+Exception
+!!! PCIe 1 FAILURE !!!
+ERROR ERROR DDR FPGA FAILD INIT 
+ERROR Read Write
+ERROR Read
+ERROR HWPORTG_FAN_control_write 2

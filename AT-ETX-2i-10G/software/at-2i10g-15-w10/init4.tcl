@@ -1,0 +1,12 @@
+set gaGui(xy) +362+61
+set gaSet(entDUT) "ETX-2I-10G_ATT/19/DCR/8SFPP"
+set gaSet(DutInitName) "ETX-2I-10G_ATT.19.DCR.8SFPP.tcl"
+set gaSet(performShortTest) "0"
+set gaSet(eraseTitle) "0"
+set gaSet(ddrMultyQty) "5"
+set gaSet(scopeModel) "DSOX1102A"
+set gaSet(enSerNum) "0"
+set gaSet(enJat) "0"
+set gaSet(enPll) "0"
+set gaSet(rbTestMode) "Full"
+set gaSet(enVneNum) "0"

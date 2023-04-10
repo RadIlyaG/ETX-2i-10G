@@ -1,0 +1,77 @@
+exit all
+config
+    system
+        clock
+            recovered 0/1 ptp g.8275-1
+                ptp-domain 6
+                no shutdown
+            exit
+            master 0/1 ptp g.8275-1
+                domain-number 6
+                no shutdown
+            exit
+            domain 1
+                source 1 recovered 0/1
+                    quality-level prc
+                    wait-to-restore 0
+                exit
+            exit
+        exit
+    exit
+    port
+        svi 2 no shutdown
+        svi 3 no shutdown
+    exit
+    flows
+        classifier-profile "untagged" match-any
+            match untagged
+        exit
+        classifier-profile "all" match-any
+            match all
+        exit
+        flow "eth2_svi2"
+            classifier "untagged"
+            policer profile "Policer1"
+            ingress-port ethernet 0/2
+            egress-port svi 2
+            no shutdown
+        exit
+        flow "svi2_eth2"
+            classifier "all"
+            policer profile "Policer1"
+            ingress-port svi 2
+            egress-port ethernet 0/2 queue 0 block 0/1
+            no shutdown
+        exit
+        flow "svi3_eth3"
+            classifier "all"
+            policer profile "Policer1"
+            ingress-port svi 3
+            egress-port ethernet 0/3 queue 0 block 0/1
+            no shutdown
+        exit
+        flow "eth3_svi3"
+            classifier "untagged"
+            policer profile "Policer1"
+            ingress-port ethernet 0/3
+            egress-port svi 3
+            no shutdown
+        exit
+    exit
+
+    system
+        clock
+            ptp-port 0/1 g.8275-1
+                port 2
+                    bind svi 2
+                    no shutdown
+                exit
+                port 3
+                    bind svi 3
+                    state master
+                    no shutdown
+                exit
+            exit
+        exit
+    exit all
+

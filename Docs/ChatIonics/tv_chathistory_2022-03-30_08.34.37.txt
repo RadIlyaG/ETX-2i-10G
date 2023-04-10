@@ -1,0 +1,98 @@
+AT-2I10G-11-W10-Philippines 08:28
+hi ilya
+AT-2I10G-11-W10-Philippines 08:29
+this is Jonee
+Ilya Ginzburg 08:29
+Hi Jonee, how are you?
+AT-2I10G-11-W10-Philippines 08:29
+we are trying to test the fresh units of 10G
+AT-2I10G-11-W10-Philippines 08:29
+I'm fine, how about you?
+Ilya Ginzburg 08:30
+i'm fine too, thank you.
+I see. ..
+Ilya Ginzburg 08:30
+Do a product already finished a test, no matter Fail or Pass?
+AT-2I10G-11-W10-Philippines 08:31
+already finished but failed
+Ilya Ginzburg 08:31
+i'm checking out log system
+Ilya Ginzburg 08:32
+finished as PASS?
+AT-2I10G-11-W10-Philippines 08:32
+Is the testing for single and dual fan board the same?
+AT-2I10G-11-W10-Philippines 08:32
+The one that PASSED is the Golden Sample
+AT-2I10G-11-W10-Philippines 08:33
+The Golden Sample is dual fan
+AT-2I10G-11-W10-Philippines 08:34
+while the fresh units that we are producing are single fan only
+Ilya Ginzburg 08:34
+Regarding the FANs. What do you mean?
+Regarding the pass units. I mean a new unit/s, not a golden sample
+AT-2I10G-11-W10-Philippines 08:35
+The Golden Sample is dual fan
+AT-2I10G-11-W10-Philippines 08:35
+while the fresh units that we are producing are single fan only
+AT-2I10G-11-W10-Philippines 08:35
+Our fresh units are FAILED as you can see now.
+AT-2I10G-11-W10-Philippines 08:36
+both units failed
+Ilya Ginzburg 08:37
+The Tester's program tests a device according to it's name (ETX-2I-10G-B_C/19/DR/8P). The name contains info about qty of fans
+Ilya Ginzburg 08:40
+I want to show you some instrument  which can help me to help you to understand a problem
+AT-2I10G-11-W10-Philippines 08:40
+ok, please share with me
+Ilya Ginzburg 08:41
+go to GUI's File menu
+Ilya Ginzburg 08:42
+File -> Console -> Capture Console
+Ilya Ginzburg 08:42
+go to C:\temp
+Ilya Ginzburg 08:45
+you see the "screenshot" of the Console. If you send me the file I can see what happened after LAST click on the RUN button. It cat give me a hint what may be the problem source
+AT-2I10G-11-W10-Philippines 08:47
+what do you mean?
+AT-2I10G-11-W10-Philippines 08:49
+what file?
+Ilya Ginzburg 08:50
+OK. When the Tester is running, I put to the Console (let say, a debug window) some info about the testing process. Each time you press the RUN (green) button, I clear the Console. When you Capture the Console I copy its content to a txt file
+Ilya Ginzburg 08:50
+ConsoleCapt_2022.03.30_08.42.txt, for example
+Ilya Ginzburg 08:51
+I created a new file right now
+AT-2I10G-11-W10-Philippines 08:51
+ok, now i understand
+AT-2I10G-11-W10-Philippines 08:51
+I will try to retest both UUTs?
+Ilya Ginzburg 08:52
+So, if I can't to connect to the Tester, lets say, on weekend , you can create a copy of the Console and send me by email
+AT-2I10G-11-W10-Philippines 08:52
+ok, noted
+Ilya Ginzburg 08:53
+no, lets perform a manual test
+Ilya Ginzburg 08:53
+i will open a terminal program and turn off-on the unit under test
+AT-2I10G-11-W10-Philippines 08:55
+ok, i see
+Ilya Ginzburg 08:58
+the product is stack . I think you should send an email to Ronen.B (ETX-2i10G team leader) about the issue and include the Inventory and Page screenshots. I will show you
+Ilya Ginzburg 09:03
+copy these file to your PC/laptop and ask Ronen for a help. CC my name
+AT-2I10G-11-W10-Philippines 09:03
+so i will get the photos that you saved. 
+AT-2I10G-11-W10-Philippines 09:03
+OK noted
+Ilya Ginzburg 09:03
+ronen_be@rad.com
+Ilya Ginzburg 09:08
+CC also ilya_s@rad.com	(Ilya Schechter)
+AT-2I10G-11-W10-Philippines 09:09
+OK, i will send an email now.
+Ilya Ginzburg 09:10
+Ilya Shekhter        Some many Ilyas...
+AT-2I10G-11-W10-Philippines 09:21
+i already sent the mail. have you received it?
+Ilya Ginzburg 09:34
+yes, I got your mail

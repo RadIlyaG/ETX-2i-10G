@@ -1,0 +1,11 @@
+exit all
+config management netconf shutdown
+
+config management access 
+no telnet
+no tftp
+no sftp
+
+ssh-encryption algorithm aes-ctr-256
+ssh-mac algorithm sha1-160
+exit all
