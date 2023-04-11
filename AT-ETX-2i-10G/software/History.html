@@ -1,413 +1,473 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
-  <head>
+
+<head>
   <meta http-equiv="content-type" content="text/html; charset=windows-1250">
   <meta name="generator" content="PSPad editor, www.pspad.com">
-   <style type="text/css">
-    div.add {color:blue;}
-    div.fix {color:red;}
-    div.cng {color:black;}
-    a:link, a:visited {text-decoration: none; color: black;}
-    a:hover , a:active {text-decoration: underline; color: black;}
-    table {border-collapse: collapse;}
-    table, td, th {border: 0px solid black;}
+  <style type="text/css">
+    div.add {
+      color: blue;
+    }
+
+    div.fix {
+      color: red;
+    }
+
+    div.cng {
+      color: black;
+    }
+
+    a:link,
+    a:visited {
+      text-decoration: none;
+      color: black;
+    }
+
+    a:hover,
+    a:active {
+      text-decoration: underline;
+      color: black;
+    }
+
+    table {
+      border-collapse: collapse;
+    }
+
+    table,
+    td,
+    th {
+      border: 0px solid black;
+    }
   </style>
   <title>Changes' history</title>
-  </head>
-  <body>
-   <h4>ATE software upgrade</h4>
+</head>
+
+<body>
+  <h4>ATE software upgrade</h4>
   <!---->
-  <table>    
-    <tr><td>ETX-2i-10G 19"      </td><td><a href="#49">: 14.06.2021</a></td></tr>
-    <tr><td>ETX-2i-10G 9.5"     </td><td><a href="#49">: 14.06.2021</a></td></tr>
-    <tr><td>ETX-2i-10G-B        </td><td><a href="#49">: 14.06.2021</a></td></tr>
-    <tr><td>ETX-2i-10G-B 8SFPP  </td><td><a href="#99">: 22.02.2023</a></td></tr>
+  <table>
+    <tr>
+      <td>ETX-2i-10G 19" </td>
+      <td><a href="#49">: 14.06.2021</a></td>
+    </tr>
+    <tr>
+      <td>ETX-2i-10G 9.5" </td>
+      <td><a href="#49">: 14.06.2021</a></td>
+    </tr>
+    <tr>
+      <td>ETX-2i-10G-B </td>
+      <td><a href="#49">: 14.06.2021</a></td>
+    </tr>
+    <tr>
+      <td>ETX-2i-10G-B 8SFPP </td>
+      <td><a href="#99">: 22.02.2023</a></td>
+    </tr>
   </table>
-  <!----> 
-   
-  <!-- <tr><td>ETX-2i-10G-B 8SFPP  </td><td><a href="#92">: 24.01.2023</a></td></tr> --> 
-  <!--ETX-2i-10G-B        </td><td><a href="#49">: 14.06.2021</a></td> -->   
-  <!--ETX-2i-10G-B 8SFPP  </td><td><a href="#40">: 09.03.2021</a></td>  -->   
-  <!--    <tr><td>ETX-2i-10G-CMB    </td><td><a href="#23">: 26.05.2020</a></td></tr> -->       
-  <br> 
+  <!---->
+
+  <!-- <tr><td>ETX-2i-10G-B 8SFPP  </td><td><a href="#92">: 24.01.2023</a></td></tr> -->
+  <!--ETX-2i-10G-B        </td><td><a href="#49">: 14.06.2021</a></td> -->
+  <!--ETX-2i-10G-B 8SFPP  </td><td><a href="#40">: 09.03.2021</a></td>  -->
+  <!--    <tr><td>ETX-2i-10G-CMB    </td><td><a href="#23">: 26.05.2020</a></td></tr> -->
+  <br>
   <h4>Changes</h4>
-	<!--
+  <!--
 	<div id="105">10.04.2023</div>       
 		<div>Change OFF state duration at <b>On_Off</b> Test to 30 sec</div>
     <br>
-	-->           
-    <div id="104">09.04.2023</div>       
-		<div>Adaptation for option ETX-2I-10G-B_MMC/8.5/AC/8SFPP</div>
-		<div>Don't download SW again if the <b>Door Switch Test</b> was performed with 6.8.2(2.76) and above</div>
-		<div>Add <b>On_Off</b> TestMode</div>
-    <br>           
-    <div id="103">23.03.2023</div>     
-		<div>Checking SN with length 10 characters too (VerifySN)</div>
-		<div>Add <b>1D</b> to Page1-Page2 matching check for 8SFPP (Pages)</div>
-    <br>           
-	<div id="102">16.03.2023</div>     
-		<div>Check existense of <b>Manufacturer Serial Number</b> and <b>CLEI Code</b> for Lumen's options (PS_IDTest)</div>
-    <br>           
-	<div id="101">13.03.2023</div>     
-		<div>Select <b>Insert Ser. Number</b> CheckButton for option <b>ETX-2I-10G-B_LY</b> (BuildTests, ToggleEnSerNum)</div>
-    <br>           
-	<div id="100">09.03.2023</div>     
-		<div>Select <b>Insert Ser. Number</b> CheckButton for options <b>ETX-2I-10G-B_VO/19/ACR/4SFPP/4S4U</b> and <b>ETX-2I-10G_LY</b> (BuildTests, ToggleEnSerNum)</div>
-    <br>           
-	<div id="99">22.02.2023</div>     
-		<div>Added ODU PSs Extracting</div>
-    <br>           
-	<div id="98">13.02.2023</div>     
-		<div><code>configure terminal console-timeout forever</code> at the <b>DoorSwitchTestPerf</b> 's begining </div>
-    <br>           
-	<div id="97">12.02.2023</div>       
-		<div>Fixed bug in LoadBootErrorsFile</div>
-    <br>           
-	<div id="96">09.02.2023</div>       
-		<div><b>Door Switch Test</b> is performing at MEA level</div>
-		<div>Don't download 6.8.2(2.76) again if the <b>Door Switch Test</b> was performed with 6.8.2(2.76) </div>
-		<div>Undoing a change Page1 for ETX-2I-10G-B_ATT/H/DCR/ODU/8SFPP and ETX-2I-10G-B_C/H/DR/OD/8P</div>
-    <br>           
-	<div id="95">02.02.2023</div>       
-		<div>Add <b>PS Test</b> TestMode</div>
-    <br>           
-	<div id="94">31.01.2023</div>       
-	<div>Change Page1 for ETX-2I-10G-B_ATT/H/DCR/ODU/8SFPP and ETX-2I-10G-B_C/H/DR/OD/8P</div>
-    <br>          
-	<div id="93">26.01.2023</div>       
-		<div>Add Page1-Page2 matching check for 8SFPP (Pages)</div>
-		<div>Add DUT Name vs DUT prompt check for 8SFPP (PS_IDTest)</div>
-    <br>           
-	<div id="92">24.01.2023</div>       
-		<div>Add PtpClock, ExtClk and SyncE Tests to 8SFPP</div>
-		<div>Add <b>BP Test</b> TestMode</div>
-    <br>           
-	<div id="91">16.01.2023</div>       
-		<div>Send to TCC <code>$tim-$gaSet(ButRunTime)</code> instead of <code>$tim</code> (SQliteAddLine)</div>
-    <br>           
-	<div id="90">02.01.2023</div>       
-		<div><i>Alt-b</i> for <code>[set gaSet(useExistBarcode) 1]</code> (GUI)</div>
-		<div><i>Alt-l</i> for <code>[list InsertLastId $dlg]</code> (GetOpDlg)</div>
-    <br>           
-	<div id="89">19.12.2022</div>       
-		<div>TstAlmLedTest for HW >= 0.4 is performing by <code>mea util comp gp gpr 19</code></div>
-    <br>           
-	<div id="88">14.12.2022</div>       
-		<div>GUI opens without title. This will force the user to scan the barcode</div>
-    <br>           
-	
-	<div id="87">13.12.2022</div>       
-		<div>Edit gaSet(dbrSW) of many INITs according to gaSet(SWCF)</div>
-    <br>           
-	
-	<div id="86">12.12.2022</div>       
-		<div>Read TraceID in tests BootDownload and Pages only, if the UUT is not 12CMB. Otherwise read it each test</div>
-    <br>           
-	
-	<div id="85">08.12.2022</div>
-		<table>
-		<tr><td>SetToDefaultWD</td><td>changed to factory-default</td></tr>
-		<tr><td>LicenseRead2CloseAll</td><td>changed to factory-default</td></tr>
-		<tr><td>LicensePerf</td><td>stay with factory-default-all</td></tr>
-		<tr><td>DyingGasp_run </td><td>stay with factory-default</td></tr>
-		<tr><td>SetToDefault</td>><td>stay with factory-default-all</td></tr>
-		<tr><td style="padding-right: 22px;">LoadDefaultConfiguration</td><td>changed to factory-default</td></tr>
-		</table>
-    <br>           
-	<div id="84">29.11.2022</div>       
-		<div>Add ReadP1015Code in PS_IDTest</div>
-    <br>           
-	<div id="83">10.11.2022</div>       
-		<div>Adaptation for option ETX-2I-10G-B_FTR/8.5/AC/8SFPP/K1</div>
-    <br>           
-	<div id="85">24.11.2022</div>       
-		<div>Cancel change Page1 and Page2 for ETX-2I-10G-B_EIR/19/ACR/8SFPP and ETX-2I-10G-B_EIR/19/DCR/8SFPP</div>
-    <br>           
-	<div id="84">23.11.2022</div>       
-		<div>CLEI Code mode</div>
-    <br>           
-	<div id="83">10.11.2022</div>       
-		<div>Adaptation for option ETX-2I-10G-B/H/DC/ODU/8SFPP</div>
-    <br>           
-	<div id="82">09.11.2022</div>       
-		<div>Adaptation for option ETX-2I-10G-B_TWC/19/DCR/8SFPP/LPK8</div>
-		<div>Change Page1 and Page2 for ETX-2I-10G-B_EIR/19/ACR/8SFPP and ETX-2I-10G-B_EIR/19/DCR/8SFPP</div>
-    <br>           
-	<div id="81">08.11.2022</div>       
-		<div>Adaptation for options ETX-2I-10G/19/H/DCR/8SFPP, ETX-2I-10G/8.5/DC/8SFPP</div>
-    <br>           
-	<div id="80">25.10.2022</div>       
-		<div>Created folder TeamLeaderFiles with bootErrors.txt, sfpList.txt and NoTrace.txt</div>
-		<div>Copy TeamLeaderFiles to others ATEs</div>
-		<div>NoTrace.txt has names of products that should not get Traceability barcode</div>
-    <br>           
-	<div id="79">12.10.2022</div>       
-		<div>Read Traceability ID</div>
-    <br>           
-	<div id="78">11.09.2022</div>       
-		<div>Add <i>ZTP</i> to prompts</div>
-		<div>Add <i>B.19.ACR</i> and <i>B.19.DCR</i> to options which require remove and insert Power Supplies</div>
-		<div>Add <i>DoorSwitchAppDownload</i> and <i>DoorSwitchTest</i> for OD units</div>
-    <br>           
-	<div id="77">15.08.2022</div>       
-     <div>Prepare to read the VNE Number</div>
-    <br>           
-	<div id="76">10.08.2022</div>       
-     <div>Remove <i>Scan barcode each UUT</i> and <i>Scan barcode each batch</i> from Tools menu (GUI)</div>
-    <br>           
-	<div id="75">07.08.2022</div>       
-     <div>Support options ETX-2I-10G/19/ACR/8SFPP and ETX-2I-10G/19/DCR/8SFPP</div>
-    <br>           
-	<div id="74">03.08.2022</div>        
-        <div>Fail in case there is no <i>=></i> prompt after download_vxboot (Boot_Download)</div>
-		<div>100 sec delay (instead of 80) after <i>file copy running-config user-default-config</i> (LoadDefConf)</div>
+	-->
+  <div id="105">11.04.2023</div>
+  <div>Start work with Git</div>
+  <br>
+  <div id="103">23.03.2023</div>
+  <div>Checking SN with length 10 characters too (VerifySN)</div>
+  <div>Add <b>1D</b> to Page1-Page2 matching check for 8SFPP (Pages)</div>
+  <br>
+  <div id="102">16.03.2023</div>
+  <div>Check existense of <b>Manufacturer Serial Number</b> and <b>CLEI Code</b> for Lumen's options (PS_IDTest)</div>
+  <br>
+  <div id="101">13.03.2023</div>
+  <div>Select <b>Insert Ser. Number</b> CheckButton for option <b>ETX-2I-10G-B_LY</b> (BuildTests, ToggleEnSerNum)</div>
+  <br>
+  <div id="100">09.03.2023</div>
+  <div>Select <b>Insert Ser. Number</b> CheckButton for options <b>ETX-2I-10G-B_VO/19/ACR/4SFPP/4S4U</b> and
+    <b>ETX-2I-10G_LY</b> (BuildTests, ToggleEnSerNum)</div>
+  <br>
+  <div id="99">22.02.2023</div>
+  <div>Added ODU PSs Extracting</div>
+  <br>
+  <div id="98">13.02.2023</div>
+  <div><code>configure terminal console-timeout forever</code> at the <b>DoorSwitchTestPerf</b> 's begining </div>
+  <br>
+  <div id="97">12.02.2023</div>
+  <div>Fixed bug in LoadBootErrorsFile</div>
+  <br>
+  <div id="96">09.02.2023</div>
+  <div><b>Door Switch Test</b> is performing at MEA level</div>
+  <div>Don't download 6.8.2(2.76) again if the <b>Door Switch Test</b> was performed with 6.8.2(2.76) </div>
+  <div>Undoing a change Page1 for ETX-2I-10G-B_ATT/H/DCR/ODU/8SFPP and ETX-2I-10G-B_C/H/DR/OD/8P</div>
+  <br>
+  <div id="95">02.02.2023</div>
+  <div>Add <b>PS Test</b> TestMode</div>
+  <br>
+  <div id="94">31.01.2023</div>
+  <div>Change Page1 for ETX-2I-10G-B_ATT/H/DCR/ODU/8SFPP and ETX-2I-10G-B_C/H/DR/OD/8P</div>
+  <br>
+  <div id="93">26.01.2023</div>
+  <div>Add Page1-Page2 matching check for 8SFPP (Pages)</div>
+  <div>Add DUT Name vs DUT prompt check for 8SFPP (PS_IDTest)</div>
+  <br>
+  <div id="92">24.01.2023</div>
+  <div>Add PtpClock, ExtClk and SyncE Tests to 8SFPP</div>
+  <div>Add <b>BP Test</b> TestMode</div>
+  <br>
+  <div id="91">16.01.2023</div>
+  <div>Send to TCC <code>$tim-$gaSet(ButRunTime)</code> instead of <code>$tim</code> (SQliteAddLine)</div>
+  <br>
+  <div id="90">02.01.2023</div>
+  <div><i>Alt-b</i> for <code>[set gaSet(useExistBarcode) 1]</code> (GUI)</div>
+  <div><i>Alt-l</i> for <code>[list InsertLastId $dlg]</code> (GetOpDlg)</div>
+  <br>
+  <div id="89">19.12.2022</div>
+  <div>TstAlmLedTest for HW >= 0.4 is performing by <code>mea util comp gp gpr 19</code></div>
+  <br>
+  <div id="88">14.12.2022</div>
+  <div>GUI opens without title. This will force the user to scan the barcode</div>
+  <br>
+
+  <div id="87">13.12.2022</div>
+  <div>Edit gaSet(dbrSW) of many INITs according to gaSet(SWCF)</div>
+  <br>
+
+  <div id="86">12.12.2022</div>
+  <div>Read TraceID in tests BootDownload and Pages only, if the UUT is not 12CMB. Otherwise read it each test</div>
+  <br>
+
+  <div id="85">08.12.2022</div>
+  <table>
+    <tr>
+      <td>SetToDefaultWD</td>
+      <td>changed to factory-default</td>
+    </tr>
+    <tr>
+      <td>LicenseRead2CloseAll</td>
+      <td>changed to factory-default</td>
+    </tr>
+    <tr>
+      <td>LicensePerf</td>
+      <td>stay with factory-default-all</td>
+    </tr>
+    <tr>
+      <td>DyingGasp_run </td>
+      <td>stay with factory-default</td>
+    </tr>
+    <tr>
+      <td>SetToDefault</td>><td>stay with factory-default-all</td>
+    </tr>
+    <tr>
+      <td style="padding-right: 22px;">LoadDefaultConfiguration</td>
+      <td>changed to factory-default</td>
+    </tr>
+  </table>
+  <br>
+  <div id="84">29.11.2022</div>
+  <div>Add ReadP1015Code in PS_IDTest</div>
+  <br>
+  <div id="83">10.11.2022</div>
+  <div>Adaptation for option ETX-2I-10G-B_FTR/8.5/AC/8SFPP/K1</div>
+  <br>
+  <div id="85">24.11.2022</div>
+  <div>Cancel change Page1 and Page2 for ETX-2I-10G-B_EIR/19/ACR/8SFPP and ETX-2I-10G-B_EIR/19/DCR/8SFPP</div>
+  <br>
+  <div id="84">23.11.2022</div>
+  <div>CLEI Code mode</div>
+  <br>
+  <div id="83">10.11.2022</div>
+  <div>Adaptation for option ETX-2I-10G-B/H/DC/ODU/8SFPP</div>
+  <br>
+  <div id="82">09.11.2022</div>
+  <div>Adaptation for option ETX-2I-10G-B_TWC/19/DCR/8SFPP/LPK8</div>
+  <div>Change Page1 and Page2 for ETX-2I-10G-B_EIR/19/ACR/8SFPP and ETX-2I-10G-B_EIR/19/DCR/8SFPP</div>
+  <br>
+  <div id="81">08.11.2022</div>
+  <div>Adaptation for options ETX-2I-10G/19/H/DCR/8SFPP, ETX-2I-10G/8.5/DC/8SFPP</div>
+  <br>
+  <div id="80">25.10.2022</div>
+  <div>Created folder TeamLeaderFiles with bootErrors.txt, sfpList.txt and NoTrace.txt</div>
+  <div>Copy TeamLeaderFiles to others ATEs</div>
+  <div>NoTrace.txt has names of products that should not get Traceability barcode</div>
+  <br>
+  <div id="79">12.10.2022</div>
+  <div>Read Traceability ID</div>
+  <br>
+  <div id="78">11.09.2022</div>
+  <div>Add <i>ZTP</i> to prompts</div>
+  <div>Add <i>B.19.ACR</i> and <i>B.19.DCR</i> to options which require remove and insert Power Supplies</div>
+  <div>Add <i>DoorSwitchAppDownload</i> and <i>DoorSwitchTest</i> for OD units</div>
+  <br>
+  <div id="77">15.08.2022</div>
+  <div>Prepare to read the VNE Number</div>
+  <br>
+  <div id="76">10.08.2022</div>
+  <div>Remove <i>Scan barcode each UUT</i> and <i>Scan barcode each batch</i> from Tools menu (GUI)</div>
+  <br>
+  <div id="75">07.08.2022</div>
+  <div>Support options ETX-2I-10G/19/ACR/8SFPP and ETX-2I-10G/19/DCR/8SFPP</div>
+  <br>
+  <div id="74">03.08.2022</div>
+  <div>Fail in case there is no <i>=></i> prompt after download_vxboot (Boot_Download)</div>
+  <div>100 sec delay (instead of 80) after <i>file copy running-config user-default-config</i> (LoadDefConf)</div>
+  <br>
+  <div id="73">31.07.2022</div>
+  <div>Fail in case <i>DEADBEEF Program Check Exception</i> occurs (EntryBootMenu)</div>
+  <br>
+  <div id="72">25.07.2022</div>
+  <div>No report in Console about BootErrors (Login)</div>
+  <div>SetSWDownload included in SoftwareDownload. SetDownload excluded from Tests</div>
+  <div>$com instead of $gaSet(comDut)</div>
+  <br>
+  <div id="71">24.07.2022</div>
+  <div>Add ETX-2I-10G-B_C.H.DR.OD.8P.tcl option</div>
+  <div>Read <i>Laser Temperature</i> from <i>port ethernet 0/1 status</i> and add to log (FanStatusTest)</div>
+  <br>
+  <div id="70">14.07.2022</div>
+  <div>Fail in case <i>FTP transfer error</i> occurs during SW download (SoftwareDownloadTest)</div>
+  <div>Fail in case <i>MNG-ETH port failure</i> occurs after reset (SetSWDownload)</div>
+  <div>Fail in case <i>HW Failure</i> occurs (MyWaitFor, FormatFlashAfterBootDnl, EntryBootMenu)</div>
+  <br>
+  <div id="69">06.07.2022</div>
+  <div>New procs: DeleteOldTeFiles and DeleteOldCaptConsFiles (Lib_Gen_Etx2i10G.tcl)</div>
+  <div>Add DeleteOldTeFiles to start process (lib_PackSour.tcl)</div>
+  <div>Remove Email entry from Tools Menu (Gui_Etx2i10G.tcl)</div>
+  <div>Add DeleteOldTeFiles and DeleteOldCaptConsFiles to Tools Menu (Gui_Etx2i10G.tcl)</div>
+  <div>Call CaptureConsole at end of ButRun if ret != 0 (Gui_Etx2i10G.tcl)</div>
+  <div>Add <i>set gaSet(fail) ""</i> to CheckBcOk</div>
+  <br>
+  <div id="68">19.06.2022</div>
+  <div>Preparation for 10G_C as 10G-B_C (RetriveDutFam, RetriveFansCheckJ)</div>
+  <br>
+  <div id="67">16.06.2022</div>
+  <div>After ReadBarcode - check if UUT's DbrName is equal to GUI's gaSet(DutFullName) (ButRun,
+    CheckTitleDbrNameVsUutDbrName)</div>
+  <div>During SetToDefaultWD - check if UUT's Page3 ID barcode is equal to scanned one (ReadBootVersion)</div>
+  <br>
+  <div id="66">26.05.2022</div>
+  <div>Preparation for 10G_ATT as 10G-B_ATT (RetriveDutFam, RetriveFansCheckJ)</div>
+  <br>
+  <div id="65">24.05.2022</div>
+  <div>From 6.8.2.1.43 the Serial Number has 10 digits and not 16</div>
+  <br>
+  <div id="64">10.04.2022</div>
+  <div>Added PtpClock for 8SFPP</div>
+  <br>
+  <div id="63">04.04.2022</div>
+  <div>Check that <i>Manufacturer Serial Number</i> is <i>Not Available</i> if UUT is not ATT</div>
+  <br>
+  <div id="62">31.03.2022</div>
+  <div>Added Dialog to remove PS-2 for option with single PS</div>
+  <div>Added -fg and -bg to the DialogBox</div>
+  <br>
+  <div id="61">24.03.2022</div>
+  <div>Temperature limits for OD (FanStatusTest)</div>
+  <div>Additional sub-net for RAD net - 172.<b>17</b>.9*</div>
+  <br>
+  <div id="60">22.03.2022</div>
+  <div>Support option ETX-2I-10G-B OD</div>
+  <br>
+  <div id="59">27.02.2022</div>
+  <div>"ERROR ERROR DDR FPGA FAILD INIT" added to bootErrors.txt</div>
+  <br>
+  <div id="58">21.02.2022</div>
+  <div>Added check if RLAutoSync::AutoSync (lib_PackSour.tcl) and OI4Barcode.jar (lib_Gen_Etx2i10G.lib, proc GetDbrName)
+    return <b>Exception</b>. If yes, an "Network Problem DialogBox" will raise</div>
+  <br>
+  <div id="57">30.01.2022</div>
+  <div>Support option ETX-2I-10G-B_C/8.5/AC/8P</div>
+  <br>
+  <div id="56">29.12.2021</div>
+  <div>In case of fail, read MAC from show device-information performed one more time (ReadMac)</div>
+  <div>Add c:\\ as path3 for TeraTerminal (OpenTeraTerm)</div>
+  <br>
+  <div id="55">07.12.2021</div>
+  <div>sw-pack_2i_10g_b_8sfpp.bin for ETX-2I-10G-B/8SFPP</div>
+  <br>
+  <div id="54">28.11.2021</div>
+  <div>Pages will be performed after BootDownload</div>
+  <br>
+  <div id="53">16.11.2021</div>
+  <div>Support JAT and PLL loads</div>
+  <br>
+  <div id="52">01.11.2021</div>
+  <div>Support options ETX-2I-10G-B_TA/DCR/4SFPP/4S4U/PTP and ETX-2I-10G-B_TA/ACR/4SFPP/4S4U/PTP</div>
+  <br>
+  <div id="51">24.10.2021</div>
+  <div>Support option ETX-2I-10G-B_TWC.8.5.AC.8SFPP.LPK8</div>
+  <br>
+  <div id="50">18.07.2021</div>
+  <div>Support option 19B with removeable PSs (ETX-2I-10G-B_FT/ACDC/4SFPP/4SFP4UTP/PTP)</div>
+  <br>
+  <div id="49">14.06.2021</div>
+  <div>DDR Test exceptions in 6.7.1(0.58) without specific PSid</div>
+  <br>
+  <div id="48">08.06.2021</div>
+  <div>::RadAppsPath instead of C:/RadApps</div>
+  <div>Preparations in lib_bc.tcl for new MacReg (with 2 MACs) </div>
+  <br>
+  <div id="47">06.06.2021</div>
+  <div>OPT option added</div>
+  <br>
+  <div id="46">05.05.2021</div>
+  <div>Power OFF and ON at the begining of Pages Test</div>
+  <br>
+  <div id="45">22.04.2021</div>
+  <div>Check of both Inlets of DDC</div>
+  <br>
+  <div id="44">12.04.2021</div>
+  <div>2SFPP -> 2SFPP2SFP</div>
+  <br>
+  <div id="43">05.04.2021</div>
+  <div>Power Off-ON of ExtClk is fail (ExtClk, SyncE_run)</div>
+  <div>Loop of 3 tries if Jitter fail (SyncE_run)</div>
+  <br>
+  <div id="42">04.04.2021</div>
+  <div>Read Serial Number now is performed at WriteSerialNumber</div>
+  <br>
+  <div id="41">01.04.2021</div>
+  <div>Adaptation for Digital Scope DSOX1202A</div>
+  <br>
+  <div id="40">09.03.2021</div>
+  <div>Manual test of 0.95V is removed</div>
+  <br>
+  <div id="39">04.03.2021</div>
+  <div>UUT UTP ports use MUX's ports 4 (UUT's port 10), 6 (9), 24 (11) and 27 (12)</div>
+  <br>
+  <div id="38">17.02.2021</div>
+  <div>TST/ALM led Test on 8SFPP products</div>
+  <br>
+  <div id="37">10.02.2021</div>
+  <div>100Mb Ethernet Switch replaced by 1G Switch. It enables perform the Dying Gasp Test on 8SFPP products</div>
+  <br>
+  <div id="36">07.02.2021</div>
+  <div>Insert SN to page0</div>
+  <br>
+  <div id="35">27.01.2021</div>
+  <div>In 8SFPP product the FanEepromBurn Test is canceled</div>
+  <div>Up to 3 Power Off/On cycles are performed if Ports 0/17 - 0/28 are down in option 24SFP, when SW is 6.5.1(0.30)
+  </div>
+  <br>
+  <div id="34">30.12.2020</div>
+  <div>GetOperator reads Employee ID</div>
+  <br>
+  <div id="33">08.12.2020</div>
+  <div>Min=20 and max=70 in Fans Test in MEA level</div>
+  <br>
+  <div id="32">24.11.2020</div>
+  <div>DDR Test exceptions in 6.7.1(0.58)</div>
+  <br>
+  <div id="31">19.11.2020</div>
+  <div>Adding J field in Fans Test in MEA level</div>
+  <div>http://webservices03.rad.com:10211 (LibUrl)</div>
+  <div>A, B and C fields in Fans Test changed from 50 to 60</div>
+  <br>
+  <div id="30">17.11.2020</div>
+  <div>Fans Test in MEA level</div>
+  <br>
+  <div id="29">08.11.2020</div>
+  <div>TCC DB is updated by web service only</div>
+  <br>
+  <div id="28">22.10.2020</div>
+  <div>Added ETX-2I-10G-B 8SFPP</div>
+  <br>
+  <div id="27">15.10.2020</div>
+  <div>Update the TCC DataBase by web</div>
+  <div>Get the Operator Name</div>
+  <br>
+  <div id="26">17.09.2020</div>
+  <div>Removed USB Port Test</div>
+  <br>
+  <div id="25">13.09.2020</div>
+  <div">Added ETX-2I-10G-B_PLD/8.5/AC/4SFPP/4S4U</div>
     <br>
-    <div id="73">31.07.2022</div>        
-        <div>Fail in case <i>DEADBEEF Program Check Exception</i> occurs (EntryBootMenu)</div>
+    <div id="24">16.07.2020</div>
+    <div>Second try ChkLockClkTds</div>
     <br>
-    <div id="72">25.07.2022</div>        
-        <div>No report in Console about BootErrors (Login)</div>
-        <div>SetSWDownload included in SoftwareDownload. SetDownload excluded from Tests</div>
-		<div>$com instead of $gaSet(comDut)</div>
-    <br> 
-    <div id="71">24.07.2022</div>        
-        <div>Add ETX-2I-10G-B_C.H.DR.OD.8P.tcl option</div>
-		<div>Read <i>Laser Temperature</i> from <i>port ethernet 0/1 status</i> and add to log (FanStatusTest)</div>
-    <br> 
-    <div id="70">14.07.2022</div>        
-        <div>Fail in case <i>FTP transfer error</i> occurs during SW download (SoftwareDownloadTest)</div>
-		<div>Fail in case <i>MNG-ETH port failure</i> occurs after reset (SetSWDownload)</div>
-		<div>Fail in case <i>HW Failure</i> occurs (MyWaitFor, FormatFlashAfterBootDnl, EntryBootMenu)</div>
-    <br> 
-    <div id="69">06.07.2022</div>        
-		<div>New procs: DeleteOldTeFiles and DeleteOldCaptConsFiles (Lib_Gen_Etx2i10G.tcl)</div>
-		<div>Add DeleteOldTeFiles to start process (lib_PackSour.tcl)</div>
-		<div>Remove Email entry from Tools Menu  (Gui_Etx2i10G.tcl)</div>
-		<div>Add DeleteOldTeFiles and DeleteOldCaptConsFiles to Tools Menu (Gui_Etx2i10G.tcl)</div>
-		<div>Call CaptureConsole at end of ButRun if ret != 0 (Gui_Etx2i10G.tcl)</div>
-		<div>Add <i>set gaSet(fail) ""</i> to CheckBcOk</div>
-    <br>     
-    <div id="68">19.06.2022</div>        
-        <div>Preparation for 10G_C as 10G-B_C (RetriveDutFam, RetriveFansCheckJ)</div>
-    <br>     
-   <div id="67">16.06.2022</div>        
-     <div>After ReadBarcode - check if UUT's DbrName is equal to GUI's gaSet(DutFullName) (ButRun, CheckTitleDbrNameVsUutDbrName)</div>
-     <div>During SetToDefaultWD - check if UUT's Page3 ID barcode is equal to scanned one (ReadBootVersion)</div>
-   <br>     
-   <div id="66">26.05.2022</div>        
-     <div>Preparation for 10G_ATT as 10G-B_ATT (RetriveDutFam, RetriveFansCheckJ)</div>
-   <br>     
-   <div id="65">24.05.2022</div>        
-     <div>From 6.8.2.1.43 the Serial Number has 10 digits and not 16</div>
-   <br>     
-   <div id="64">10.04.2022</div>        
-     <div>Added PtpClock for 8SFPP</div>
-   <br>     
-   <div id="63">04.04.2022</div>        
-     <div>Check that <i>Manufacturer Serial Number</i> is <i>Not Available</i> if UUT is not ATT</div>
-   <br>     
-   <div id="62">31.03.2022</div>        
-     <div>Added Dialog to remove PS-2 for option with single PS</div>
-	 <div>Added -fg and -bg to the DialogBox</div>
-   <br>     
-   <div id="61">24.03.2022</div>        
-     <div>Temperature limits for OD (FanStatusTest)</div>
-	 <div>Additional sub-net for RAD net - 172.<b>17</b>.9*</div>
-   <br>     
-   <div id="60">22.03.2022</div>        
-     <div>Support option ETX-2I-10G-B OD</div>
-   <br>     
-   <div id="59">27.02.2022</div>        
-     <div>"ERROR ERROR DDR FPGA FAILD INIT" added to bootErrors.txt</div>
-   <br>     
-   <div id="58">21.02.2022</div>        
-     <div>Added check if RLAutoSync::AutoSync (lib_PackSour.tcl) and OI4Barcode.jar (lib_Gen_Etx2i10G.lib, proc GetDbrName) return <b>Exception</b>. If yes, an "Network Problem DialogBox" will raise</div>
-   <br>     
-   <div id="57">30.01.2022</div>        
-     <div>Support option ETX-2I-10G-B_C/8.5/AC/8P</div>
-   <br>     
-   <div id="56">29.12.2021</div>        
-     <div>In case of fail, read MAC from show device-information performed one more time (ReadMac)</div>
-	   <div>Add c:\\ as path3 for TeraTerminal (OpenTeraTerm)</div>
-   <br>     
-   <div id="55">07.12.2021</div>        
-     <div>sw-pack_2i_10g_b_8sfpp.bin for ETX-2I-10G-B/8SFPP</div>
-   <br>     
-   <div id="54">28.11.2021</div>        
-     <div>Pages will be performed after BootDownload</div>
-   <br>  
-   <div id="53">16.11.2021</div>        
-     <div>Support JAT and PLL loads</div>
-   <br>  
-   <div id="52">01.11.2021</div>        
-     <div>Support options ETX-2I-10G-B_TA/DCR/4SFPP/4S4U/PTP and ETX-2I-10G-B_TA/ACR/4SFPP/4S4U/PTP</div>
-   <br>  
-   <div id="51">24.10.2021</div>        
-     <div>Support option ETX-2I-10G-B_TWC.8.5.AC.8SFPP.LPK8</div>
-   <br>           
-   <div id="50">18.07.2021</div>        
-     <div>Support option 19B with removeable PSs (ETX-2I-10G-B_FT/ACDC/4SFPP/4SFP4UTP/PTP)</div>
-   <br>     
-   <div id="49">14.06.2021</div>        
-     <div>DDR Test exceptions in 6.7.1(0.58) without specific PSid</div>
-   <br>     
-   <div id="48">08.06.2021</div>        
-     <div>::RadAppsPath instead of C:/RadApps</div>
-     <div>Preparations in lib_bc.tcl for new MacReg (with 2 MACs) </div>
-   <br>   
-   <div id="47">06.06.2021</div>        
-     <div>OPT option added</div>
-   <br>      
-   <div id="46">05.05.2021</div>        
-     <div>Power OFF and ON at the begining of Pages Test</div>
-   <br>      
-   <div id="45">22.04.2021</div>        
-     <div>Check of both Inlets of DDC</div>
-   <br>      
-   <div id="44">12.04.2021</div>        
-     <div>2SFPP -> 2SFPP2SFP</div>
-   <br>      
-   <div id="43">05.04.2021</div>        
-     <div>Power Off-ON of ExtClk is fail (ExtClk, SyncE_run)</div>
-     <div>Loop of 3 tries if Jitter fail (SyncE_run)</div>
-   <br>      
-   <div id="42">04.04.2021</div>        
-     <div>Read Serial Number now is performed at WriteSerialNumber</div>
-   <br>      
-   <div id="41">01.04.2021</div>        
-     <div>Adaptation for Digital Scope DSOX1202A</div>
-   <br>           
-   <div id="40">09.03.2021</div>        
-     <div>Manual test of 0.95V is removed</div>
-   <br>      
-   <div id="39">04.03.2021</div>        
-     <div>UUT UTP ports use MUX's ports 4 (UUT's port 10), 6 (9), 24 (11) and 27 (12)</div>
-   <br>      
-   <div id="38">17.02.2021</div>        
-     <div>TST/ALM led Test on 8SFPP products</div>
-   <br>      
-   <div id="37">10.02.2021</div>        
-     <div>100Mb Ethernet Switch replaced by 1G Switch. It enables perform the Dying Gasp Test on 8SFPP products</div>
-   <br>      
-   <div id="36">07.02.2021</div>        
-     <div>Insert SN to page0</div>
-   <br>      
-   <div id="35">27.01.2021</div>        
-     <div>In 8SFPP product the FanEepromBurn Test is canceled</div>
-     <div>Up to 3 Power Off/On cycles are performed if Ports 0/17 - 0/28 are down in option 24SFP, when SW is 6.5.1(0.30)</div>
-   <br>      
-   <div id="34">30.12.2020</div>        
-     <div>GetOperator reads Employee ID</div>
-   <br>      
-   <div id="33">08.12.2020</div>        
-     <div>Min=20 and max=70 in Fans Test in MEA level</div>
-   <br>      
-   <div id="32">24.11.2020</div>        
-     <div>DDR Test exceptions in 6.7.1(0.58)</div>
-   <br>   
-   <div id="31">19.11.2020</div>        
-     <div>Adding J field in Fans Test in MEA level</div>  
-     <div>http://webservices03.rad.com:10211 (LibUrl)</div>
-     <div>A, B and C fields in Fans Test changed from 50 to 60</div>
-   <br>
-   <div id="30">17.11.2020</div>        
-     <div>Fans Test in MEA level</div>  
-   <br>    
-   <div id="29">08.11.2020</div>        
-     <div>TCC DB is updated by web service only</div>  
-   <br>       
-   <div id="28">22.10.2020</div>        
-     <div>Added ETX-2I-10G-B 8SFPP</div>  
-   <br>       
-   <div id="27">15.10.2020</div>        
-     <div>Update the TCC DataBase by web</div>
-     <div>Get the Operator Name</div>  
-   <br> 
-   <div id="26">17.09.2020</div>        
-     <div>Removed USB Port Test</div>  
-   <br>    
-   <div id="25">13.09.2020</div>        
-     <div">Added ETX-2I-10G-B_PLD/8.5/AC/4SFPP/4S4U</div>  
-   <br>    
-   <div id="24">16.07.2020</div>        
-     <div>Second try ChkLockClkTds</div>  
-   <br>    
-   <div id="23">26.05.2020</div>        
-     <div>Added ETX-2i-10G-CMB </div>  
-   <br>    
-   <div id="22">21.04.2020</div>        
-     <div>Added Check Operational Status</div>
-   <br>
-   <div id="21">23.02.2020</div>        
-     <div>Added Scope DSOX1102B</div>
-     <div>Added Check for ETX-205 AUXes' configuration. If the configuration gone - SetToDefault and config them</div>
-   <br>
-    <div id="20">16.02.2020</div>        
-     <div>Added WD test</div>
-   <br>
-   <div id="19">04.12.2019</div>        
-     <div>Added BOOTSTRAP-2I10G</div>
-     <div>Added ETX-2I-10G-B.ACACI</div>
-   <br>
-   <div id="18">25.11.2019</div>        
-     <div>Added WallGarden_TYPE-5_et_6</div>
-   <br>
-   <div id="17">17.07.2019</div>        
-     <div>Added new MAC range</div>
-   <br>  
-   <div id="16">04.07.2019</div>        
-     <div class="cng">Changed: RLSerial instead of RLCom</div>
-     <div class="add">Added: Temperature Test</div>
-     <div class="cng">Changed: Read of TST/ALM led is removed</div>
-   <br>
-   <div id="15">28.05.2019</div>        
-     <div class="cng">Changed: RLCom instead of RLSerial</div>
-   <br> 
-   <div id="14">13.05.2019</div>        
-     <div class="cng">Changed: Adaptation for prompt "ztp"</div> 
-     <div class="cng">Changed: [Send] with "com" and "sent" only</div>  
-   <br> 
-   <div id="13">21.03.2019</div>        
-     <div class="cng">Changed: 140 sec delay instead of 40 in DyingGastTest </div>  
-   <br>  
-   <div id="12">04.03.2019</div>        
-     <div class="add">Added: ETX-2i-10G-B </div>  
-   <br> 
-   <div id="11">27.02.2019</div>        
-     <div class="add">Added: SetToDefaultAll before DefaultUserConfiguration </div>  
-   <br> 
-   <div id="10">08.11.2018</div>        
-     <div class="add">Added: Check FAN Status by "configure chassis show environment" </div>  
-   <br> 
-    <div id="09">20.09.2018</div>        
-     <div class="add">Added: Default User Configuration</div>  
-     <div class="add">Added: Button "Clear" for files' name in Inventory</div>
-   <br> 
-   <div id="08">17.09.2018</div>        
-     <div class="add">Added: Adaptation to 6.6.0(0.22)</div>  
-   <br>
-   <div id="07">13.08.2018</div>        
-     <div class="add">Added: Scopes TDS520 and DSOX1102A</div>  
-   <br> 
-   <div id="06">08.04.2018</div>        
-     <div class="add">Added: ACDC option</div>  
-   <br> 
-   <div id="05">16.01.2018</div>        
-     <div class="add">Added: Close and Open License for UUT with 2SFPP or without SFPP</div>  
-   <br>
-   <div id="04">15.01.2018</div>        
-     <div class="add">Added: UUT option without SFPP</div>  
-   <br>
-   <div id="03">09.01.2018</div>        
-     <div class="add">Added: Check 0.95V during the LED test</div>  
-   <br>
-   <div id="02">20.12.2017</div>        
-     <div class="add">Added: Catching Exceptions during up process</div>  
-   <br> 
-   <div id="01">05.06.2017</div>        
-     <div>New Tester</div>  
-   <br> 
-   
-   
-  </body>
+    <div id="23">26.05.2020</div>
+    <div>Added ETX-2i-10G-CMB </div>
+    <br>
+    <div id="22">21.04.2020</div>
+    <div>Added Check Operational Status</div>
+    <br>
+    <div id="21">23.02.2020</div>
+    <div>Added Scope DSOX1102B</div>
+    <div>Added Check for ETX-205 AUXes' configuration. If the configuration gone - SetToDefault and config them</div>
+    <br>
+    <div id="20">16.02.2020</div>
+    <div>Added WD test</div>
+    <br>
+    <div id="19">04.12.2019</div>
+    <div>Added BOOTSTRAP-2I10G</div>
+    <div>Added ETX-2I-10G-B.ACACI</div>
+    <br>
+    <div id="18">25.11.2019</div>
+    <div>Added WallGarden_TYPE-5_et_6</div>
+    <br>
+    <div id="17">17.07.2019</div>
+    <div>Added new MAC range</div>
+    <br>
+    <div id="16">04.07.2019</div>
+    <div class="cng">Changed: RLSerial instead of RLCom</div>
+    <div class="add">Added: Temperature Test</div>
+    <div class="cng">Changed: Read of TST/ALM led is removed</div>
+    <br>
+    <div id="15">28.05.2019</div>
+    <div class="cng">Changed: RLCom instead of RLSerial</div>
+    <br>
+    <div id="14">13.05.2019</div>
+    <div class="cng">Changed: Adaptation for prompt "ztp"</div>
+    <div class="cng">Changed: [Send] with "com" and "sent" only</div>
+    <br>
+    <div id="13">21.03.2019</div>
+    <div class="cng">Changed: 140 sec delay instead of 40 in DyingGastTest </div>
+    <br>
+    <div id="12">04.03.2019</div>
+    <div class="add">Added: ETX-2i-10G-B </div>
+    <br>
+    <div id="11">27.02.2019</div>
+    <div class="add">Added: SetToDefaultAll before DefaultUserConfiguration </div>
+    <br>
+    <div id="10">08.11.2018</div>
+    <div class="add">Added: Check FAN Status by "configure chassis show environment" </div>
+    <br>
+    <div id="09">20.09.2018</div>
+    <div class="add">Added: Default User Configuration</div>
+    <div class="add">Added: Button "Clear" for files' name in Inventory</div>
+    <br>
+    <div id="08">17.09.2018</div>
+    <div class="add">Added: Adaptation to 6.6.0(0.22)</div>
+    <br>
+    <div id="07">13.08.2018</div>
+    <div class="add">Added: Scopes TDS520 and DSOX1102A</div>
+    <br>
+    <div id="06">08.04.2018</div>
+    <div class="add">Added: ACDC option</div>
+    <br>
+    <div id="05">16.01.2018</div>
+    <div class="add">Added: Close and Open License for UUT with 2SFPP or without SFPP</div>
+    <br>
+    <div id="04">15.01.2018</div>
+    <div class="add">Added: UUT option without SFPP</div>
+    <br>
+    <div id="03">09.01.2018</div>
+    <div class="add">Added: Check 0.95V during the LED test</div>
+    <br>
+    <div id="02">20.12.2017</div>
+    <div class="add">Added: Catching Exceptions during up process</div>
+    <br>
+    <div id="01">05.06.2017</div>
+    <div>New Tester</div>
+    <br>
+
+
+</body>
+
 </html>
