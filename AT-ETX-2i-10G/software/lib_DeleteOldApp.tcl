@@ -83,6 +83,10 @@ proc DeleteOldApp {} {
       catch {file delete -force $fol}
     }
     
+    ## 07:48 13/04/2023
+    if {[string match -nocase {6.7.1(0.107)_TA} [file tail $fol]]} {
+      catch {file delete -force $fol}
+    }
     
     
   }
