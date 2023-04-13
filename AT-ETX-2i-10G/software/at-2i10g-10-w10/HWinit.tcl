@@ -20,6 +20,5 @@ switch -exact -- $gaSet(pair) {
       console eval {wm title . "Con 2"} 
       set gaSet(pioBoxSerNum) FT5PF5RM         
   }
-  
 }  
 source lib_PackSour.tcl
