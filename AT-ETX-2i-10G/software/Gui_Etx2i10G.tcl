@@ -1479,15 +1479,13 @@ proc GuiReadSerNum {} {
 proc ToggleEnSerNum {} {
   global gaSet glTests gaGui
   puts "ToggleEnSerNum $gaSet(enSerNum)"
-  if {$gaSet(enSerNum) == 0 && \
-      ([string match *ETX-2I-10G-B_VO.19.ACR.4SFPP.4S4U* $gaSet(DutInitName)]==1 || \
-       [string match *ETX-2I-10G_LY* $gaSet(DutInitName)]==1 || \
-       [string match *ETX-2I-10G-B_LY* $gaSet(DutInitName)]==1)} {
+  set txt [join [split $gaSet(insertSerNumOptsList)] \n] 
+  if {$gaSet(enSerNum) == 0 && [IsOptionReqsSerNum ] == 1} { 
     RLSound::Play information
     set ret [DialogBox -title "Confirm disable"\
       -type "yes no" -icon images/question -aspect 2000\
-      -text "The \'Insert Ser. Number\' CheckButton should be selected when the following is tested:\n\n\
-        ETX-2I-10G-B_VO/19/ACR/4SFPP/4S4U\nETX-2I-10G_LY\nETX-2I-10G-B_LY\n\nAre you sure you want to uncheck it?"]
+      -text "The \'Insert Ser. Number\' CheckButton should be selected when the following is tested:\n\n$txt\n\n\
+      Are you sure you want to uncheck it?"]
     if {$ret=="yes"} {
       set inx "-1"
       foreach tst $glTests {
@@ -1504,6 +1502,15 @@ proc ToggleEnSerNum {} {
       }
       return {}
     }
+  } elseif {$gaSet(enSerNum) == 1 && [IsOptionReqsSerNum ] == 0} { 
+    RLSound::Play information
+    set ret [DialogBox -title "Confirm enable"\
+      -type "OK" -icon images/error -aspect 2000\
+      -text "The \'Insert Ser. Number\' CheckButton should be selected ONLY when the following is tested:\n\n$txt\n\n\
+      Your UUT is $gaSet(DutFullName)"]
+      # if {$ret=="no"} {
+        # set gaSet(enSerNum) 0
+      # }
   }
   BuildTests  
 }

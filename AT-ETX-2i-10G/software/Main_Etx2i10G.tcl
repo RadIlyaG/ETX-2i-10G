@@ -147,7 +147,8 @@ proc BuildTests {} {
       
       if {[string match *ETX-2I-10G-B_VO.19.ACR.4SFPP.4S4U* $gaSet(DutInitName)]==1 || \
           [string match *ETX-2I-10G_LY* $gaSet(DutInitName)]==1 || \
-          [string match *ETX-2I-10G-B_LY* $gaSet(DutInitName)]==1} {
+          [string match *ETX-2I-10G-B_LY* $gaSet(DutInitName)]==1} {}
+      if [IsOptionReqsSerNum ] {   
         set gaSet(enSerNum) 1
       } else {
         set gaSet(enSerNum) 0 ;# test2 comment on line 153

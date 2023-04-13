@@ -2021,3 +2021,19 @@ proc CheckFolder4NewFiles {path secNow} {
     }
   }
 }
+# ***************************************************************************
+# IsOptionReqsSerNum
+# ***************************************************************************
+proc IsOptionReqsSerNum {} {
+  global gaSet
+  set res 0
+  puts "IsOptionReqsSerNum $gaSet(DutFullName)"
+  foreach opt $gaSet(insertSerNumOptsList)  {
+    set res [string match *$opt* $gaSet(DutFullName)]
+    puts "IsOptionReqsSerNum $opt $res"
+    if $res break
+  }
+  update
+  return $res
+}
+
