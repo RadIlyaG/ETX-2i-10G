@@ -94,8 +94,7 @@ proc BuildTests {} {
     #     lappend lTestNames USBport
     #   } 
       if {$np=="8SFPP" && $up=="0_0"} {
-        if {$gaSet(rbTestMode) eq "Comp"} {
-          #lappend lTests DyingGasp_conf DyingGasp_run
+          if {$gaSet(rbTestMode) eq "Comp"} {
           # no DG 
         } elseif {$gaSet(rbTestMode) eq "Full" || $gaSet(rbTestMode) eq "MainBoard"} {
           lappend lTests DyingGasp_Log
@@ -110,12 +109,10 @@ proc BuildTests {} {
           if {$gaSet(rbTestMode) eq "Comp"} {
             # no PtpClock  
           } elseif {$gaSet(rbTestMode) eq "Full" || $gaSet(rbTestMode) eq "MainBoard"} {
-            #lappend lTests ExtClk PtpClock_conf PtpClock_run
             lappend lTests PtpClock_conf PtpClock_run
             lappend lTests ExtClk SyncE_conf SyncE_run
           }
         } else {
-          #lappend lTests PtpClock_conf PtpClock_run
           lappend lTests ExtClk SyncE_conf SyncE_run 
         }
         
@@ -171,12 +168,6 @@ proc BuildTests {} {
           }
         }
       }  
-    #      set lTests [lreplace $lTests [lsearch $lTests "BootDownload"]  [lsearch $lTests "BootDownload"]]
-    #      set lTests [lreplace $lTests [lsearch $lTests "Pages"]  [lsearch $lTests "Pages"]]
-    #      set lTests [lreplace $lTests [lsearch $lTests "SetDownload"]  [lsearch $lTests "SetDownload"]]
-    #      set lTests [lreplace $lTests [lsearch $lTests "SoftwareDownload"]  [lsearch $lTests "SoftwareDownload"]]
-    #      set lTests [lreplace $lTests [lsearch $lTests "DDR"]  [lsearch $lTests "DDR"]]
-    
     }
   }
   set glTests [list]
