@@ -307,10 +307,8 @@ proc PS_IDTest {} {
   puts "PS_IDTest b:$b psQty:$psQty psQtyShBe:$psQtyShBe"
   if {$psQty!=$psQtyShBe} {
     set gaSet(fail) "Qty or type of PSs is wrong."
-#     AddToLog $gaSet(fail)
     return -1
   }
-  #regexp {\-+\s(.+)\s+FAN} $buffer - psStatus
   regexp {\-+\s(.+\s+FAN)} $buffer - psStatus
   if {$b=="Half19" || $b=="Half19B"} {
     regexp {1\s+\w+\s+([\s\w]+)\s+FAN} $psStatus - ps1Status
@@ -321,7 +319,6 @@ proc PS_IDTest {} {
   
   if {$ps1Status!="OK"} {
     set gaSet(fail) "Status of PS-1 is \'$ps1Status\'. Should be \'OK\'"
-#     AddToLog $gaSet(fail)
     return -1
   }
   
@@ -330,10 +327,8 @@ proc PS_IDTest {} {
     set ps2Status [string trim $ps2Status]
     if {$ps2Status!="OK"} {
       set gaSet(fail) "Status of PS-2 is \'$ps2Status\'. Should be \'OK\'"
-  #     AddToLog $gaSet(fail)
       return -1
-    }
-    
+    }    
   }
   
   set res [regexp {(\d+)\s+Celsius} $buffer ma val]
@@ -428,7 +423,6 @@ proc PS_IDTest {} {
     }
     AddToPairLog $gaSet(pair) "Manufacturer Serial Number: $val"
     
-    #if {$p1>=6 && $p2>=8 && $p3>=2 && $s1>=0 && $s2>=33} {}
     if {[package vcompare $sw_norm 6.8.2.0.33]!="-1"} {
       ## if sw_norm >=6.8.2.0.33
       set res [regexp {CLEI Code[\s\:]+([\w]+)\s} $buffer ma val]
@@ -467,27 +461,7 @@ proc PS_IDTest {} {
       }
     }
   }
-  
-  
-  ## meantime tsi test is performed at Leds_FAN
-#   regexp {FAN Status[\s-]+(.+)\sSensor} $buffer ma fanSt
-#   if ![info exists fanSt] {
-#     set gaSet(fail) "Can't read FAN Status"
-#     return -1
-#   }
-#   puts "fanSt:$fanSt"
-#   if {$b=="Half19"} {
-#     if {$fanSt!="1 OK"} {
-#       set gaSet(fail) "FAN Status is \'$fanSt\'"
-#       return -1
-#     }
-#   } elseif {$b=="19"} { 
-#     if {$fanSt!="1 OK 2 OK 3 OK 4 OK"} {
-#       set gaSet(fail) "FAN Status is \'$fanSt\'"
-#       return -1
-#     }
-#   }
-  
+    
 #   set ret [ReadCPLD]
 #   if {$ret!=0} {return $ret}
   
@@ -518,74 +492,6 @@ proc PS_IDTest {} {
 
   return $ret
 }
-# ***************************************************************************
-# DyingGaspSetup
-# ***************************************************************************
-proc neDyingGaspSetup {} {
-  global gaSet buffer gRelayState
-  Status "DyingGaspTest"
-  set ret [Login]
-  if {$ret!=0} {
-    #set ret [Login]
-    if {$ret!=0} {return $ret}
-  }
-  set gaSet(fail) "Logon fail"
-  set com $gaSet(comDut)
-  Send $com "exit all\r" stam 0.25 
-  
-  set cf $gaSet(DGaspCF)
-  set cfTxt "Dying Gasp"
-  set ret [DownloadConfFile $cf $cfTxt 1 $com]
-  if {$ret!=0} {return $ret}
-  
-#   set dutIp 10.10.10.1[set gaSet(pair)]  
-#   for {set i 1} {$i<=20} {incr i} {   
-#     set ret [Ping $dutIp]
-#     puts "DyingGaspSetup ping after download i:$i ret:$ret"
-#     if {$ret!=0} {return $ret}
-#   }
-  
-  foreach {b r p d ps} [split $gaSet(dutFam) .] {}
-  if {$b=="19V"} {
-    set ret [DnfvPower off] 
-    if {$ret!=0} {return $ret} 
-  }  
-#   if {$ps=="DC"} {
-#     Power all off
-#     set gRelayState red
-#     IPRelay-LoopRed
-#     SendEmail "ETX-2I" "Manual Test"
-#     RLSound::Play information
-#     set txt "Remove the DC PSs and insert AC PSs"
-#     set res [DialogBox -type "OK Cancel" -icon /images/question -title "Change PS" -message $txt]
-#     update
-#     if {$res!="OK"} {
-#       return -2
-#     } else {
-#       set ret 0
-#     }
-#     Power all on
-#     set gRelayState green
-#     IPRelay-Green
-#   } elseif {$ps=="AC" || $ps=="AC HP"} {
-#     Power all off
-#     after 1000
-#     Power all on
-#   }
-  Power all off
-  after 1000
-  Power all on
-  
-  set ret [Login]
-  if {$ret!=0} {
-    #set ret [Login]
-    if {$ret!=0} {return $ret}
-  }
-
-#   set snmpId [RLScotty::SnmpOpen $dutIp]
-#   RLScotty::SnmpConfig $snmpId -version SNMPv3 -user initial
-  return $ret
-}    
  
 # ***************************************************************************
 # DyingGaspPerf
@@ -593,17 +499,12 @@ proc neDyingGaspSetup {} {
 proc DyingGaspPerf {psOffOn psOff} {
   global trp tmsg gaSet
   puts "[MyTime] DyingGaspPerf $psOffOn $psOff"
-#   set ret [OpenSession $dutIp]
-#   if {$ret!=0} {return $ret}
   set ret [Login]
   if {$ret!=0} {
     #set ret [Login]
     if {$ret!=0} {return $ret}
   }
   set gaSet(fail) "Logon fail"
-#   set com $gaSet(comDut)
-#   Send $com "exit all\r" stam 0.25 
-
    
   set wsDir C:\\Program\ Files\\Wireshark
   set npfL [exec $wsDir\\tshark.exe -D]
@@ -628,7 +529,7 @@ proc DyingGaspPerf {psOffOn psOff} {
       set dutIp 10.10.10.1[set gaSet(pair)]
     }  
   }
-  #set dutIp 10.10.10.1[set gaSet(pair)]
+  
   set ret [PingTraps $intf $dutIp]
   if {$ret=="-1"} {
     set ret [Wait "Wait Management up" 20 white]
@@ -637,8 +538,6 @@ proc DyingGaspPerf {psOffOn psOff} {
     if {$ret!=0} {return $ret}
   }
 
-  #file delete -force $resFile
-  
   catch {exec arp.exe -d $dutIp} resArp
   puts "[MyTime] resArp:$resArp"
   
@@ -689,24 +588,6 @@ proc DyingGaspPerf {psOffOn psOff} {
   if {$res} {
     puts "\rFrameB---<$fram>---\r"; update
   }
-#   set frameQty [expr {[regexp -all "Frame " $monData] - 1}]
-#   for {set fFr 1; set nextFr 2} {$fFr <= $frameQty} {incr fFr} {
-#     puts "fFr:$fFr  nextFr:$nextFr"
-#     if [regexp "Frame $fFr:.*\\sFrame $nextFr" $monData m] {
-#       if [regexp "Src: [set dutIp].*" $m mm] {
-#         if [string match *4479696e672067617370* $mm] {
-#           puts $mm
-#           set res 1
-#         }
-#       }
-#     }
-#     puts ""
-#     
-#     incr nextFr
-#     if {$nextFr>$frameQty} {set nextFr 99}
-#   }
-# 
-#   
 
   if {$res==1} {
     set ret [Wait "Wait UUT up" 30 white]
@@ -715,254 +596,6 @@ proc DyingGaspPerf {psOffOn psOff} {
   } elseif {$res==0} {
     set ret -1
     set gaSet(fail) "No \"DyingGasp\" trap was detected"
-  }
-  return $ret
-  
-}
-
-# ***************************************************************************
-# DyingGaspPerf
-# ***************************************************************************
-proc neDyingGaspPerf {psOffOn psOff} {
-  global trp tmsg gaSet
-#   set ret [OpenSession $dutIp]
-#   if {$ret!=0} {return $ret}
-  set ret [Login]
-  if {$ret!=0} {
-    #set ret [Login]
-    if {$ret!=0} {return $ret}
-  }
-  set gaSet(fail) "Logon fail"
-  set com $gaSet(comDut)
-  Send $com "exit all\r" stam 0.25 
-  
-  set dutIp 10.10.10.1[set gaSet(pair)]
-  set ret [Ping $dutIp]
-  if {$ret!=0} {return $ret}
-  
-  RLScotty::SnmpCloseAllTrap
-  for {set wc 1} {$wc<=10} {incr wc} {
-    set trp(id) [RLScotty::SnmpOpenTrap tmsg]
-    puts "wc:$wc trp(id):$trp(id)"
-    if {$trp(id)=="-1"} {
-      set ret -1
-      set gaSet(fail) "Open Trap failed"
-      set ret [Wait "Wait for SNMP session" 5 white]
-      if {$ret!=0} {return $ret}
-    } else {
-      set ret 0
-      break
-    }
-  }
-  if {$ret!=0} {return $ret}
-  RLScotty::SnmpConfigTrap $trp(id) -version SNMPv3 -user initial ; #SNMPv2c ;# SNMPv1 , SNMPv2c , SNMPv3
-  
-  set tmsg ""
-  #Power $psOff off
-  set ret [Send $com "configure port ethernet 0/1\r" "0/1"]
-  if {$ret!=0} {
-    RLScotty::SnmpCloseTrap $trp(id)
-    return $ret
-  }
-  
-  set ret -1
-  for {set i 1} {$i<=5} {incr i} {
-    set ret [Send $com "shutdown\r" "0/1"]
-      if {$ret==0} {
-      after 1000
-      set ret [Send $com "no shutdown\r" "0/1"]
-      if {$ret!=0} {
-        RLScotty::SnmpCloseTrap $trp(id)
-        return $ret
-      }
-    }
-    puts "tmsgStClk:<$tmsg>"
-    if {$tmsg!=""} {
-      set ret 0
-      break
-    }
-    after 1000
-  }
-  if {$ret=="-1"} {
-    set gaSet(fail) "Trap is not sent"
-    RLScotty::SnmpCloseTrap $trp(id)
-    return -1
-  }
-  
-  after 1000
-  set tmsg ""
-  
-  Power $psOffOn on
-  Power $psOff off
-  Wait "Wait for trap 1" 3 white
-  puts "tmsgDG 1.1:<$tmsg>"
-  set tmsg ""
-  puts "tmsgDG 1.2:<$tmsg>"
-  
-  foreach {b r p d ps} [split $gaSet(dutFam) .] {}
-  if {$b=="19V"} {
-    set ret [DnfvPower off] 
-    if {$ret!=0} {return $ret} 
-  }  
-  
-  Power $psOffOn off
-  Wait "Wait for trap 2" 3 white 
-   
-  #set ret [regexp -all "$dutIp\[\\s\\w\\:\\-\\.\\=\]+\\\"\\w+\\\"\[\\s\\w\\:\\-\\.\\=\]+\\\"\[\\w\\:\\-\\.\]+\\\"\[\\s\\w\\:\\-\\.\\=\]+\\\"\[\\w\\-\]+\\\"" $tmsg v]  
-  puts "tmsgDG 2:<$tmsg>"
-  set res [regexp "from\\s$dutIp:\\s\.\+\:systemDyingGasp" $tmsg -]
-  Power $psOffOn on
-  
-  # Close sesion:
-  RLScotty::SnmpCloseTrap $trp(id)  
-
-  if {$res==1} {
-    set ret 0
-  } elseif {$res==0} {
-    set ret -1
-    set gaSet(fail) "No \"DyingGasp\" trap was detected"
-  }
-  return $ret
-  
-}
-
-# ***************************************************************************
-# XFP_ID_Test
-# ***************************************************************************
-proc XFP_ID_Test {} {
-  global gaSet buffer
-  Status "XFP_ID_Test"
-  set ret [Login]
-  if {$ret!=0} {
-    #set ret [Login]
-    if {$ret!=0} {return $ret}
-  }
-  set gaSet(fail) "Logon fail"
-  set com $gaSet(comDut)
-  
-  foreach 10Gp {3/1 3/2 4/1 4/2} {
-    if {$gaSet(10G)=="2" && ($10Gp=="3/1" || $10Gp=="3/2")} {
-      continue
-    }
-    if {$gaSet(10G)=="3" && $10Gp=="3/2"} {
-      continue
-    }
-    Status "XFP $10Gp ID Test"
-    set gaSet(fail) "Read XFP status of port $10Gp fail"
-    Send $com "exit all\r" stam 0.25 
-    set ret [Send $com "configure port ethernet $10Gp\r" #]
-    if {$ret!=0} {return $ret}
-    set ret [Send $com "show status\r" "MAC Address" 20]
-    if {$ret!=0} {return $ret}
-    set b $buffer
-    set ::b1 $b
-      
-    set ret [Send $com "\r" #]
-    if {$ret!=0} {return $ret}
-    append b $buffer
-    set ::b2 $b
-    set res [regexp {Connector Type\s+:\s+(.+)Auto} $b - connType]
-    set connType [string trim $connType]
-    if {$connType!="XFP In"} {
-      set gaSet(fail) "XFP status of port $10Gp is \"$connType\". Should be \"XFP In\"" 
-      set ret -1
-      break 
-    }
-    set xfpL [list "XFP-1D" XPMR01CDFBRAD]
-    regexp {Part Number[\s:]+([\w\-]+)\s} $b - xfp
-    if ![info exists xfp] {
-      puts "b:<$b>"
-      puts "b1:<$::b1>"
-      puts "b2:<$::b2>"
-      set gaSet(fail) "Port $10Gp. Can't read XFP's Part Number"
-      return -1
-    }
-#     if {$xfp!="XFP-1D"} {}
-    if {[lsearch $xfpL $xfp]=="-1"} {
-      set gaSet(fail) "XFP Part Number of port $10Gp is \"$xfp\". Should be one from $xfpL" 
-      set ret -1
-      break 
-    }    
-  }
-  return $ret  
-}
-
-# ***************************************************************************
-# SfpUtp_ID_Test
-# ***************************************************************************
-proc neSfpUtp_ID_Test {} {
-  global gaSet buffer
-#   if {$gaSet(1G)=="10UTP" || $gaSet(1G)=="20UTP"} {
-#     ## don't check ports UTP
-#     return 0
-#   }
-  Status "SfpUtp_ID_Test"
-  set ret [Login]
-  if {$ret!=0} {
-    #set ret [Login]
-    if {$ret!=0} {return $ret}
-  }
-  set gaSet(fail) "Logon fail"
-  set com $gaSet(comDut)
-  
-  foreach 1Gp {1/1 1/2 1/3 1/4 1/5 1/6 1/7 1/8 1/9 1/10 2/1 2/2 2/3 2/4 2/5 2/6 2/7 2/8 2/9 2/10} {
-    if {($gaSet(1G)=="10SFP" || $gaSet(1G)=="10UTP") && [lindex [split $1Gp /] 0]==2} {
-      ## dont check ports 2/x
-      continue
-    }
-#     if {$gaSet(1G)=="10UTP" || $gaSet(1G)=="20UTP"} {
-#       ## dont check ports UTP
-#       set ret 0
-#       break
-#     }
-#     if {$gaSet(1G)=="10SFP_10UTP" && [lindex [split $1Gp /] 0]==2} {
-#       ## dont check ports UTP  2/x
-#       continue
-#     }
-    Status "SfpUtp $1Gp ID Test"
-    set gaSet(fail) "Read SfpUtp status of port $1Gp fail"
-    Send $com "exit all\r" stam 0.25 
-    set ret [Send $com "configure port ethernet $1Gp\r" #]
-    if {$ret!=0} {return $ret}
-    if [string match {*Entry instance doesn't exist*} $buffer] {
-      set gaSet(fail) "Status of port $1Gp is \"Entry instance doesn't exist\"." 
-      set ret -1
-      break
-    }
-    set ret [Send $com "show status\r\r" "#" 20]
-    if {$ret!=0} {return $ret}    
-    set res [regexp {Connector Type\s+:\s+(.+)Auto} $buffer - connType]
-    set connType [string trim $connType]
-    if {([lindex [split $1Gp /] 0]==1 && ($gaSet(1G)=="10UTP" || $gaSet(1G)=="20UTP")) ||\
-        ([lindex [split $1Gp /] 0]==2 && ($gaSet(1G)=="10SFP_10UTP" || $gaSet(1G)=="20UTP"))} {
-      ## 1/x ports
-      ## 2/x ports
-      set conn "RJ45" 
-      set name "UTP"
-    } else {
-      set conn "SFP In"
-      set name "SFP"
-    } 
-    
-    if {$connType!=$conn} {
-      set gaSet(fail) "$name status of port $1Gp is \"$connType\". Should be \"$conn\"" 
-      set ret -1
-      break 
-    }
-    if {$name=="SFP"} {
-      regexp {Part Number[\s:]+([\w\-]+)\s} $buffer - sfp
-      if ![info exists sfp] {
-        set gaSet(fail) "Can't read SFP's Part Number"
-        return -1
-      }
-      set sfpL [list "SFP-5D" "SFP-6D" "SFP-6H" "SFP-30" "SFP-6" "SPGBTXCNFCRAD" "EOLS-1312-10-RAD" "EOLS131210RAD"]
-      if {[lsearch $sfpL $sfp]=="-1"} {
-        set gaSet(fail) "SFP Part Number of port $1Gp is \"$sfp\". Should be one from $sfpL" 
-        set ret -1
-        break 
-      }
-    }
-    
   }
   return $ret  
 }
@@ -1449,17 +1082,7 @@ proc Login {} {
   Status $statusTxt
   return $ret
 }
-# ***************************************************************************
-# FormatFlash
-# ***************************************************************************
-proc FormatFlash {} {
-  global gaSet buffer
-  set com $gaSet(comDut)
-  
-  Power all on 
-  
-  return $ret
-}
+
 # ***************************************************************************
 # FactDefault
 # ***************************************************************************
@@ -1709,8 +1332,7 @@ proc ReadBootVersion {wdMode} {
     if {$ret!=0} {
       set gaSet(fail) "WD Test fail. Verify the Dip-Switch position"
       return $ret
-    }
-    
+    }    
   }
   return $ret
 }
@@ -1775,15 +1397,6 @@ proc Loopback {mode} {
     set ret [Send $com "loopback remote\r" (0/1)]
   }
   if {$ret!=0} {return $ret}
-#   Send $com "exit\r" stam 0.25 
-#   set ret [Send $com "ethernet 4/2\r" (4/2)]
-#   if {$ret!=0} {return $ret}
-#   if {$mode=="off"} {
-#     set ret [Send $com "no loopback\r" (4/2)]
-#   } elseif {$mode=="on"} {
-#     set ret [Send $com "loopback remote\r" (4/2)]
-#   }
-#   if {$ret!=0} {return $ret}
   
   return $ret
 }
@@ -2085,8 +1698,6 @@ proc SoftwareDownloadTest {} {
   return $ret
 } 
 
-
-
 # ***************************************************************************
 # ReadEthPortStatus
 # ***************************************************************************
@@ -2329,8 +1940,6 @@ proc Boot_Download {} {
     # yes:   
     Status "Setup in progress ..."
     
-    #dec to Hex
-    #set x [format %.2x $::pair]
     if {$gaSet(pair)=="SE"} {
       set pair 101
     } else {
@@ -2359,8 +1968,6 @@ proc Boot_Download {} {
     #regsub -all {\.[\w]*} $gaSet(BootCF) "" boot_file
     
     
-        
-    # Download:   
     Send $com "run download_vxboot\r" stam 1
     set ret [Wait "Download Boot in progress ..." 10]
     if {$ret!=0} {return $ret}
@@ -2389,15 +1996,7 @@ proc Boot_Download {} {
   }      
   return $ret
 }
-# ***************************************************************************
-# _SetDownload
-# ***************************************************************************
-proc _SetDownload {run} {
-  set ret [SetSWDownload]
-  if {$ret!=0} {return $ret}
-  
-  return $ret
-}
+
 # ***************************************************************************
 # FormatFlashAfterBootDnl
 # ***************************************************************************
@@ -2446,9 +2045,6 @@ proc SetSWDownload {} {
     return -1
   }
      
-  ## C:/temp/SW/6.0.1_0.32/etxa_6.0.1(0.32)_sw-pack_2iB_10x1G_sr.bin -->> \
-  ## etxa_6.0.1(0.32)_sw-pack_2iB_10x1G_sr.bin
-  #set tail [file tail $gaSet(SWCF)]
   set tail $gaSet(pair)_[file tail $gaSet(SWCF)]
   set rootTail [file rootname $tail]
   if [file exists c:/download/temp/$tail] {
@@ -2459,20 +2055,12 @@ proc SetSWDownload {} {
         set gaSet(fail) "The SW file ($gaSet(SWCF)) can't be deleted"
         puts "[MyTime] SetSWDownload. The file c:/download/temp/$tail ($gaSet(SWCF)) can't be deleted. cres:<$cres>"
         return -1
-      }
-    
+      }  
     }
   }
     
   file copy -force $gaSet(SWCF) c:/download/temp/$tail 
   
-  #gaInfo(TftpIp.$::ID) = 10.10.8.1 (device IP)
-  #gaInfo(PcIp) = "10.10.10.254" (gateway IP/server IP)
-  #gaInfo(mask) = "255.255.248.0"  (device mask)  
-  #gaSet(Apl) = C:/Apl/4.01.10sw-pack_203n.bin
-
-  
-  # Config Setup:
   Send $com "\r\r" "\[boot\]:"
   set ret [Send $com "\r\r" "\[boot\]:"]  
   if {$ret!=0} {
@@ -2674,29 +2262,7 @@ proc FanEepromBurnTest {} {
   }
   return $ret
 }  
-  
-# ***************************************************************************
-# SpeedEthPort
-# ***************************************************************************
-proc neSpeedEthPort {port speed} {
-  global gaSet buffer
-  set com $gaSet(comDut)
-  set ret [Login]
-  if {$ret!=0} {return $ret}
-  set gaSet(fail) "Configuration speed of port $port fail"
-  Status "SpeedEthPort $port $speed"
-  set ret [Send $com "exit all\r" "2I"]
-  if {$ret!=0} {return $ret}
-  set ret [Send $com "configure port ethernet $port\r" "($port)"]
-  if {$ret!=0} {return $ret}
-  set ret [Send $com "no auto-negotiation\r" "($port)"]
-  if {$ret!=0} {return $ret}
-  set ret [Send $com "speed-duplex 100-full-duplex rj45\r" "($port)"]
-  if {$ret!=0} {return $ret}
-  set ret [Send $com "auto-negotiation\r" "($port)"]
-  if {$ret!=0} {return $ret}
-  return $ret
-}  
+    
 # ***************************************************************************
 # Login205
 # ***************************************************************************
@@ -2717,7 +2283,6 @@ proc Login205 {aux} {
   if {[string match {*Are you sure?*} $buffer]==1} {
    Send $com n\r stam 1
   }
-   
    
   if {[string match *password* $buffer] || [string match {*press a key*} $buffer]} {
     set ret 0
@@ -3206,6 +2771,7 @@ proc MirpesetStat {} {
   }
   return $ret
 }
+
 # ***************************************************************************
 # AdminFactAll
 # ***************************************************************************
@@ -3226,6 +2792,7 @@ proc AdminFactAll {} {
   Wait "Wait for UUT up" 30
   return 0
 }  
+
 # ***************************************************************************
 # VerifySN
 # ***************************************************************************
@@ -3289,7 +2856,6 @@ proc TstAlmLedTest {} {
   }
   
   set hw 0.123
-  if 1 {
   Send $com "exit all\r" stam 0.25 
   set ret [Send $com "configure system\r" system]  
   set ret [Send $com "show device-information\r\r" system]  
@@ -3298,7 +2864,7 @@ proc TstAlmLedTest {} {
     set gaSet(fail) "Can't read the HW version"
     return -1
   }
-  }
+  
   Send $com "\r\r" stam 0.25 
   Send $com "exit all\r" stam 0.25 
   puts "hw:$hw"
@@ -3320,7 +2886,6 @@ proc TstAlmLedTest {} {
       if {$ret!=0} {return $ret}
     } 
   }
-  
   
   foreach regVal {84 88 80} stt {"lights red" "lights orange" "is off"} {
     if {[package vcompare $hw 0.4]<0} {
@@ -3368,52 +2933,6 @@ proc SetJatPllDownload {} {
   if {$ret=="-1"} {return $ret}
   set tail $ret
   
-#   foreach {b r p d ps np up} [split $gaSet(dutFam) .] {}
-# #   if {[string match *8SFPP* $gaSet(DutInitName)] || [string match *.8P.* $gaSet(DutInitName)]} {
-# #     set b 8SFPP
-# #   }
-#   if {$npo=="8SFPP" && $upo=="0_0"} {
-#     set b 8SFPP
-#   }  
-#   if {$b=="19"} {
-#     set SWCF c:/download/SW/JAT_PLL_PROG/sw-pack_2i_10g.bin
-#   } elseif {$b=="Half19"} {
-#     set SWCF c:/download/SW/JAT_PLL_PROG/sw-pack_2i_10g_lc.bin
-#   } elseif {$b=="19B" || $b=="Half19B"} {
-#     set SWCF c:/download/SW/JAT_PLL_PROG/sw-pack_2i_10g_lc_b.bin
-#   } elseif {$b=="8SFPP"} {
-#     set SWCF c:/download/SW/JAT_PLL_PROG/sw-pack_2i_10g_b_8sfpp.bin
-#   }
-#   puts "SetJatPllDownload b:$b SWCF:$SWCF"; update
-#   
-#   if {[file exists $SWCF]!=1} {
-#     set gaSet(fail) "The SW file $SWCF doesn't exist"
-#     return -1
-#   }
-#      
-#   set tail [file tail $SWCF]
-#   set rootTail [file rootname $tail]
-#   if [file exists c:/download/temp/$tail] {
-#     catch {file delete -force c:/download/temp/$tail}
-#     after 2000
-#     if [file exists c:/download/temp/$tail] {
-#       if [catch {file delete -force c:/download/temp/$tail}] {
-#          set gaSet(fail) "The SW file ($SWCF) can't be deleted"
-#          return -1
-#       }
-#     
-#     }
-#   }
-#     
-#   file copy -force $SWCF c:/download/temp 
-  
-  #gaInfo(TftpIp.$::ID) = 10.10.8.1 (device IP)
-  #gaInfo(PcIp) = "10.10.10.254" (gateway IP/server IP)
-  #gaInfo(mask) = "255.255.248.0"  (device mask)  
-  #gaSet(Apl) = C:/Apl/4.01.10sw-pack_203n.bin
-
-  
-  # Config Setup:
   Send $com "\r\r" "\[boot\]:"
   set ret [Send $com "\r\r" "\[boot\]:"]  
   if {$ret!=0} {
@@ -3500,8 +3019,7 @@ proc SetJatPllDownload {} {
   
   Status "Wait for loading start .."
   set ret [Send $com "run\r" "Loading" 30]
-  return $ret  
-   
+  return $ret     
 }
 
 # ***************************************************************************
@@ -3591,9 +3109,9 @@ proc Load_Jat_Pll_Perf {} {
     if {$ret!=0} {return $ret}
   }  
   
-  return $ret
-  
+  return $ret  
 }
+
 # ***************************************************************************
 # Dyigasp_ClearLog
 # ***************************************************************************
@@ -3680,6 +3198,7 @@ proc PtpClock_conf_perf {} {
   set ret [DownloadConfFile $cf $cfTxt 1 $com]
   return $ret  
 }
+
 # ***************************************************************************
 # PtpClock_run_perf
 # ***************************************************************************
@@ -3771,9 +3290,6 @@ proc DoorSwitchSetSWDownload {} {
     return -1
   }
      
-  ## C:/temp/SW/6.0.1_0.32/etxa_6.0.1(0.32)_sw-pack_2iB_10x1G_sr.bin -->> \
-  ## etxa_6.0.1(0.32)_sw-pack_2iB_10x1G_sr.bin
-  #set tail [file tail $gaSet(SWCF)]
   set tail $gaSet(pair)_[file tail $doorSwApp]
   set rootTail [file rootname $tail]
   if [file exists c:/download/temp/$tail] {
@@ -3784,20 +3300,12 @@ proc DoorSwitchSetSWDownload {} {
         set gaSet(fail) "The SW file ($doorSwApp)) can't be deleted"
         puts "[MyTime] SetSWDownload. The file c:/download/temp/$tail ($doorSwApp)) can't be deleted. cres:<$cres>"
         return -1
-      }
-    
+      }  
     }
   }
     
   file copy -force $doorSwApp c:/download/temp/$tail 
-  
-  #gaInfo(TftpIp.$::ID) = 10.10.8.1 (device IP)
-  #gaInfo(PcIp) = "10.10.10.254" (gateway IP/server IP)
-  #gaInfo(mask) = "255.255.248.0"  (device mask)  
-  #gaSet(Apl) = C:/Apl/4.01.10sw-pack_203n.bin
-
-  
-  # Config Setup:
+    
   Send $com "\r\r" "\[boot\]:"
   set ret [Send $com "\r\r" "\[boot\]:"]  
   if {$ret!=0} {
@@ -3860,6 +3368,7 @@ proc DoorSwitchSetSWDownload {} {
   
   return $ret  
 }
+
 # ***************************************************************************
 # DoorSwitchAppDownloadTest
 # ***************************************************************************
@@ -3867,10 +3376,9 @@ proc DoorSwitchAppDownloadTest {} {
   global gaSet buffer 
   set com $gaSet(comDut)
   
-  #set tail [file tail $gaSet(SWCF)]
   set tail $gaSet(pair)_[file tail $gaSet(doorSwApp)]
   set rootTail [file rootname $tail]
-  # Download:   
+  
   Status "Wait for download / writing to flash .."
   set gaSet(fail) "Application download fail"
   Send $com "download 1,[set tail]\r" "stam" 3
@@ -3970,7 +3478,6 @@ proc DoorSwitchTestPerf {} {
   } else {
     set regSBL {84 A4 84}
   }
-  
   
   foreach doorState {"Pull Out" "Release" "Push"} regSB $regSBL {
     RLSound::Play information
