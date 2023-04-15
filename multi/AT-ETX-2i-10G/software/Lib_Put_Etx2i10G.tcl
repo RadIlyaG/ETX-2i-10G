@@ -2371,7 +2371,7 @@ proc DeleteBootFiles {} {
   if {$ret8!=0} {
     set res [Send $com "delete startup-config\12" "deleted successfully" 20]
     if {$res!=0} {
-      set gaSet(fail) "Use-str-config delete fail
+      set gaSet(fail) "Use-str-config delete fail"
       return -1      
     } 
     puts "startup-config Delete" ; update      
