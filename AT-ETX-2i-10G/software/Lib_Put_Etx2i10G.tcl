@@ -284,7 +284,10 @@ proc PS_IDTest {} {
   if {$ret!=0} {return $ret}
   
   foreach {b r p d ps np up} [split $gaSet(dutFam) .] {}
-  if {$ps=="ACDC"} {
+  if {$ps eq "noPS"} {
+    set ps AC
+    set psQty [regexp -all $ps $buffer]
+  } elseif {$ps=="ACDC"} {
     set acQty [set dcQty [set psQty 0]]
     incr psQty [set acQty [regexp -all AC $buffer]]
     incr psQty [set dcQty [regexp -all DC $buffer]]
@@ -304,6 +307,7 @@ proc PS_IDTest {} {
   } elseif {$b=="Half19" || $b=="Half19B"} {
     set psQtyShBe 1
   }
+  
   puts "PS_IDTest b:$b psQty:$psQty psQtyShBe:$psQtyShBe"
   if {$psQty!=$psQtyShBe} {
     set gaSet(fail) "Qty or type of PSs is wrong."
