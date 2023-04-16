@@ -1968,7 +1968,7 @@ proc InformAboutNewFiles {} {
   set pathTail [file tail $path]
   set secNow [clock seconds]
   set ::newFilesL [list]
-  
+  puts "\n[MyTime] InformAboutNewFiles"
   CheckFolder4NewFiles $path $secNow
   puts "::newFilesL:<$::newFilesL>"
   
@@ -1990,12 +1990,14 @@ proc InformAboutNewFiles {} {
       #set msg "A message regarding\n\n"
       foreach fi $::newFilesL {
         catch {file copy -force $fi R:/IlyaG/$pathTail } res
+        puts "file:<$fi>, res of copy:<$res>"
       }
+      update
     }
   } else {
     set msg "No new files"
     ##DialogBox -message $msg -type Ok -icon info -title "Tester update" -aspect 2000
-    puts $msg
+    puts "msg:<$msg>"
   }
   
 }
