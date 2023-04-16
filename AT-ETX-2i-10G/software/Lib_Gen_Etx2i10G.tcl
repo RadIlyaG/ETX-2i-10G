@@ -834,7 +834,7 @@ proc RetriveDutFam {{dutInitName ""}} {
       set gaSet(dutFam) 19B.0.0.0.0.0.0
       ## 29/06/2022 14:27:11
       ## exceptions
-      if {$dutInitName == "ETX-2I-10G_CELLCOM.ACDC.24SFP.tcl"} {
+      if {$dutInitName == "ETX-2I-10G_CELLCOM.ACDC.24SFP.tcl" || $dutInitName == "ETX-2I-10G_CELLCOM.ACDC.2SFPP.24SFP.tcl"} {
         set gaSet(dutFam) 19.0.0.0.0.0.0
       }
     }
@@ -2029,12 +2029,14 @@ proc CheckFolder4NewFiles {path secNow} {
 proc IsOptionReqsSerNum {} {
   global gaSet
   set res 0
-  puts "IsOptionReqsSerNum $gaSet(DutFullName)"
+  puts "\nIsOptionReqsSerNum $gaSet(DutFullName)"
+  set gaSet(insertSerNumOptsList) [list ETX-2I-10G_LY ETX-2I-10G-B_LY ETX-2I-10G-B_VO/19/ACR/4SFPP/4S4U]
   foreach opt $gaSet(insertSerNumOptsList)  {
     set res [string match *$opt* $gaSet(DutFullName)]
     puts "IsOptionReqsSerNum $opt $res"
     if $res break
   }
+  puts ""
   update
   return $res
 }

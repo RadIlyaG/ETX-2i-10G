@@ -224,8 +224,6 @@ if {![info exists gaSet(enVneNum)]} {
 set gaSet(1.useTraceId) 1
 
 set gaSet(cleiCodeMode) 0
-
-set gaSet(insertSerNumOptsList) [list ETX-2I-10G_LY ETX-2I-10G-B_LY ETX-2I-10G-B_VO/19/ACR/4SFPP/4S4U]
   
 DeleteOldTeFiles
 DeleteOldCaptConsFiles
