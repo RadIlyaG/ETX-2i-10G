@@ -88,7 +88,31 @@ proc DeleteOldApp {} {
       catch {file delete -force $fol}
     }
     
-    
+    ## 07:29 16/04/2023
+    if {[string match -nocase {6.5.1(0.30)_TA} [file tail $fol]]} {
+      catch {file delete -force $fol}
+    }
+    if {[string match -nocase {6.8.2(1.43)_8SFPP} [file tail $fol]]} {
+      catch {file delete -force $fol}
+    }
+    if {[string match -nocase {6.8.2(0.32)_8SFPP} [file tail $fol]]} {
+      catch {file delete -force $fol}
+    }
+    if {[string match -nocase {6.8.2(0.35)_8SFPP} [file tail $fol]]} {
+      catch {file delete -force $fol}
+    }
+    if {[string match -nocase {6.8.2(0.21)_8SFPP_PTP} [file tail $fol]]} {
+      catch {file delete -force $fol}
+    }
+    if {[string match -nocase {6.8.2(0.20)_8SFPP} [file tail $fol]]} {
+      catch {file delete -force $fol}
+    }
+    if {[string match -nocase {6.8.0(0.32)_8SFPP} [file tail $fol]]} {
+      catch {file delete -force $fol}
+    }
+    if {[string match -nocase {6.8.0(0.9)_8SFPP} [file tail $fol]]} {
+      catch {file delete -force $fol}
+    }
   }
 }
 
