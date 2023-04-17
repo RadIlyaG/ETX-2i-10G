@@ -40,18 +40,18 @@ proc BuildTests {} {
           if {$ret!=0} {return $ret}
         }
         set sw_norm [join [regsub -all {[\(\)]} $gaSet(dbrSW) " "]  . ] ; # 6.8.2(0.33) -> 6.8.2.0.33
-        ## 11:01 09/04/2023 if {[package vcompare $sw_norm 6.8.2.2.76]!="0"} {}
-        ## if sw_norm != 6.8.2.2.76, then download regular APP
-        if {[package vcompare $sw_norm 6.8.2.2.76]=="-1"} {
-        ## if sw_norm < 6.8.2.2.76, then download special APP before DoorSwitchTest
+        
+        set doorTestApp "6.8.2.2.75" ; ## 07:29 17/04/2023 "6.8.2.2.76"        
+        if {[package vcompare $sw_norm $doorTestApp]=="-1"} {
+        ## if sw_norm < doorTestApp, then download special APP before DoorSwitchTest
           lappend lTests DoorSwitchAppDownload
         } else {
-          ## if sw_norm >= 6.8.2.2.76, then download regular APP
+          ## if sw_norm >= doorTestApp, then download regular APP
           lappend lTests SoftwareDownload
         }
         lappend lTests  DoorSwitchTest
-        if {[package vcompare $sw_norm 6.8.2.2.76]=="-1"} {
-        ## if sw_norm < 6.8.2.2.76, then download regular APP after DoorSwitchTest
+        if {[package vcompare $sw_norm $doorTestApp]=="-1"} {
+        ## if sw_norm < doorTestApp, then download regular APP after DoorSwitchTest
           lappend lTests SoftwareDownload
         }
       } else {
