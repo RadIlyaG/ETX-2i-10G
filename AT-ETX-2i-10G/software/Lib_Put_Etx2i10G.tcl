@@ -2512,9 +2512,10 @@ proc FanStatusTest {} {
       }
     } elseif {$b=="19B"} { 
       if {$np=="8SFPP" && $up=="0_0" && \
-          ([string match *B.19.H.* $gaSet(DutInitName)] || [string match *B.19.N.* $gaSet(DutInitName)] ||\
-           [string match *B_C.19.H.* $gaSet(DutInitName)] ||  [string match *B_ATT.H.* $gaSet(DutInitName)] ||\
-           [string match *.19.H.* $gaSet(DutInitName)])} {
+          ([string match *B.19.H.* $gaSet(DutInitName)]    || [string match *B.19.N.* $gaSet(DutInitName)] ||\
+           [string match *B_C.19.H.* $gaSet(DutInitName)]  || [string match *B_ATT.H.* $gaSet(DutInitName)] ||\
+           [string match *.19.H.* $gaSet(DutInitName)]     || \
+           [string match *ATT.19.HN.* $gaSet(DutInitName)] || [string match *B_ATT.19.HN.* $gaSet(DutInitName)])} {
         if {$fanSt!="1 OK 2 OK 3 OK 4 OK"} {
           set gaSet(fail) "FAN Status is \'$fanSt\'"
           return -1
