@@ -666,9 +666,9 @@ proc mparray {a {pattern *}} {
 proc GetDbrName {mode} {
   global gaSet gaGui
   Status "Please wait for retriving DBR's parameters"
-  puts "\r[MyTime] GetDbrName $mode"; update
-  set barcode [set gaSet(entDUT) [string toupper $gaSet(entDUT)]] ; update
   
+  set barcode [set gaSet(entDUT) [string toupper $gaSet(entDUT)]] ; update
+  puts "\r[MyTime] GetDbrName $mode $barcode"; update
   if [file exists MarkNam_$barcode.txt] {
     file delete -force MarkNam_$barcode.txt
   }

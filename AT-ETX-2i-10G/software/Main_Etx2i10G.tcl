@@ -41,17 +41,27 @@ proc BuildTests {} {
         }
         set sw_norm [join [regsub -all {[\(\)]} $gaSet(dbrSW) " "]  . ] ; # 6.8.2(0.33) -> 6.8.2.0.33
         
-        set doorTestApp "6.8.2.2.75" ; ## 07:29 17/04/2023 "6.8.2.2.76"        
-        if {[package vcompare $sw_norm $doorTestApp]=="-1"} {
-        ## if sw_norm < doorTestApp, then download special APP before DoorSwitchTest
+        set doorTestApp1 "6.8.2.2.75" ; ## 07:29 17/04/2023 "6.8.2.2.76"  
+        set doorTestApp2 "6.8.2.0.76" ; ## 08:37 18/04/2023       
+        if {[package vcompare $sw_norm $doorTestApp1]=="-1" && [package vcompare $sw_norm $doorTestApp2]!="0" } {
+          ## if sw_norm < doorTestApp1 and != doorTestApp2, then download special APP before DoorSwitchTest
+          ## After the Test - download regular APP after DoorSwitchTest
+          set appSupportsSwitch 0
+        } else {
+          set appSupportsSwitch 1
+        }
+        puts "\nsw_norm:<$sw_norm>, doorTestApp1:<$doorTestApp1>, doorTestApp2:<$doorTestApp2>, appSupportsSwitch:<$appSupportsSwitch>\n"
+        if !$appSupportsSwitch {
           lappend lTests DoorSwitchAppDownload
         } else {
           ## if sw_norm >= doorTestApp, then download regular APP
           lappend lTests SoftwareDownload
         }
+        
         lappend lTests  DoorSwitchTest
-        if {[package vcompare $sw_norm $doorTestApp]=="-1"} {
-        ## if sw_norm < doorTestApp, then download regular APP after DoorSwitchTest
+        
+        if !$appSupportsSwitch {
+          ## if sw_norm < doorTestApp and != doorTestApp2, then download regular APP after DoorSwitchTest
           lappend lTests SoftwareDownload
         }
       } else {
