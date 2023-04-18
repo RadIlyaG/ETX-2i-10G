@@ -238,4 +238,4 @@ update
 Status "Ready"
 #set ret [SQliteOpen]
 ToggleTestMode
-InformAboutNewFiles
+#InformAboutNewFiles
