@@ -1993,12 +1993,14 @@ proc Boot_Download {} {
     set ret [Wait "Download Boot in progress ..." 10]
     if {$ret!=0} {return $ret}
     after 5000
-    set id [open c:/download/temp/delete_vxboot w+]
-    close $id
     
-    file delete -force c:/download/temp/vxboot.bin
-    
-    
+    if [file exists c:/download/temp/delete_vxboot] {
+      file delete -force c:/download/temp/vxboot.bin
+    } else {
+      set id [open c:/download/temp/delete_vxboot w+]
+      close $id
+    }
+       
     
     Send $com "\r\r" "=>" 1
     set ret [Send $com "\r\r" "=>" 3]
