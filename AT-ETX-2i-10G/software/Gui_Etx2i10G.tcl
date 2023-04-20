@@ -49,6 +49,8 @@ proc GUI {} {
          }
       }
       {separator}
+      {command "Inform about new files" {} "Exit" {} -command {InformAboutNewFiles}}
+      {separator}
       {command "Create Temperature Log from local logs" {} "" {} -command {ThermoHist}}
       {command "Create Temperature Log from all Testers" {} "" {} -command {AllATEsThermoHist all}}
       {command "Create Temperature Log from \'OD\' Testers" {} "" {Ctrl o} -command {AllATEsThermoHist OD}}
