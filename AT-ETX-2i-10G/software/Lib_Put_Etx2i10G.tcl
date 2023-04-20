@@ -1973,22 +1973,31 @@ proc Boot_Download {} {
     # Download Comment: download command is: run download_vxboot
     # the download file name should be always: vxboot.bin
     # else it will not work !
-    if [file exists c:/download/temp/vxboot.bin] {
-      file delete -force c:/download/temp/vxboot.bin
-    }
+    
     if {[file exists $gaSet(BootCF)]!=1} {
       set gaSet(fail) "The BOOT file ($gaSet(BootCF)) doesn't exist"
       return -1
     }
-    file copy -force $gaSet(BootCF) c:/download/temp              
+    if [file exists c:/download/temp/delete_vxboot] {
+      if [file exists c:/download/temp/vxboot.bin] {
+        file delete -force c:/download/temp/vxboot.bin
+      }
+       
+      file copy -force $gaSet(BootCF) c:/download/temp  
+    }
     #regsub -all {\.[\w]*} $gaSet(BootCF) "" boot_file
     
-    
+    file delete -force c:/download/temp/delete_vxboot
+    after 1000
     Send $com "run download_vxboot\r" stam 1
     set ret [Wait "Download Boot in progress ..." 10]
     if {$ret!=0} {return $ret}
+    after 5000
+    set id [open c:/download/temp/delete_vxboot w+]
+    close $id
     
     file delete -force c:/download/temp/vxboot.bin
+    
     
     
     Send $com "\r\r" "=>" 1
