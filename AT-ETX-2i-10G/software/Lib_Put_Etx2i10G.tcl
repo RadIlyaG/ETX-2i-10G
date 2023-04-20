@@ -1979,14 +1979,20 @@ proc Boot_Download {} {
       return -1
     }
     if [file exists c:/download/temp/delete_vxboot] {
+      puts "[MyTime]  delete_vxboot exists"; update
       if [file exists c:/download/temp/vxboot.bin] {
+        puts "[MyTime] delete vxboot.bin"; update
         file delete -force c:/download/temp/vxboot.bin
       }
-       
+      puts "[MyTime] copy vxboot.bin"; update 
       file copy -force $gaSet(BootCF) c:/download/temp  
+    } else {
+      puts "[MyTime] delete_vxboot not exists, not delete, not copy"; update
     }
+    
     #regsub -all {\.[\w]*} $gaSet(BootCF) "" boot_file
     
+    puts "[MyTime] delete delete_vxboot"; update
     file delete -force c:/download/temp/delete_vxboot
     after 1000
     Send $com "run download_vxboot\r" stam 1
@@ -1995,8 +2001,11 @@ proc Boot_Download {} {
     after 5000
     
     if [file exists c:/download/temp/delete_vxboot] {
+      puts "[MyTime] delete_vxboot exists"; update
+      puts "[MyTime] delete vxboot.bin"; update
       file delete -force c:/download/temp/vxboot.bin
     } else {
+       puts "[MyTime] create delete_vxboot"; update
       set id [open c:/download/temp/delete_vxboot w+]
       close $id
     }
