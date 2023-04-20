@@ -2041,3 +2041,26 @@ proc IsOptionReqsSerNum {} {
   return $res
 }
 
+# ***************************************************************************
+# LoadCleiCodesFile
+# ***************************************************************************
+proc LoadCleiCodesFile {} {
+  global gaSet
+  set gaSet(CleiCodesL) [list] 
+  if ![file exists ./TeamLeaderFiles/CleiCodes.txt]  {
+    return {}
+  }
+  
+  set id [open  ./TeamLeaderFiles/CleiCodes.txt r]
+    while {[gets $id line] >= 0} {
+      set line [string trim $line]
+      if {[string length $line] != 0} {
+        #lappend gaSet(CleiCodesL) $line
+        set gaSet(CleiCodesL) [concat $gaSet(CleiCodesL) $line]
+      }
+    }
+  close $id  
+  return {}
+}
+
+

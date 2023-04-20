@@ -444,6 +444,15 @@ proc PS_IDTest {} {
         set gaSet(fail) "The length of the \'CLEI Code\' is $clei_len. Should be 10"  
         return -1
       }
+      
+      ## 08:45 20/04/2023
+      set tblClei [lindex $gaSet(CleiCodesL) [expr {1 + [lsearch $gaSet(CleiCodesL) $gaSet(DutFullName)]}]]
+      puts "\n DutFullName:<$gaSet(DutFullName)> tblClei:<$tblClei> Clei:<$val>"
+      if {$val != $tblClei} {
+        set gaSet(fail) "The \'CLEI Code\' is $val. Should be $tblClei"  
+        return -1
+      }
+      
       AddToPairLog $gaSet(pair) "CLEI Code: $val"
     } else {
       puts "No ATT or sw < 6.8.2(0.33)"
@@ -1749,8 +1758,11 @@ proc ReadEthPortStatus {port} {
   if {$res==0} {
     set res [regexp {Manufacturer Part Number :\s([\w\-\s]+)SFP Manufacture Date} $bu - val]
     if {$res==0} {
-      set gaSet(fail) "Read Manufacturer Part Number of SFP in port $port fail"
-      return -1
+      set res [regexp {Manufacturer Part Number :\s([\w\-\s]+)Manufacturer CLEI} $bu - val]
+      if {$res==0} {
+        set gaSet(fail) "Read Manufacturer Part Number of SFP in port $port fail"
+        return -1
+      } 
     } 
   }
   set val [string trim $val]

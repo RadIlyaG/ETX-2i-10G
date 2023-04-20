@@ -39,6 +39,7 @@ proc GUI {} {
       {command "Edit SFP's list file" init "" {} -command {exec notepad ./TeamLeaderFiles/sfpList.txt &}}
       {command "Edit NoTrace file" init "" {} -command {exec notepad ./TeamLeaderFiles/NoTrace.txt &}}
       {command "Add DBR Name to NoTrace file" init "" {} -command {AddDbrNameToNoTraceFile}}
+      {command "Edit CleiCodes file" init "" {} -command {exec notepad ./TeamLeaderFiles/CleiCodes.txt &}}
       {separator}
       {command "History" History "" {} \
          -command {
@@ -431,6 +432,7 @@ proc ButRun {} {
   # console eval {set ::tk::console::maxLines 100000}
   LoadBootErrorsFile
   LoadNoTraceFile
+  LoadCleiCodesFile
   
   set clkSeconds [clock seconds]
   set ti [clock format $clkSeconds -format  "%Y.%m.%d-%H.%M"]
