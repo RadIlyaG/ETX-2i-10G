@@ -1980,10 +1980,20 @@ proc InformAboutNewFiles {} {
     }  
     #append msg "\nwas sent"
     append msg "\nAre you sure you want to spread them?"
-    #set res [DialogBox -message $msg -type {Yes No} -justify left -icon question -title "Tester update" -aspect 2000]
-    set res "Yes"
+    set res [DialogBox -message $msg -type {Yes No} -justify left -icon question -title "Tester update" -aspect 2000]
+    #set res "Yes"
     if {$res=="Yes"} {
-      RLAutoUpdate::SendMail {ilya_g@rad.com} $::newFilesL "file://R:\\IlyaG\\$pathTail"
+      if [string match *ilya-g-* [info host]] {
+        set mlist {ilya_g@rad.com}
+      } else {
+        set mlist {ilya_g@rad.com yulia_s@rad.com ronen_be@rad.com } ; # 
+      }
+      set mess "The following was updated:\r\n"
+      foreach {s} $::newFilesL {
+        append mess "\r$s\n"
+      }
+      append mess "\rfile://R:\\IlyaG\\$pathTail\r"
+      SendMail $mlist $mess
       if ![file exists R:/IlyaG/$pathTail] {
         file mkdir R:/IlyaG/$pathTail
       }
@@ -1996,7 +2006,7 @@ proc InformAboutNewFiles {} {
     }
   } else {
     set msg "No new files"
-    ##DialogBox -message $msg -type Ok -icon info -title "Tester update" -aspect 2000
+    DialogBox -message $msg -type Ok -icon info -title "Tester update" -aspect 2000
     puts "msg:<$msg>"
   }
   
@@ -2016,8 +2026,13 @@ proc CheckFolder4NewFiles {path secNow} {
         #puts "cf4nf $item" ; update
         if [string match {*init*.tcl} $item] {
           ## don take this file
-        } else {  
-          lappend ::newFilesL $item
+        } else {
+          set dirname [file dirname $item]
+          if {[string match *ConfFiles* $dirname] ||\
+              [string match *uutInits* $dirname] ||\
+              [string match *TeamLeaderFiles* $dirname]} {
+            lappend ::newFilesL $item
+          }
         }
       }
     }
@@ -2062,5 +2077,4 @@ proc LoadCleiCodesFile {} {
   close $id  
   return {}
 }
-
 

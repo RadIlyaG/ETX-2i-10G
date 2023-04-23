@@ -55,14 +55,17 @@ if 1 {
   }
   
   package require RLAutoSync
-  
-  proc TesterAutoSync {} {
+  proc TesterAutoSync {mode} {
     global gaSet gMessage
-  
+
     set s1 [file normalize //prod-svm1/tds/AT-Testers/JER_AT/ilya/TCL/ETX-2i-10G/AT-ETX-2i-10G]
     set d1 [file normalize  C:/AT-ETX-2i-10G]
-    set s2 [file normalize //prod-svm1/tds/AT-Testers/JER_AT/ilya/TCL/ETX-2i-10G/download]
-    set d2 [file normalize  C:/download]
+    set sdL [list $s1 $d1]
+    if {$mode=="full"} {
+      set s2 [file normalize //prod-svm1/tds/AT-Testers/JER_AT/ilya/TCL/ETX-2i-10G/download]
+      set d2 [file normalize  C:/download]
+      set sdL [concat $sdL $s2 $d2]
+    }
     
     if {$gaSet(radNet)} {
       if {[string match *david-ya* [info host]] || [string match *ilya-g* [info host]]} {
@@ -77,7 +80,7 @@ if 1 {
     # java.exe -jar c:/RadApps/AutoSyncApp.jar "//prod-svm1/tds/AT-Testers/JER_AT/ilya/TCL/ETX-2i-10G/AT-ETX-2i-10G C:/AT-ETX-2i-10G //prod-svm1/tds/AT-Testers/JER_AT/ilya/TCL/ETX-2i-10G/download C:/download" "-noCheckFiles{init*.tcl skipped.txt *.db}" "-noCheckDirs{temp tmpFiles OLD old}"
     # Measure-Command {$foo = java.exe -jar c:/RadApps/AutoSyncApp.jar "//prod-svm1/tds/AT-Testers/JER_AT/ilya/TCL/ETX-2i-10G/AT-ETX-2i-10G C:/AT-ETX-2i-10G //prod-svm1/tds/AT-Testers/JER_AT/ilya/TCL/ETX-2i-10G/download C:/download" "-noCheckFiles{init*.tcl skipped.txt *.db}" "-noCheckDirs{temp tmpFiles OLD old}"} ; $foo 
     
-    set ret [RLAutoSync::AutoSync "$s1 $d1 $s2 $d2" -noCheckFiles {init*.tcl skipped.txt *.db} \
+    set ret [RLAutoSync::AutoSync $sdL -noCheckFiles {init*.tcl skipped.txt *.db} \
         -noCheckDirs {temp tmpFiles OLD old} -jarLocation $::RadAppsPath \
         -javaLocation $gaSet(javaLocation) -emailL $emailL -putsCmd 1 -radNet $gaSet(radNet)]
     #console show
@@ -109,8 +112,8 @@ if 1 {
     } 
     return $ret
   }
-  
-  set ret [TesterAutoSync]
+    
+  set ret [TesterAutoSync full]
   
   if {$gaSet(radNet)} {
     package require RLAutoUpdate

@@ -407,24 +407,53 @@ proc ButRun {} {
   } 
   }
   
-  if 0 {
-  set ret [TesterAutoSync]
-  puts ret:<$ret>
-  if {[string match {*file updated*} $gMessage]} {
-    set txt "Some files were changed.\n\n\
-    To operate them the GUI will be reopened.\n\n\
-    Rerun the Tester after update."
-    set ret [DialogBox -title "Restart the Tester" -icon images/error -type {"OK"} -message $txt -justify center]
-    if {$ret=="OK"} {
-      wm iconify . ; update
-      after 1000 exit
-      exec wish86.exe ${gaSet(pair)}-Tester.tcl &
-      return {}
-    } elseif {$ret=="Stop"} {
-      set gaSet(fail)  "User stop"
-      set ret -2
-    }
+  if 1 {
+    set ret [TesterAutoSync noApps]
+    puts ret:<$ret>
+    # if {[string match {*file updated*} $gMessage]} {
+      # set txt "Some files were changed.\n\n\
+      # To operate them the GUI will be reopened.\n\n\
+      # Rerun the Tester after update."
+      # set ret [DialogBox -title "Restart the Tester" -icon images/error -type {"OK"} -message $txt -justify center]
+      # if {$ret=="OK"} {
+        # wm iconify . ; update
+        # after 1000 exit
+        # exec wish86.exe ${gaSet(pair)}-Tester.tcl &
+        # return {}
+      # } elseif {$ret=="Stop"} {
+        # set gaSet(fail)  "User stop"
+        # set ret -2
+      # }
+    # }
   }
+  
+  if 1 {
+    if {$gaSet(radNet)} {
+      #package require RLAutoUpdate
+      set s1 [file normalize //prod-svm1/tds/AT-Testers/JER_AT/ilya/TCL/ETX-2i-10G/AT-ETX-2i-10G/ConfFiles]
+      set d1 [file normalize  C:/AT-ETX-2i-10G/ConfFiles]
+      set s2 [file normalize //prod-svm1/tds/AT-Testers/JER_AT/ilya/TCL/ETX-2i-10G/AT-ETX-2i-10G/software/uutInits]
+      set d2 [file normalize  C:/AT-ETX-2i-10G/software/uutInits]
+      set s3 [file normalize //prod-svm1/tds/AT-Testers/JER_AT/ilya/TCL/ETX-2i-10G/AT-ETX-2i-10G/software/TeamLeaderFiles]
+      set d3 [file normalize  C:/AT-ETX-2i-10G/software/TeamLeaderFiles]
+      
+      set ret [RLAutoUpdate::AutoUpdate "$s1 $d1 $s2 $d2 $s3 $d3 "]
+      #console show
+      puts "ret:<$ret>"
+      set gsm $gMessage
+      foreach gmess $gMessage {
+        puts "$gmess"
+      }
+      update
+      if {$ret=="-1"} {
+        set res [tk_messageBox -icon error -type yesno -title "AutoSync"\
+        -message "The AutoSync process did not perform successfully.\n\n\
+        Do you want to continue? "]
+        if {$res=="no"} {
+          #exit
+        }
+      }
+    }
   }
    
   source Lib_$gaSet(scopeModel).tcl
