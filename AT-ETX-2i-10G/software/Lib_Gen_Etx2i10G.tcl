@@ -1973,13 +1973,13 @@ proc InformAboutNewFiles {} {
   puts "::newFilesL:<$::newFilesL>"
   
   if {[llength $::newFilesL]>0} {
-    set msg "The following file/s was/were changed during last hour:\n\n"
+    set msg "The following was changed during last hour:\n\n"
     foreach fi $::newFilesL {
       set ffi [format %-85s $fi]
       append msg "$fi\t[clock format [file mtime $fi] -format '%Y.%m.%d-%H.%M.%S']\n"
     }  
     #append msg "\nwas sent"
-    append msg "\nAre you sure you want to spread them?"
+    append msg "\nAre you sure you want to upload it to TDS?"
     set res [DialogBox -message $msg -type {Yes No} -justify left -icon question -title "Tester update" -aspect 2000]
     #set res "Yes"
     if {$res=="Yes"} {
@@ -1988,7 +1988,7 @@ proc InformAboutNewFiles {} {
       } else {
         set mlist {ilya_g@rad.com yulia_s@rad.com ronen_be@rad.com } ; # 
       }
-      set mess "The following was updated:\r\n"
+      set mess "The following was changed:\r\n"
       foreach {s} $::newFilesL {
         append mess "\r$s\n"
       }
