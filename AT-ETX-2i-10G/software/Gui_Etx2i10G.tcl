@@ -407,7 +407,7 @@ proc ButRun {} {
   } 
   }
   
-  if 1 {
+  if 0 {
     set ret [TesterAutoSync noApps]
     puts ret:<$ret>
     # if {[string match {*file updated*} $gMessage]} {
@@ -427,7 +427,7 @@ proc ButRun {} {
     # }
   }
   
-  if 1 {
+  if 0 {
     if {$gaSet(radNet)} {
       #package require RLAutoUpdate
       set s1 [file normalize //prod-svm1/tds/AT-Testers/JER_AT/ilya/TCL/ETX-2i-10G/AT-ETX-2i-10G/ConfFiles]
