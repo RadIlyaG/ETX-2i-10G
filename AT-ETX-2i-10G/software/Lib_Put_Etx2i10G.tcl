@@ -217,7 +217,6 @@ proc DeleteUsbPortApp {} {
   return $ret
 }  
 
-
 # ***************************************************************************
 # PS_IDTest
 # ***************************************************************************
@@ -237,6 +236,18 @@ proc PS_IDTest {} {
   
   set ret [Send $com "exit all\r" $gaSet(prompt)]
   if {$ret!=0} {return $ret}
+  
+  set ret [Send $com "\r" $gaSet(prompt)]
+  set prompt $buffer
+  set dutFullName $gaSet(DutFullName)  
+  puts "prompt:<$prompt> dutFullName:<$dutFullName>\n"; update
+  if {([string match *-B* $prompt]  &&  [string match *-B* $dutFullName]) ||
+      (![string match *-B* $prompt] && ![string match *-B* $dutFullName])} {
+        ## both promt and dutFullName have or haven't -B, it is OK
+  } else {
+    set gaSet(fail) "Mismatch between UUT's Prompt ($prompt) and Barcode ($dutFullName)" 
+    return -1
+  }  
   
   foreach {b r p d ps np up} [split $gaSet(dutFam) .] {}
   if {$np=="8SFPP" && $up=="0_0"} { 
@@ -502,7 +513,6 @@ proc PS_IDTest {} {
   }
   set gaSet(uutBootVers) ""
   
-
   return $ret
 }
  
