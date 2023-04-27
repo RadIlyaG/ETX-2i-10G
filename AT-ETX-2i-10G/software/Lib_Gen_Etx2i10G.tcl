@@ -1507,7 +1507,8 @@ proc RetriveFansCheckJ {} {
         [string match *_C.19.H.* $gaSet(DutInitName)]    || \
         [string match *_C.H.DR.OD.* $gaSet(DutInitName)] || \
         [string match *.19.H.* $gaSet(DutInitName)] || \
-        [string match *B.H.DC.OD* $gaSet(DutInitName)]} {
+        [string match *B.H.DC.OD* $gaSet(DutInitName)] || \
+        [string match *B.H.ACR.OD* $gaSet(DutInitName)]} {
       ## 26/05/2022 added *10G_ATT.H.*
       if {$np=="8SFPP" && $up=="0_0" && [regexp {ODU?\.8} $gaSet(DutInitName)]==1} {
         puts "if3.1.1"
@@ -1940,7 +1941,7 @@ proc GetDbrSWAgain {} {
 
   set barcode $gaSet(1.barcode1)
   catch {exec $gaSet(javaLocation)\\java -jar $::RadAppsPath/SWVersions4IDnumber.jar $barcode} b
-  puts "GetDbrSW b:<$b>" ; update
+  puts "GetDbrSWAgain b:<$b>" ; update
   after 1000
   if ![info exists gaSet(swPack)] {
     set gaSet(swPack) ""

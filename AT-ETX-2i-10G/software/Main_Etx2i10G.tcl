@@ -30,7 +30,7 @@ proc BuildTests {} {
       
       ## 13:19 11/09/2022
       if {$gaSet(rbTestMode) eq "Full" && $np=="8SFPP" && $up=="0_0" && [regexp {ODU?\.8} $gaSet(DutInitName)]==1} {
-        puts gaSet(dbrSW):<$gaSet(dbrSW)>
+        puts "BuildTests gaSet(dbrSW):<$gaSet(dbrSW)>"
         if {$gaSet(dbrSW)=="" || $gaSet(dbrSW)=="??"} {
           if {[string match {*There is no SW ID for SW*} $gaSet(fail)]} {
             regexp {:([A-Z0-9]+)\.} $gaSet(fail) ma val
@@ -1077,10 +1077,14 @@ proc Leds_FAN {run} {
       }
       
       set val [ShowPS 1]
-      set res [regexp {1\s+DC\s+OK\s+2\s+DC\s+OK} $buffer ma]
+      foreach {b r p d psType np up} [split $gaSet(dutFam) .] {}
+      if {$psType eq "DC"} {
+        set res [regexp {1\s+DC\s+OK\s+2\s+DC\s+OK} $buffer ma]
+      } elseif {$psType eq "AC"} {
+        set res [regexp {1\s+AC\s+OK\s+2\s+AC\s+OK} $buffer ma]
+      }
       if {$res!=1} {
-        set gaSet(fail) "Status of PSs is not \"1 DC OK 2 DC OK\""
-  #       AddToLog $gaSet(fail)
+        set gaSet(fail) "Status of PSs is not \"1 $psType OK 2 $psType OK\""
         return -1
       }
       
