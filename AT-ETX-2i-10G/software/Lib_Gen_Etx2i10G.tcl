@@ -830,7 +830,8 @@ proc RetriveDutFam {{dutInitName ""}} {
               [string match *B_*.DR.* $dutInitName]==1 || \
               [string match *B_*.AC.* $dutInitName]==1 || [string match *B_*.DC.* $dutInitName]==1 || \
               [regexp {ODU?\.8} $dutInitName]==1 || \
-              [string match *_C.19.H.DR.* $dutInitName]==1 || [string match *_C.19.DR.* $dutInitName]==1} {
+              [string match *_C.19.H.DR.* $dutInitName]==1 || [string match *_C.19.DR.* $dutInitName]==1 || \
+              [string match *B_TWC.19.* $dutInitName]==1} {
       set gaSet(dutFam) 19B.0.0.0.0.0.0
       ## 29/06/2022 14:27:11
       ## exceptions
@@ -930,6 +931,8 @@ proc RetriveDutFam {{dutInitName ""}} {
     set PS DC
   } elseif {[string match *.AC* $dutInitName]==1} {
     set PS AC
+  }  elseif {[string match *.24VR* $dutInitName]==1} {
+    set PS DC
   }
   foreach {b r p d ps np up} [split $gaSet(dutFam) .] {
     set gaSet(dutFam) $b.$r.$p.$d.$PS.$np.$up  
@@ -1507,8 +1510,7 @@ proc RetriveFansCheckJ {} {
         [string match *_C.19.H.* $gaSet(DutInitName)]    || \
         [string match *_C.H.DR.OD.* $gaSet(DutInitName)] || \
         [string match *.19.H.* $gaSet(DutInitName)] || \
-        [string match *B.H.DC.OD* $gaSet(DutInitName)] || \
-        [string match *B.H.ACR.OD* $gaSet(DutInitName)]} {
+        [string match *B.H.DC.OD* $gaSet(DutInitName)]} {
       ## 26/05/2022 added *10G_ATT.H.*
       if {$np=="8SFPP" && $up=="0_0" && [regexp {ODU?\.8} $gaSet(DutInitName)]==1} {
         puts "if3.1.1"
@@ -1941,7 +1943,7 @@ proc GetDbrSWAgain {} {
 
   set barcode $gaSet(1.barcode1)
   catch {exec $gaSet(javaLocation)\\java -jar $::RadAppsPath/SWVersions4IDnumber.jar $barcode} b
-  puts "GetDbrSWAgain b:<$b>" ; update
+  puts "GetDbrSW b:<$b>" ; update
   after 1000
   if ![info exists gaSet(swPack)] {
     set gaSet(swPack) ""
