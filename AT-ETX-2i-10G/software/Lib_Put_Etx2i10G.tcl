@@ -329,9 +329,12 @@ proc PS_IDTest {} {
     regexp {1\s+\w+\s+([\s\w]+)\s+FAN} $psStatus - ps1Status
   } elseif {$b=="19" || $b=="19B"} { 
     regexp {1\s+\w+\s+([\s\w]+)\s+2} $psStatus - ps1Status
+    if [string match *24VR* $gaSet(DutInitName)] { 
+      regexp {1\s+24 VDC\s+([\s\w]+)\s+2 } $psStatus - ps1Status
+    }
   }
   set ps1Status [string trim $ps1Status]
-  
+         
   if {$ps1Status!="OK"} {
     set gaSet(fail) "Status of PS-1 is \'$ps1Status\'. Should be \'OK\'"
     return -1
@@ -339,6 +342,9 @@ proc PS_IDTest {} {
   
   if {$b=="19" || $b=="19B"} {
     regexp {2\s+\w+\s+([\s\w]+)\s+} $psStatus - ps2Status
+    if [string match *24VR* $gaSet(DutInitName)] { 
+      regexp {2\s+24 VDC\s+([\s\w]+)\s+} $psStatus - ps2Status
+    }
     set ps2Status [string trim $ps2Status]
     if {$ps2Status!="OK"} {
       set gaSet(fail) "Status of PS-2 is \'$ps2Status\'. Should be \'OK\'"
@@ -1379,13 +1385,25 @@ proc ShowPS {ps} {
   if {$ret!=0} {return $ret}
   if {$ps==1} {
     set res [regexp {1\s+[AD]C\s+([\w\s]+)\s2} $buffer - val]
+    if [string match *24VR* $gaSet(DutInitName)] { 
+      set res [regexp {1\s+24 VDC\s+([\s\w]+)\s+2 } $buffer - val]
+    }
     if {$res==0} {
       set res [regexp {1[\-\s]+([\w\s]+)\s2} $buffer - val]
+      if [string match *24VR* $gaSet(DutInitName)] { 
+        set res [regexp {1[\-\s]+([a-zA-Z\s]+)\s2} $buffer - val]
+      }
     }
   } elseif {$ps==2} {
     set res [regexp {2\s+[AD]C\s+([\w\s]+)\sFAN} $buffer - val]
+    if [string match *24VR* $gaSet(DutInitName)] { 
+      set res [regexp {2\s+24 VDC\s+([\s\w]+)\sFAN} $buffer - val]
+    }
     if {$res==0} {
       set res [regexp {2[\-\s]+([\w\s]+)\sFAN} $buffer - val]
+      if [string match *24VR* $gaSet(DutInitName)] { 
+        set res [regexp {2[\-\s]+([\sa-zA-Z]+)\sFAN} $buffer - val]
+      }
     }
   }
   if {$res==0} {
