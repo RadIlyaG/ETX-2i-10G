@@ -90,7 +90,11 @@ proc BuildTests {} {
         lappend lTests  OpenLicense
       }
 
-      lappend lTests SetToDefaultWD
+      if {$gaSet(rbTestMode) eq "Comp"} {
+        lappend lTests SetToDefault 
+      } else {  
+        lappend lTests SetToDefaultWD
+      }
        
       if {[string match *.12CMB.* $gaSet(DutInitName)]==0} {
         ## if a product is NOT CMB, we cheeck ID now
@@ -136,7 +140,7 @@ proc BuildTests {} {
 
       if {$np=="8SFPP" && $up=="0_0"} {
         if {$gaSet(rbTestMode) eq "Comp"} {
-          # no SetToDefault 
+          lappend lTests SetToDefaultAll_Save
         } elseif {$gaSet(rbTestMode) eq "Full" || $gaSet(rbTestMode) eq "MainBoard"} {
           lappend lTests SetToDefault
         }
@@ -154,7 +158,7 @@ proc BuildTests {} {
       } 
 
       if {$gaSet(DefaultCF)!="" && $gaSet(DefaultCF)!="c:/aa"} {
-        lappend lTests LoadDefaultConfiguration
+        lappend lTests LoadDefaultConfiguration CheckUserDefaultFile
       }
       
       if [IsOptionReqsSerNum] {    
@@ -172,11 +176,13 @@ proc BuildTests {} {
         lappend lTests Mac_BarCode 
       }
       
+      
+      ## remove unnecessary tests for Complementary
       if {$np=="8SFPP" && $up=="0_0"} {
         if {$gaSet(rbTestMode) eq "Comp"} {
-          foreach tst {"BootDownload" "Pages" "SetDownload" "SoftwareDownload" "DDR" \
+          foreach tst {"BootDownload" "SetDownload" "SoftwareDownload" "DDR" \
                         "SetToDefaultWD" "SFP_ID" "DataTransmission_conf" "DataTransmission_run"\
-                        "Leds_FAN_conf"} {
+                        "LoadDefaultConfiguration" "Leds_FAN_conf" "Mac_BarCode"} {
             set lTests [lreplace $lTests [lsearch $lTests $tst]  [lsearch $lTests $tst]]
           }
         }
@@ -839,31 +845,42 @@ proc Leds_FAN {run} {
   Power all on
   foreach {b r p d ps np up} [split $gaSet(dutFam) .] {}
   
-  if {$np=="8SFPP" && $up=="0_0"} {
-    if {$gaSet(rbTestMode) eq "MainBoard" || $gaSet(rbTestMode) eq "Full"} {
-      for {set i 1} {$i<=5} {incr i} {
-        set ret [FanStatusTest]
-        if {$ret!=0} {
-          after 2000
-        } else {
-          break
-        } 
-      }
+  # 07:26 17/05/2023  Always check the FANs
+  # if {$np=="8SFPP" && $up=="0_0"} {
+    # if {$gaSet(rbTestMode) eq "MainBoard" || $gaSet(rbTestMode) eq "Full"} {
+      # for {set i 1} {$i<=5} {incr i} {
+        # set ret [FanStatusTest]
+        # if {$ret!=0} {
+          # after 2000
+        # } else {
+          # break
+        # } 
+      # }
+    # } else {
+      # ## don't check it in Complementary tests
+      # set ret 0
+    # }  
+  # } else {
+    # ## Not Itzik's product
+    # for {set i 1} {$i<=5} {incr i} {
+      # set ret [FanStatusTest]
+      # if {$ret!=0} {
+        # after 2000
+      # } else {
+        # break
+      # } 
+    # }
+  # }  
+  
+  for {set i 1} {$i<=5} {incr i} {
+    set ret [FanStatusTest]
+    puts "\n i:$i ret:<$ret> fail:<$gaSet(fail)>"; update
+    if {$ret!=0} {
+      after 2000
     } else {
-      ## don't check it in Complementary tests
-      set ret 0
-    }  
-  } else {
-    ## Not Itzik's product
-    for {set i 1} {$i<=5} {incr i} {
-      set ret [FanStatusTest]
-      if {$ret!=0} {
-        after 2000
-      } else {
-        break
-      } 
-    }
-  }  
+      break
+    } 
+  }
   if {$ret!=0} {return $ret}
 
   set gRelayState red
@@ -1854,4 +1871,24 @@ proc On_Off {run} {
     $gaSet(startTime) configure -text $st
   }
   return $retRet
+}
+# ***************************************************************************
+# SetToDefaultAll_Save
+# ***************************************************************************
+proc SetToDefaultAll_Save {run} {
+  global gaSet 
+  Power all on
+  set ret [FactDefault stda noWD]
+  if {$ret!=0} {return $ret}
+  set ret [SaveRunningConf]
+  return $ret 
+}
+# ***************************************************************************
+# CheckUserDefaultFile
+# ***************************************************************************
+proc CheckUserDefaultFile {run} {
+  global gaSet 
+  Power all on
+  set ret [CheckUserDefaultFilePerf]
+  return $ret 
 }

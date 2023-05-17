@@ -477,6 +477,21 @@ proc ButRun {} {
   #set ret 0
   
   if {$ret==0} {
+    if {$gaSet(rbTestMode) eq "Comp"} {
+      RLSound::Play information
+      set txt "Be aware!\r\rYou are about to perform Complementary Tests only!"
+      set res [DialogBox -icon images/info -type "Continue Abort" -text $txt -default 0 -aspect 2000 -title "ETX-2i-10G"]
+      if {$res=="Abort"} {
+        set ret -2
+        set gaSet(fail) "Complementary Tests abort"
+        Status "Complementary Tests abort"
+      } else {
+        set ret 0
+      }
+    }
+  }
+  
+  if {$ret==0} {
     if {$gaSet(rbTestMode) eq "On_Off"} {
       ## no need read barcode for PS test
     } else { 

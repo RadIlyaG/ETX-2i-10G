@@ -2527,19 +2527,32 @@ proc FanStatusTest {} {
     if {$ret!=0} {return $ret}
   }   
   set com $gaSet(comDut)  
-  set ret [Send $com "exit all\r" $gaSet(prompt)]
-  if {$ret!=0} {return $ret}
-  set ret [Send $com "exit all\r" $gaSet(prompt)]
-  if {$ret!=0} {return $ret}
-  set ret [Send $com "configure port ethernet 0/1\r" $gaSet(prompt)]
-  if {$ret!=0} {return $ret}
-  set ret [Send $com "show status\r" more]
-  if {$ret!=0} {return $ret}
-  set ret [Send $com "\r" $gaSet(prompt)]
-  if {$ret!=0} {return $ret}
-  if [regexp {Laser Temperature \(Celsius\)[\s\:]+([\d\.]+)\sC} $buffer m val] {
-    set lsr [string trim $val]
-    AddToPairLog $gaSet(pair) "$m"
+  
+  if {$gaSet(rbTestMode) eq "Comp"} {
+    ## no check it in Complementary
+    set ret 0
+    set lsr 0
+  } else {
+    set ret [Send $com "exit all\r" $gaSet(prompt)]
+    if {$ret!=0} {return $ret}
+    set ret [Send $com "exit all\r" $gaSet(prompt)]
+    if {$ret!=0} {return $ret}
+    set ret [Send $com "configure port ethernet 0/1\r" $gaSet(prompt)]
+    if {$ret!=0} {return $ret}
+    set ret [Send $com "show status\r" more 4]
+    if {$ret!=0} {
+      set gaSet(fail) "Read Laser Temperature fail"
+      return $ret
+    }
+    set ret [Send $com "\r" $gaSet(prompt)]
+    if {$ret!=0} {return $ret}
+    if [regexp {Laser Temperature \(Celsius\)[\s\:]+([\d\.]+)\sC} $buffer m val] {
+      set lsr [string trim $val]
+      AddToPairLog $gaSet(pair) "$m"
+    } else {
+      set gaSet(fail) "Retrive Laser Temperature fail"
+      return -1
+    }
   }
   
   set ret [Send $com "exit all\r" $gaSet(prompt)]
@@ -3610,5 +3623,64 @@ proc ReadP1015Code {} {
     return -1
   }
   
+  return $ret
+}
+# ***************************************************************************
+# SaveRunningConf
+# ***************************************************************************
+proc SaveRunningConf {} {
+  global gaSet buffer
+  set com $gaSet(comDut)
+  Status "Save Running Configuration"
+  set ret [Login]
+  if {$ret!=0} {
+    #set ret [Login]
+    if {$ret!=0} {return $ret}
+  }
+  
+  Send $com "exit all\r" stam 1 
+  
+  set ret [Send $com "admin save\r" "successfull" 120]
+  if {$ret!=0} {set gaSet(fail) "Admin Save fail"; return $ret}
+  
+  # set ret [Send $com "file copy running-config user-default-config\r" "yes/no" ]
+  # if {$ret!=0} {set gaSet(fail) "Copy Running to UserDefault fail"; return $ret}
+  # set ret [Send $com "y\r" "successfull" 100]
+  return $ret 
+}   
+# ***************************************************************************
+# CheckUserDefaultFilePerf
+# ***************************************************************************
+proc CheckUserDefaultFilePerf {} {
+  global gaSet buffer
+  set com $gaSet(comDut)
+  Status "Check User Default File"
+  set ret [Login]
+  if {$ret!=0} {
+    #set ret [Login]
+    if {$ret!=0} {return $ret}
+  }
+  
+  Send $com "exit all\r" stam 0.25 
+  set ret [Send $com "file dir\r" more 5]
+  if {$ret == 0} {
+    set buff $buffer
+    Send $com "\r" more 5
+    append buff $buffer
+    Send $com "\r" $gaSet(prompt)
+    append buff $buffer
+    set buffer $buff
+  }
+  puts "\n CheckUserDefaultFilePerf buffer:<$buffer>"
+  if [string match {*user-default-config*} $buffer] {
+    set ret 0
+    set res [regexp {user-default-config[\sa-zA-Z]+(\d+)\s} $buffer ma val]
+    if $res {
+      AddToPairLog $gaSet(pair) "user-default-config: $val"
+    }
+  } else {
+    set ret -1
+    set gaSet(fail) "No \'user-default-config\' in File Dir"
+  }
   return $ret
 }
