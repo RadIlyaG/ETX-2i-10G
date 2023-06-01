@@ -933,7 +933,8 @@ proc Leds_FAN {run} {
   }
  
   if {$np=="8SFPP" && $up=="0_0" && $gaSet(rbTestMode) eq "Comp"} {
-    set txt1 "Verify that:\n"
+    set txt1 "Verify that:\n\
+  GREEN \'LINK\' and ORANGE \'ACT\' leds of \'Port 7\' are ON and Blinking respectively\n" ; # 07:38 01/06/2023
   } else {
      set txt1 "Verify that:\n\
   GREEN \'PWR\' led is ON\n\
