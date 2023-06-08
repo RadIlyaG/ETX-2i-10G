@@ -1,7 +1,7 @@
 set gaSet(javaLocation) C:\\Program\ Files\\Java\\jre1.8.0_191\\bin
 switch -exact -- $gaSet(pair) {
   1 - 5 - SE {
-      set gaSet(comDut)    3
+      set gaSet(comDut)    8
       set gaSet(com220)    5
       set gaSet(comAux1)    NA
       set gaSet(comAux2)    NA
@@ -11,7 +11,7 @@ switch -exact -- $gaSet(pair) {
       set gaSet(pioBoxSerNum) FT81GTID  
   }
   2 {
-      set gaSet(comDut)     2
+      set gaSet(comDut)     3
       set gaSet(com220)     4
       set gaSet(comAux1)   NA
       set gaSet(comAux2)   NA
