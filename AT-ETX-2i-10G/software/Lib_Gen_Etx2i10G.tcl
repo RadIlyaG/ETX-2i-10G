@@ -831,7 +831,7 @@ proc RetriveDutFam {{dutInitName ""}} {
               [string match *B_*.AC.* $dutInitName]==1 || [string match *B_*.DC.* $dutInitName]==1 || \
               [regexp {ODU?\.8} $dutInitName]==1 || \
               [string match *_C.19.H.DR.* $dutInitName]==1 || [string match *_C.19.DR.* $dutInitName]==1 || \
-              [string match *B_TWC.19.* $dutInitName]==1} {
+              [string match *B_TWC.19.* $dutInitName]==1 || [string match *B_VT.19.* $dutInitName]==1} {
       set gaSet(dutFam) 19B.0.0.0.0.0.0
       ## 29/06/2022 14:27:11
       ## exceptions
@@ -931,8 +931,10 @@ proc RetriveDutFam {{dutInitName ""}} {
     set PS DC
   } elseif {[string match *.AC* $dutInitName]==1} {
     set PS AC
-  }  elseif {[string match *.24VR* $dutInitName]==1} {
+  } elseif {[string match *.24VR* $dutInitName]==1} {
     set PS DC
+  } elseif {[string match *19.NULL.* $dutInitName]==1} {
+    set PS AC
   }
   foreach {b r p d ps np up} [split $gaSet(dutFam) .] {
     set gaSet(dutFam) $b.$r.$p.$d.$PS.$np.$up  

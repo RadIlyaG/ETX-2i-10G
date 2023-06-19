@@ -1033,7 +1033,8 @@ proc Leds_FAN {run} {
           ($b=="19B" && [string match *B_*.ACR.* $gaSet(DutInitName)])|| \
           ($b=="19B" && [string match *B_*.DCR.* $gaSet(DutInitName)])|| \
           ($b=="19B" && [string match *B.19.ACR.* $gaSet(DutInitName)])|| \
-          ($b=="19B" && [string match *B.19.DCR.* $gaSet(DutInitName)])} {
+          ($b=="19B" && [string match *B.19.DCR.* $gaSet(DutInitName)])|| \
+          ($b=="19B" && [string match *B_VT.19.NULL.* $gaSet(DutInitName)])} {
         
         # if {$np=="8SFPP" && $up=="0_0" && $gaSet(rbTestMode) eq "MainBoard" || \
             # $np=="8SFPP" && $up=="0_0" && [regexp {ODU?\.8} $gaSet(DutInitName)]==1 && $gaSet(rbTestMode) eq "Full"} {}
