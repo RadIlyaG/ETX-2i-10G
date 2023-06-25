@@ -68,7 +68,7 @@ if 1 {
     }
     
     if {$gaSet(radNet)} {
-      if {[string match *david-ya* [info host]] || [string match *ilya-g* [info host]]} {
+      if {[string match *avraham-bi* [info host]] || [string match *david-ya* [info host]] || [string match *ilya-g* [info host]]} {
         set emailL [list]
       } else {
         set emailL {{yulia_s@rad.com ronen_be@rad.com} {} {} }

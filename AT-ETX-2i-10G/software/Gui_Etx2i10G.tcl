@@ -569,7 +569,7 @@ proc ButRun {} {
     }
     
     
-    if {$ret==0 && $gaSet(relDebMode)=="Debug" && [string match *david-ya* [info host]]==0} {
+    if {$ret==0 && $gaSet(relDebMode)=="Debug" && ([string match *david-ya* [info host]]==0 || [string match *avraham-bi* [info host]]==0)} {
       #RLSound::Play beep
       RLSound::Play information
       set txt "Be aware!\r\rYou are about to perform tests in Debug mode.\r\r\
@@ -1486,9 +1486,10 @@ proc GuiReadOperator {} {
   catch {array unset gaDBox} 
   catch {array unset gaGetOpDBox} 
   #set ret [GetOperator -i pause.gif -ti "title Get Operator" -te "text Operator's Name "]
-  if {[string match *david-ya* [info host]]} {
+  if {[string match *david-ya* [info host]] || [string match *avraham-bi* [info host]]} {
     ## 08:55 13/06/2022
-    set ret "David Yashar"
+    ## 08:28 22/06/2023
+    set ret "DavidYashar or AvrahamBismut"
   } else {
     set sn [clock seconds]
     set ret [GetOperator -i images/oper32.ico -gn $::RadAppsPath]

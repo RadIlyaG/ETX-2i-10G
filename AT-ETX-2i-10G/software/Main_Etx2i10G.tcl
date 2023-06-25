@@ -170,8 +170,9 @@ proc BuildTests {} {
         lappend lTests WriteSerialNumber
       }
       
-      if {[string match *david-ya* [info host]]} {
+      if {[string match *david-ya* [info host]] || [string match *avraham-bi* [info host]]} {
         ## 08:25 13/06/2022 don't do it at David's
+        ## 08:29 22/06/2023 don't do it at AviBi's
       } else {
         lappend lTests Mac_BarCode 
       }
@@ -787,28 +788,31 @@ proc Leds_FAN_conf {run} {
   global gaSet gaGui gRelayState
   Status ""
   Power all on
-   set ret [Login]
-  if {$ret!=0} {
-    #set ret [Login]
-    if {$ret!=0} {return $ret}
-  }
-  set gaSet(fail) "Logon fail"
-  set com $gaSet(comDut)
-  
-  set ret [MirpesetStat]
-  if {$ret!=0} {return $ret}
-  
-  Send $com "exit all\r" stam 0.25 
-  set cf C:/AT-ETX-2i-10G/ConfFiles/mng_5.9.1.txt
-  set cfTxt "MNG port"
-  set ret [DownloadConfFile $cf $cfTxt 0 $com]
-  if {$ret!=0} {return $ret}
   
   foreach {b r p d ps np up} [split $gaSet(dutFam) .] {}
-  set cf $gaSet([set b]CF) 
-  set cfTxt "$b"    
-  set ret [DownloadConfFile $cf $cfTxt 0 $com]
-  if {$ret!=0} {return $ret}
+  if {$gaSet(rbTestMode) eq "MainBoard" || $gaSet(rbTestMode) eq "Full"} {
+    set ret [Login]
+    if {$ret!=0} {
+      #set ret [Login]
+      if {$ret!=0} {return $ret}
+    }
+    set gaSet(fail) "Logon fail"
+    set com $gaSet(comDut)
+    
+    set ret [MirpesetStat]
+    if {$ret!=0} {return $ret}
+    
+    Send $com "exit all\r" stam 0.25 
+    set cf C:/AT-ETX-2i-10G/ConfFiles/mng_5.9.1.txt
+    set cfTxt "MNG port"
+    set ret [DownloadConfFile $cf $cfTxt 0 $com]
+    if {$ret!=0} {return $ret}
+    
+    set cf $gaSet([set b]CF) 
+    set cfTxt "$b"    
+    set ret [DownloadConfFile $cf $cfTxt 0 $com]
+    if {$ret!=0} {return $ret}
+  }
   
   set ret [RL10GbGen::Init $gaSet(id220)]  
   if {$ret!=0} {
