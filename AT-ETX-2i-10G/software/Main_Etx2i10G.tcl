@@ -183,7 +183,7 @@ proc BuildTests {} {
         if {$gaSet(rbTestMode) eq "Comp"} {
           foreach tst {"BootDownload" "SetDownload" "SoftwareDownload" "DDR" \
                         "SetToDefaultWD" "SFP_ID" "DataTransmission_conf" "DataTransmission_run"\
-                        "LoadDefaultConfiguration" "Leds_FAN_conf" "Mac_BarCode"} {
+                        "LoadDefaultConfiguration" "Mac_BarCode"} {
             set lTests [lreplace $lTests [lsearch $lTests $tst]  [lsearch $lTests $tst]]
           }
         }
