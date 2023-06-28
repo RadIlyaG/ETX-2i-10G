@@ -1,0 +1,271 @@
+
+    configure
+#       System Configuration
+        system
+            name "2i10G-COV-v1.0"
+            date-and-time
+                zone utc +01:00
+#               NTP (Network Time Protocol)
+                ntp
+                    server 1
+                        address 172.16.128.106
+                        no shutdown
+                    exit
+                    server 2
+                        address 10.64.33.203
+                        no shutdown
+                    exit
+                exit
+                summer-time recurring last sunday march 03:00 last sunday october 03:00
+            exit
+            login-message '       *******************************************************************\r\n       *                             WARNING !                           *\r\n       *                                                                 *\r\n       *   All connections are logged and monitored. By connecting to    *\r\n       *   this system you fully consent to all monitoring.              *\r\n       *                                                                 *\r\n       *   UNAUTHORIZED ACCESS TO THIS DEVICE IS PROHIBITED              *\r\n       *                                                                 *\r
+\n       *  You must have explicit, authorized permission to access or     *\r\n       *   configure this device. Unauthorized attempts and actions      *\r\n       *   to access or use this system may result in civil and/or       *\r\n       *   criminal penalties.  If you are not an authorized user,       *\r\n       *   disconnect now. Any attempts to gain unauthorized access      *\r\n       *   will be prosecuted to the fullest extent of the law.          *\r\n       *******************************************************************\r\n'
+#           Syslog Parameters
+            syslog device
+                facility local5
+                severity-level warning
+            exit
+            syslog server 1
+                address 172.16.128.98
+                no shutdown
+            exit
+            syslog server 2
+                address 10.64.32.202
+                no shutdown
+            exit
+#           LLDP Configuration
+            lldp
+                no shutdown
+            exit
+        exit
+#       Management configuration
+        management
+
+    login-user "su"
+      password "dba8e41e4fb6b86b5ebc38a8fc6a93c9f4bca50d" hash
+    exit
+    login-user "oper"
+      password "bb74a3a56f1a815cfcb3ae2f5a884635306cd278" hash
+    exit
+    login-user "tech"
+      password "940368b727fde2a11cb05048bb03f60165ebec08" hash
+    exit
+    login-user "user"
+      password "478ab2eb93f85310ff24abdaa6a7626e958f6d99" hash
+    exit
+    login-user "admincpe"
+      level su
+      password "6cb2fd483b369bd829820fc850a961721bdc3315" hash
+      no shutdown
+    exit
+
+#           SNMP Configuration
+            snmp
+                community "read"
+                    name "C0v1FRA_CPE"
+                    sec-name "v2_read"
+                    no shutdown
+                exit
+                community "trap"
+                    name "C0v1FRA_CPE"
+                    sec-name "v2_trap"
+                    no shutdown
+                exit
+                community "write"
+                    name "C0v1FRA_CPE_W"
+                    sec-name "v2_write"
+                    no shutdown
+                exit
+      target-params "tp1"
+        message-processing-model snmpv2c
+        version snmpv2c
+        security name "v2_trap" level no-auth-no-priv
+        no shutdown
+      exit
+      target "opennms"
+        target-params "tp1"
+        address udp-domain 172.16.128.253
+        no shutdown
+        tag-list "power"
+      exit
+      notify "systemDyingGasp"
+        tag "power"
+      exit
+            exit
+            access
+                ssh-encryption all
+                ssh-mac all
+                auth-policy 1st-level tacacs+
+            exit
+#           TACACS+
+            tacacsplus
+                group "default"
+                    accounting shell system commands
+                exit
+                server 172.16.128.102
+                    key "C6C09E1EC98DD71E" hash
+                    group "default"
+                    priority 200
+                    no shutdown
+                exit
+   server 10.64.33.201
+      key "4402D8068A9C71FE0A56FEED48DEF64D" hash
+      group "default"
+      priority 150
+      no shutdown
+   exit
+            exit
+        exit
+#       QoS - Configuration
+        qos
+            policer-profile "4M"
+                bandwidth cir 4096 cbs 512000 eir 0 ebs 0
+            exit
+            policer-profile "5M"
+                bandwidth cir 5120 cbs 512000 eir 0 ebs 0
+            exit
+            policer-profile "10M"
+                bandwidth cir 10240 cbs 512000 eir 0 ebs 0
+            exit
+            policer-profile "20M"
+                bandwidth cir 20480 cbs 512000 eir 0 ebs 0
+            exit
+            policer-profile "40M"
+                bandwidth cir 40448 cbs 512000 eir 0 ebs 0
+            exit
+            policer-profile "100M"
+                bandwidth cir 104000 cbs 512000 eir 0 ebs 0
+            exit
+            policer-profile "200M"
+                bandwidth cir 204000 cbs 512000 eir 0 ebs 0
+            exit
+            policer-profile "500M"
+                bandwidth cir 504000 cbs 512000 eir 0 ebs 0
+            exit
+            policer-profile "BPEA-5M-100M"
+                bandwidth cir 5120 cbs 512000 eir 104000 ebs 65200
+                traffic-type all
+                compensation 0
+                color-aware
+            exit
+            policer-profile "BPEA-20M-100M"
+                bandwidth cir 20480 cbs 512000 eir 104000 ebs 65200
+                traffic-type all
+                compensation 0
+                color-aware
+            exit
+            shaper-profile "BPEA-200M"
+                bandwidth cir 204000 cbs 512000
+            exit
+            queue-block-profile "BPEA-QB"
+                queue 0
+                    scheduling strict
+                exit
+            exit
+            queue-block-profile "Scheduling2"
+            exit
+#           Queue Group Configuration
+            queue-group-profile "BPEA-QG"
+                queue-block 1/1
+                    profile "Scheduling2"
+                exit
+                queue-block 0/1
+                    bind queue 0 queue-block 1/1
+                exit
+                queue-block 0/2
+                    name "BPEA"
+                    profile "BPEA-QB"
+                    bind queue 1 queue-block 1/1
+                    shaper profile "BPEA-200M"
+                exit
+            exit
+        exit
+#       Port Configuration
+        port
+            l2cp-profile "L2PT"
+                protocol stp tunnel mac-change
+                protocol cdp tunnel mac-change
+                protocol lldp tunnel mac-change
+                protocol pvstp tunnel mac-change
+            exit
+#           Ethernet - Port Configuration
+            ethernet 0/1
+                egress-mtu 12288
+                queue-group profile "BPEA-QG"
+            exit
+            ethernet 0/3
+                egress-mtu 12288
+                queue-group profile "BPEA-QG"
+            exit
+#           Service Virtual Interface- Port Configuration
+            svi 1
+                no shutdown
+            exit
+            svi 96
+                no shutdown
+            exit
+        exit
+#       Flows Configuration
+        flows
+#           Classifier Profile Configuration
+        
+
+            classifier-profile "MNG-INBAND" match-any
+                match vlan 101
+            exit
+            classifier-profile "all" match-any
+                match all
+            exit
+#           Flow Configuration
+            flow "mng_access_default_in"
+                classifier "mng_untagged"
+                no policer
+                ingress-port ethernet 0/101
+                egress-port svi 96
+                no shutdown
+            exit
+            flow "mng_access_default_out"
+                classifier "mng_all"
+                no policer
+                ingress-port svi 96
+                egress-port ethernet 0/101
+                no shutdown
+            exit
+            flow "MNG-INBAND_OUT"
+                classifier "mng_untagged"
+                no policer
+                vlan-tag push vlan 101 p-bit fixed 7
+                ingress-port svi 1
+                egress-port ethernet 0/1 queue 0 block 0/1
+                no shutdown
+            exit
+            flow "MNG-INBAND_IN"
+                classifier "MNG-INBAND"
+                no policer
+                vlan-tag pop vlan
+                ingress-port ethernet 0/1
+                egress-port svi 1
+                no shutdown
+            exit
+        exit
+        router 1
+            name "Router#1"
+            dhcp-client
+                vendor-class-id name "2i10G-COV"
+            exit
+            interface 1
+                bind svi 1
+                dhcp
+                dhcp-client
+                    client-id mac
+                exit
+                no shutdown
+            exit
+           
+            exit
+        exit
+    exit
+
+    configure
+    exit
+
