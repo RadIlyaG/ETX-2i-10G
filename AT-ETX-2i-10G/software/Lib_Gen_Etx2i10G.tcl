@@ -835,7 +835,8 @@ proc RetriveDutFam {{dutInitName ""}} {
       set gaSet(dutFam) 19B.0.0.0.0.0.0
       ## 29/06/2022 14:27:11
       ## exceptions
-      if {$dutInitName == "ETX-2I-10G_CELLCOM.ACDC.24SFP.tcl" || $dutInitName == "ETX-2I-10G_CELLCOM.ACDC.2SFPP.24SFP.tcl"} {
+      if {$dutInitName == "ETX-2I-10G_CELLCOM.ACDC.24SFP.tcl" || \
+          $dutInitName == "ETX-2I-10G_CELLCOM.ACDC.2SFPP.24SFP.tcl"} {
         set gaSet(dutFam) 19.0.0.0.0.0.0
       }
     }
@@ -863,6 +864,9 @@ proc RetriveDutFam {{dutInitName ""}} {
     } else {
       set gaSet(dutFam) Half19.0.0.0.0.0.0
     }
+  }
+  if {$dutInitName == "ETX-2I-10G_COV.ACR.4SFPP.24SFP.tcl"} {
+    set gaSet(dutFam) 19.0.0.0.0.0.0
   }
   
   set npo npo
