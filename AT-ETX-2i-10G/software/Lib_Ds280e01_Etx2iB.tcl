@@ -146,12 +146,15 @@ proc GetPageFile {barcode trac} {
     # set gaGet(page1) "00 00 00 41 00 03 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00" 
   # }
   
-  # 15:37 07/05/2023
-  set pcb [lindex $gaGet(page1) 5]
-  puts "GetPageFile $gaSet(DutInitName) pcb:<$pcb."
-  if {$gaSet(DutInitName)=="ETX-2I-10G-B_ATT.H.DCR.ODU.8SFPP.tcl" && $pcb eq "04"}  {
-    set gaGet(page2) "F0 00 F0 C0 04 00 00 01 00 85 23 40 50 10 1E 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00" 
-  }
+  # 13:07 09/07/2023
+  # # 15:37 07/05/2023
+  # set pcb [lindex $gaGet(page1) 5]
+  # puts "GetPageFile $gaSet(DutInitName) pcb:<$pcb."
+  # if {$gaSet(DutInitName)=="ETX-2I-10G-B_ATT.H.DCR.ODU.8SFPP.tcl" && $pcb eq "04"}  {
+    # set gaGet(page2) "F0 00 F0 C0 04 00 00 01 00 85 23 40 50 10 1E 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00" 
+  # }
+  
+  
 ###   #page1:
 ###   set gaGet(HwRev.p1.01_02) [lrange $gaGet(page1) 1 2]
 ###   set gaGet(CslRev.p1.03)   [lrange $gaGet(page1) 3 3]
