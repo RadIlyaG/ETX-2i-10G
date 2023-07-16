@@ -3736,10 +3736,15 @@ proc BistPerf {} {
 # ***************************************************************************
 proc BistRun {dur} {
   global gaSet buffer
-    set ret [Send $com "mea test gen on\r\r" FPGA]
+  
+  if {$gaSet(act)==0} {return -2}
+  
+  set ret [Send $com "mea test gen on\r\r" FPGA]
   set gaSet(fail) "Start BIST fail"
   if {$ret!=0} {return $ret}
-  Wait "BIST is performing..." $dur
+  set ret [Wait "BIST is performing..." $dur]
+  if {$ret!=0} {return $ret}
+  
   set ret [Send $com "mea test gen off\r\r" FPGA]
   set gaSet(fail) "Stop BIST fail"
   if {$ret!=0} {return $ret}
