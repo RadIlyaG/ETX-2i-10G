@@ -3710,10 +3710,36 @@ proc BistPerf {} {
   
   set ret [Send $com "debug mea\r" FPGA 11]
   if {$ret!=0} {return $ret}
-  set ret [Send $com "mea test gen on\r\r" FPGA]
+  
+  set ret [BistRun 15]
+  puts "BistPerf ret of BistRun 15sec: <$ret>"
+  if {$ret==0} {
+    set ret [BistRun 120]
+    puts "BistPerf ret of BistRun 120sec: <$ret>"
+  }
+  if {$ret!=0} {
+    return $ret
+  }
+  
+  set gaSet(fail) "Exit from MEA fail"
+  set ret [Send $com "exit\r\r\r" $gaSet(prompt) 16]
+  if {$ret!=0} {
+    set ret [Send $com "exit\r\r\r" $gaSet(prompt) 16]
+    if {$ret!=0} {return $ret}
+  }
+  
+  return $ret
+}  
+
+# ***************************************************************************
+# BistRun
+# ***************************************************************************
+proc BistRun {dur} {
+  global gaSet buffer
+    set ret [Send $com "mea test gen on\r\r" FPGA]
   set gaSet(fail) "Start BIST fail"
   if {$ret!=0} {return $ret}
-  Wait "BIST is performing..." 20
+  Wait "BIST is performing..." $dur
   set ret [Send $com "mea test gen off\r\r" FPGA]
   set gaSet(fail) "Stop BIST fail"
   if {$ret!=0} {return $ret}
@@ -3729,7 +3755,7 @@ proc BistPerf {} {
     set res1g [string match {*1G NICANOR PASS*} $buffer]
   }
   set res10g [string match {*10G NICANOR PASS*} $buffer]
-  puts "\n[MyTime] BistPerf res1g:$res1g res10g:$res10g"
+  puts "\n[MyTime] BistRun 15 res1g:$res1g res10g:$res10g"
   set fail "No "
   set ret 0
   if {$res1g==0} {
@@ -3747,16 +3773,7 @@ proc BistPerf {} {
   
   if {$ret!=0} {
     set gaSet(fail) $fail
-    return $ret
   }
-  
-  set gaSet(fail) "Exit from MEA fail"
-  set ret [Send $com "exit\r\r\r" $gaSet(prompt) 16]
-  if {$ret!=0} {
-    set ret [Send $com "exit\r\r\r" $gaSet(prompt) 16]
-    if {$ret!=0} {return $ret}
-  }
-  
   return $ret
-}  
+}
   
