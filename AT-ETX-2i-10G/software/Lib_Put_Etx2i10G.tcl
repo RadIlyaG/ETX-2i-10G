@@ -3684,3 +3684,79 @@ proc CheckUserDefaultFilePerf {} {
   }
   return $ret
 }
+# ***************************************************************************
+# BistPerf
+# ***************************************************************************
+proc BistPerf {} {
+  global gaSet buffer
+  Status "BIST Test"
+  set ret [Login]
+  if {$ret!=0} {
+    #set ret [Login]
+    if {$ret!=0} {return $ret}
+  }
+  set gaSet(fail) "Logon fail"
+  set com $gaSet(comDut)
+  Send $com "exit all\r" stam 0.25 
+  Send $com "logon\r" stam 0.25 
+  if {[string match {*command not recognized*} $buffer]==0} {
+    set ret [Send $com "logon debug\r" password]
+    if {$ret!=0} {return $ret}
+    regexp {Key code:\s+(\d+)\s} $buffer - kc
+    catch {exec $::RadAppsPath/atedecryptor.exe $kc pass} password
+    set ret [Send $com "$password\r" $gaSet(prompt) 1]
+    if {$ret!=0} {return $ret}
+  }      
+  
+  set ret [Send $com "debug mea\r" FPGA 11]
+  if {$ret!=0} {return $ret}
+  set ret [Send $com "mea test gen on\r\r" FPGA]
+  set gaSet(fail) "Start BIST fail"
+  if {$ret!=0} {return $ret}
+  Wait "BIST is performing..." 20
+  set ret [Send $com "mea test gen off\r\r" FPGA]
+  set gaSet(fail) "Stop BIST fail"
+  if {$ret!=0} {return $ret}
+  set ret [Send $com "mea test show\r" FPGA]
+  set gaSet(fail) "Check BIST fail"
+  if {$ret!=0} {return $ret}
+  
+  foreach {b r p d ps np up} [split $gaSet(dutFam) .] {}
+  if {$np=="8SFPP" && $up=="0_0"} {
+    ## no 1G ports in 8SFPP
+    set res1g 1
+  } else {
+    set res1g [string match {*1G NICANOR PASS*} $buffer]
+  }
+  set res10g [string match {*10G NICANOR PASS*} $buffer]
+  puts "\n[MyTime] BistPerf res1g:$res1g res10g:$res10g"
+  set fail "No "
+  set ret 0
+  if {$res1g==0} {
+    append fail "1G "
+    set ret -1
+  }
+  if {$res10g==0} {
+    if [string match *1G* $fail] {
+      append fail "and "
+    }
+    append fail "10G "
+    set ret -1
+  }
+  append fail "NICANOR PASS in BIST result"
+  
+  if {$ret!=0} {
+    set gaSet(fail) $fail
+    return $ret
+  }
+  
+  set gaSet(fail) "Exit from MEA fail"
+  set ret [Send $com "exit\r\r\r" $gaSet(prompt) 16]
+  if {$ret!=0} {
+    set ret [Send $com "exit\r\r\r" $gaSet(prompt) 16]
+    if {$ret!=0} {return $ret}
+  }
+  
+  return $ret
+}  
+  

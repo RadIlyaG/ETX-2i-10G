@@ -119,9 +119,18 @@ proc BuildTests {} {
           lappend lTests DyingGasp_Log
         }
       } else {
-        lappend lTests DyingGasp_conf DyingGasp_run
+        if {$gaSet(rbTestMode) eq "Partial_444P"} {
+          ## no DyingGasp at Ionics for 4SFPP/4SFP4UTP/PTP
+        } else {
+          lappend lTests DyingGasp_conf DyingGasp_run
+        }
       }  
-      lappend lTests DataTransmission_conf DataTransmission_run
+      
+      if {$gaSet(rbTestMode) eq "Partial_444P"} {
+        lappend lTests BIST
+      } else {
+        lappend lTests DataTransmission_conf DataTransmission_run
+      }
       
       if {$p=="P"} {
         if {$np=="8SFPP" && $up=="0_0"} {
@@ -132,7 +141,11 @@ proc BuildTests {} {
             lappend lTests ExtClk SyncE_conf SyncE_run
           }
         } else {
-          lappend lTests ExtClk SyncE_conf SyncE_run 
+          if {$gaSet(rbTestMode) eq "Partial_444P"} {
+            ## no ExtClk and SyncE at Ionics for 4SFPP/4SFP4UTP/PTP
+          } else {
+            lappend lTests ExtClk SyncE_conf SyncE_run 
+          }
         }
         
       }
@@ -148,7 +161,11 @@ proc BuildTests {} {
         lappend lTests SetToDefault
       }
       
-      lappend lTests Leds_FAN_conf Leds_FAN
+      if {$gaSet(rbTestMode) eq "Partial_444P"} {
+        ## no Leds_Fan at Ionics for 4SFPP/4SFP4UTP/PTP
+      } else {
+        lappend lTests Leds_FAN_conf Leds_FAN
+      }  
         
       if {[string match *.12CMB.* $gaSet(DutInitName)]==1} {
         lappend lTests Combo_PagesSW ID Combo_SFP_ID Combo_UTP_ID
@@ -187,7 +204,17 @@ proc BuildTests {} {
             set lTests [lreplace $lTests [lsearch $lTests $tst]  [lsearch $lTests $tst]]
           }
         }
-      }  
+      }
+
+      if {$gaSet(DutFullName)=="ETX-2I-10G-B_FT/ACDC/4SFPP/4SFP4UTP/PTP"} {
+        if {$gaSet(rbTestMode) eq "Comp_444P"} {
+          foreach tst {"BootDownload" "Pages" "SetDownload" "SoftwareDownload" "FanEepromBurn" "DDR" \
+                        "SetToDefaultWD" "OpenLicense" "ID" "UTP_ID"  "SFP_ID" \
+                        "LoadDefaultConfiguration" "Mac_BarCode"} {
+            set lTests [lreplace $lTests [lsearch $lTests $tst]  [lsearch $lTests $tst]]
+          }
+        }
+      }
     }
   }
   set glTests [list]
@@ -1896,5 +1923,15 @@ proc CheckUserDefaultFile {run} {
   global gaSet 
   Power all on
   set ret [CheckUserDefaultFilePerf]
+  return $ret 
+}
+
+# ***************************************************************************
+# BIST
+# ***************************************************************************
+proc BIST {run} {
+  global gaSet 
+  Power all on
+  set ret [BistPerf]
   return $ret 
 }

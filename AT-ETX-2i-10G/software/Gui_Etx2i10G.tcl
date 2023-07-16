@@ -100,22 +100,24 @@ proc GUI {} {
       }  
       {separator}
       {command "Release menus" {} "" {} -command {ToggleRunButSt}}
-      {separator}
-      {cascad "TestMode" {} tm 0 {
-        {radiobutton "MainBoard Tests" {} "" {} -command {ToggleTestMode} -variable gaSet(rbTestMode) -value "MainBoard"}  
-        {radiobutton "Complementary Tests" {} "" {} -command {ToggleTestMode} -variable gaSet(rbTestMode) -value "Comp"}  
-        {radiobutton "Full Tests" {} "" {} -command {ToggleTestMode} -variable gaSet(rbTestMode) -value "Full"}  
-        {radiobutton "BP Test" {} "" {} -command {ToggleTestMode} -variable gaSet(rbTestMode) -value "BP"}  
-        {radiobutton "On-Off Test" {} "" {} -command {ToggleTestMode} -variable gaSet(rbTestMode) -value "On_Off"} 
-        {separator}
-        {command "Toggle CLEI Code mode" {} "" {} -command {ToggleCleiCodeGuiMode}}  
-      }
-      }
-      {separator}      
+      {separator}   
       {radiobutton "TDS340"  init {} {} -value Tds340 -variable gaSet(scopeModel)}
       {radiobutton "TDS520A" init {} {} -value Tds520A -variable gaSet(scopeModel)}   
       {radiobutton "DSOX1102A" init {} {} -value DSOX1102A -variable gaSet(scopeModel)}   
 
+    }
+    "Test &Modes" modes modes 0 {	
+      {radiobutton "MainBoard Tests (8SFPP)" {} "" {} -command {ToggleTestMode} -variable gaSet(rbTestMode) -value "MainBoard"}  
+      {radiobutton "Partial Tests (4SFPP/4SFP4UTP/PTP)" {} "" {} -command {ToggleTestMode} -variable gaSet(rbTestMode) -value "Partial_444P"}  
+      {separator}
+      {radiobutton "Full Test" {} "" {} -command {ToggleTestMode} -variable gaSet(rbTestMode) -value "Full"}  
+      {radiobutton "Complementary Tests (8SFPP)" {} "" {} -command {ToggleTestMode} -variable gaSet(rbTestMode) -value "Comp"}  
+      {radiobutton "Complementary Tests (4SFPP/4SFP4UTP/PTP)" {} "" {} -command {ToggleTestMode} -variable gaSet(rbTestMode) -value "Comp_444P"}  
+      {separator}
+      {radiobutton "BP Test" {} "" {} -command {ToggleTestMode} -variable gaSet(rbTestMode) -value "BP"}  
+      {radiobutton "On-Off Test" {} "" {} -command {ToggleTestMode} -variable gaSet(rbTestMode) -value "On_Off"} 
+      {separator}
+      {command "Toggle CLEI Code mode" {} "" {} -command {ToggleCleiCodeGuiMode}}  
     }
     "&MUX connections" tools tools 0 {
       {command "ioToGenMngToPc" init {} {} -command {GuiMuxMngIO ioToGenMngToPc ioToGen}}	 
@@ -1576,11 +1578,20 @@ proc ToggleEnJatPll {} {
 # ***************************************************************************
 proc ToggleTestMode {} {
   global gaGui gaSet
-  $gaSet(sstatus) configure -bg yellow -text "$gaSet(rbTestMode) Tests"
+  switch -exact -- $gaSet(rbTestMode) {
+    MainBoard    {set txt "MainBoard Tests"; set let M}  
+    Partial_444P {set txt "Partial Tests (4SFPP/4SFP4UTP/PTP)"; set let P4}  
+    Full         {set txt "Full Test"; set let F}  
+    Comp         {set txt "Complementary Tests (8SFPP)"; set let C}  
+    Comp_444P    {set txt "Complementary Tests (4SFPP/4SFP4UTP/PTP)"; set let C4}  
+    BP           {set txt "Back Plane Test"; set let B}  
+    On_Off       {set txt "Off_On Test"; set let O}  
+  }
+  $gaSet(sstatus) configure -bg yellow -text $txt
   $gaSet(runTime) configure -text ""
   $gaSet(startTime) configure -text ""
   set gaSet(relDebMode) Release
-  $gaSet(statBarShortTest) configure -bg yellow -text "[string index $gaSet(rbTestMode) 0]"
+  $gaSet(statBarShortTest) configure -bg yellow -text $let ; #"[string index $gaSet(rbTestMode) 0]"
   BuildTests
   if {$gaSet(rbTestMode) eq "On_Off"} {
     DialogBox -title "Power OFF and ON" -type OK \
