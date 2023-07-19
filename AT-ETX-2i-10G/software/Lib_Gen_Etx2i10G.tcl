@@ -831,7 +831,8 @@ proc RetriveDutFam {{dutInitName ""}} {
               [string match *B_*.AC.* $dutInitName]==1 || [string match *B_*.DC.* $dutInitName]==1 || \
               [regexp {ODU?\.8} $dutInitName]==1 || \
               [string match *_C.19.H.DR.* $dutInitName]==1 || [string match *_C.19.DR.* $dutInitName]==1 || \
-              [string match *B_TWC.19.* $dutInitName]==1 || [string match *B_VT.19.* $dutInitName]==1} {
+              [string match *B_TWC.19.* $dutInitName]==1 || [string match *B_VT.19.* $dutInitName]==1 || \
+              [string match *B_GC.19.*.4SFPP4SFP $dutInitName]==1 } {
       set gaSet(dutFam) 19B.0.0.0.0.0.0
       ## 29/06/2022 14:27:11
       ## exceptions
@@ -875,7 +876,8 @@ proc RetriveDutFam {{dutInitName ""}} {
     set npo 2SFPP
   } elseif {[string match *.4SFPP.* $dutInitName]==1} {    
     set npo 4SFPP
-  } elseif {[string match *.8SFPP.* $dutInitName]==1 || [string match *.8P.* $dutInitName]==1} {    
+  } elseif {[string match *.8SFPP.* $dutInitName]==1 || [string match *.8P.* $dutInitName]==1 ||\
+            [string match *.4SFPP4SFP.* $dutInitName]==1} {    
     set npo 8SFPP
     set upo 0_0    
   }
@@ -1537,7 +1539,8 @@ proc RetriveFansCheckJ {} {
               [string match *10G_ATT.19.* $gaSet(DutInitName)] || \
               [string match *_C.19.DR.* $gaSet(DutInitName)] || \
               [string match *_EIR.19.ACR.* $gaSet(DutInitName)] || \
-              [string match *_EIR.19.DCR.* $gaSet(DutInitName)]} {
+              [string match *_EIR.19.DCR.* $gaSet(DutInitName)] || \
+              [string match *_GC.19.ACR.4SFPP4SFP.* $gaSet(DutInitName)]} {
       ## 26/05/2022 added *10G_ATT.19.*
       puts "if3.2"
       set fans 2
