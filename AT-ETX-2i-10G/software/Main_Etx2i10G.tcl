@@ -161,11 +161,13 @@ proc BuildTests {} {
         lappend lTests SetToDefault
       }
       
-      if {$gaSet(rbTestMode) eq "Partial_444P"} {
-        ## no Leds_Fan at Ionics for 4SFPP/4SFP4UTP/PTP
-      } else {
-        lappend lTests Leds_FAN_conf Leds_FAN
-      }  
+      # if {$gaSet(rbTestMode) eq "Partial_444P"} {
+        # ## no Leds_Fan at Ionics for 4SFPP/4SFP4UTP/PTP
+      # } else {
+        # lappend lTests Leds_FAN_conf Leds_FAN
+      # }  
+      ## 10:13 19/07/2023
+      lappend lTests Leds_FAN_conf Leds_FAN
         
       if {[string match *.12CMB.* $gaSet(DutInitName)]==1} {
         lappend lTests Combo_PagesSW ID Combo_SFP_ID Combo_UTP_ID
@@ -817,6 +819,11 @@ proc Leds_FAN_conf {run} {
   Power all on
   
   foreach {b r p d ps np up} [split $gaSet(dutFam) .] {}
+  if {$gaSet(rbTestMode) eq "Partial_444P"} {
+    set ret [BistStartStop on]
+    return $ret
+  }
+  
   if {$gaSet(rbTestMode) eq "MainBoard" || $gaSet(rbTestMode) eq "Full"} {
     set ret [Login]
     if {$ret!=0} {
@@ -966,6 +973,10 @@ proc Leds_FAN {run} {
   if {$np=="8SFPP" && $up=="0_0" && $gaSet(rbTestMode) eq "Comp"} {
     set txt1 "Verify that:\n\
   GREEN \'LINK\' and ORANGE \'ACT\' leds of \'Port 7\' are ON and Blinking respectively\n" ; # 07:38 01/06/2023
+  } elseif {$gaSet(rbTestMode) eq "Partial_444P"} {
+    set txt1 "Verify that:\n\
+  GREEN \'PWR\' led is ON\n\
+  GREEN \'LINK\' led of \'MNG-ETH\' is ON\n"
   } else {
      set txt1 "Verify that:\n\
   GREEN \'PWR\' led is ON\n\
@@ -982,6 +993,10 @@ proc Leds_FAN {run} {
        set txt3 "GREEN \'LINK\' leds of 10GbE ports are ON and ORANGE \'ACT\' leds are Blinking\n\
        FAN(-s) rotate (if exists)"
     }
+  } elseif {$gaSet(rbTestMode) eq "Partial_444P"}  {
+    set txt3 "GREEN \'LINK\' leds of 10GbE ports are ON and ORANGE \'ACT\' leds are Blinking\n\
+  GREEN \'LINK/ACT\' leds of 1GbE ports are Blinking  (if exists)\n\
+  FAN(-s) rotate"
   } else {
     set txt3 "GREEN \'LINK\' leds of 10GbE ports are ON and ORANGE \'ACT\' leds are Blinking\n\
   GREEN \'LINK/ACT\' leds of 1GbE ports are Blinking  (if exists)\n\
@@ -1142,15 +1157,19 @@ proc Leds_FAN {run} {
   }
   
   if {$p=="P"} {
-    RLSound::Play information
-    set txt "Remove the EXT CLK cable and verify the SD led is OFF"
-    set res [DialogBox -type "OK Fail" -icon /images/question -title "LED Test" -message $txt]
-    update
-    if {$res!="OK"} {
-      set gaSet(fail) "LED Test failed"
-      return -1
-    } else {
+    if {$gaSet(rbTestMode) eq "Partial_444P"}  {
       set ret 0
+    } else {
+      RLSound::Play information
+      set txt "Remove the EXT CLK cable and verify the SD led is OFF"
+      set res [DialogBox -type "OK Fail" -icon /images/question -title "LED Test" -message $txt]
+      update
+      if {$res!="OK"} {
+        set gaSet(fail) "LED Test failed"
+        return -1
+      } else {
+        set ret 0
+      }
     }
   }
  

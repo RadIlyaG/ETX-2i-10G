@@ -3708,14 +3708,16 @@ proc BistPerf {} {
     if {$ret!=0} {return $ret}
   }      
   
-  set ret [Send $com "debug mea\r" FPGA 11]
+  set ret [Send $com "debug mea\r\r" FPGA 11]
   if {$ret!=0} {return $ret}
   
-  set ret [BistRun 15]
-  puts "BistPerf ret of BistRun 15sec: <$ret>"
+  set dur 30
+  set ret [BistRun $dur]
+  puts "BistPerf ret of BistRun $dur sec: <$ret>"
   if {$ret==0} {
-    set ret [BistRun 120]
-    puts "BistPerf ret of BistRun 120sec: <$ret>"
+    set dur 100
+    set ret [BistRun $dur]
+    puts "BistPerf ret of BistRun $dur sec: <$ret>"
   }
   if {$ret!=0} {
     return $ret
@@ -3738,8 +3740,8 @@ proc BistRun {dur} {
   global gaSet buffer
   
   if {$gaSet(act)==0} {return -2}
-  
-  set ret [Send $com "mea test gen on\r\r" FPGA]
+  set com $gaSet(comDut)
+  set ret [Send $com "mea test gen on\r\r" FPGA 30]
   set gaSet(fail) "Start BIST fail"
   if {$ret!=0} {return $ret}
   set ret [Wait "BIST is performing..." $dur]
@@ -3757,11 +3759,11 @@ proc BistRun {dur} {
     ## no 1G ports in 8SFPP
     set res1g 1
   } else {
-    set res1g [string match {*1G NICANOR PASS*} $buffer]
+    set res1g [string match {*Nicanor Pass 1G*} $buffer]
   }
-  set res10g [string match {*10G NICANOR PASS*} $buffer]
+  set res10g [string match {*Nicanor Pass 10G*} $buffer]
   puts "\n[MyTime] BistRun 15 res1g:$res1g res10g:$res10g"
-  set fail "No "
+  set fail "No Nicanor Pass "
   set ret 0
   if {$res1g==0} {
     append fail "1G "
@@ -3774,11 +3776,48 @@ proc BistRun {dur} {
     append fail "10G "
     set ret -1
   }
-  append fail "NICANOR PASS in BIST result"
+  append fail "in BIST result"
   
   if {$ret!=0} {
     set gaSet(fail) $fail
   }
+  return $ret
+}
+
+# ***************************************************************************
+# BistStartStop
+# ***************************************************************************
+proc BistStartStop {mode} {
+  global gaSet buffer
+  Status "BIST StartStop $mode"
+  set ret [Login]
+  if {$ret!=0} {
+    #set ret [Login]
+    if {$ret!=0} {return $ret}
+  }
+  set gaSet(fail) "Logon fail"
+  set com $gaSet(comDut)
+  Send $com "exit all\r" stam 0.25 
+  Send $com "logon\r" stam 0.25 
+  if {[string match {*command not recognized*} $buffer]==0} {
+    set ret [Send $com "logon debug\r" password]
+    if {$ret!=0} {return $ret}
+    regexp {Key code:\s+(\d+)\s} $buffer - kc
+    catch {exec $::RadAppsPath/atedecryptor.exe $kc pass} password
+    set ret [Send $com "$password\r" $gaSet(prompt) 1]
+    if {$ret!=0} {return $ret}
+  }      
+  
+  set ret [Send $com "debug mea\r\r" FPGA 11]
+  if {$ret!=0} {return $ret}
+  Send $com "mea test gen $mode\r\r" FPGA 
+  
+  set gaSet(fail) "Exit from MEA fail"
+  set ret [Send $com "exit\r\r\r" $gaSet(prompt) 16]
+  if {$ret!=0} {
+    set ret [Send $com "exit\r\r\r" $gaSet(prompt) 16]    
+  }
+  
   return $ret
 }
   

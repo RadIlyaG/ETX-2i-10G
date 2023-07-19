@@ -2087,3 +2087,80 @@ proc LoadCleiCodesFile {} {
   return {}
 }
 
+## RetriveIdTraceData DF100148093 CSLByBarcode
+## RetriveIdTraceData DF100148093 MKTItem4Barcode
+## RetriveIdTraceData 21181408    PCBTraceabilityIDData
+## RetriveIdTraceData TO300315253 OperationItem4Barcode
+# ***************************************************************************
+# RetriveIdTaceData
+# ***************************************************************************
+proc RetriveIdTraceData {args} {
+  package require http
+  package require tls
+  package require base64
+  ::http::register https 8445 ::tls::socket
+  global gaSet
+  set gaSet(fail) ""
+  puts "RetriveIdTaceData $args"
+  set barc [format %.11s [lindex $args 0]]
+  
+  set command [lindex $args 1]
+  switch -exact -- $command {
+    CSLByBarcode          {set barcode $barc  ; set traceabilityID null}
+    PCBTraceabilityIDData {set barcode null   ; set traceabilityID $barc}
+    MKTItem4Barcode       {set barcode $barc  ; set traceabilityID null}
+    OperationItem4Barcode {set barcode $barc  ; set traceabilityID null}
+    default {set gaSet(fail) "Wrong command: \'$command\'"; return -1}
+  }
+  set url "https://ws-proxy01.rad.com:8445/ATE_WS/ws/rest/"
+  set param [set command]\?barcode=[set barcode]\&traceabilityID=[set traceabilityID]
+  append url $param
+  puts "url:<$url>"
+  set tok [::http::geturl $url -headers [list Authorization "Basic [base64::encode webservices:radexternal]"]]
+  update
+  set st [::http::status $tok]
+  set nc [::http::ncode $tok]
+  if {$st=="ok" && $nc=="200"} {
+    #puts "Get $command from $barc done successfully"
+  } else {
+    set gaSet(fail) "http::status: <$st> http::ncode: <$nc>"; return -1
+  }
+  upvar #0 $tok state
+  #parray state
+  #puts "$state(body)"
+  set body $state(body)
+  ::http::cleanup $tok
+  
+  set re {[{}\[\]\,\t\:\"]}
+  set tt [regsub -all $re $body " "]
+  set ret [regsub -all {\s+}  $tt " "]
+  
+  return [lindex $ret end]
+}
+
+# ***************************************************************************
+# GetPcbID
+# ***************************************************************************
+proc GetPcbID {board} {
+  global gaSet gaGui
+  set gaSet([set board]PcbId) "" ; update
+  set barc $gaSet([set board]PcbIdBarc)
+  set pcbName -1
+  if {$barc==""} {
+    # do nothing
+  } else {
+    set pcbName [RetriveIdTraceData $barc PCBTraceabilityIDData]
+  }
+  puts "GetPcbID board:<$board> barc:<$barc> pcbName:<$pcbName>" 
+  if {$pcbName=="-1"} {
+    return -1
+  } else {
+    set gaSet([set board]PcbId) $pcbName
+    #set gaSet([set board]PcbIdBarc) ""
+    if {$board=="main"} {
+      focus -force $gaGui(entPCB_SUB_CARD_1_IDbarc) 
+      $gaGui(entPCB_SUB_CARD_1_IDbarc) selection range 0 end
+    }
+    return 0
+  }
+}

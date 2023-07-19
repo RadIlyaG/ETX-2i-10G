@@ -192,3 +192,39 @@ proc LockedDBtoDB {} {
   SQliteClose
   return 0
 }
+
+proc glTestsPerOption {} {
+  global gaSet glTests
+  set dbFile C:\\ATE-ControlCenter\\JerAteStats.db
+  sqlite3 gaSet(dataBase) $dbFile
+  gaSet(dataBase) timeout 5000
+  set res [gaSet(dataBase) eval {SELECT name FROM sqlite_master WHERE type='table' AND name='tbl'}]
+  #set ids [gaSet(dataBase) eval {SELECT Barcode FROM tbl WHERE UutName LIKE "%-10g%" and HostDescription LIKE "%-2i-10g%" GROUP BY UutName}]
+  set ids [gaSet(dataBase) eval {SELECT Barcode FROM tbl WHERE UutName LIKE "%-10g%" and HostDescription LIKE "%-2i-10g%" GROUP BY UutName ORDER BY UutName}]
+  #set ids [lrange $ids 0 2] ; #{DF1002471284}
+  set fi [open c:/temp/ttee_[clock seconds].txt w]
+  foreach id $ids {
+    if {[string length $id]>=11} {
+      set num [expr {1+[lsearch $ids $id]}]
+      puts "\n\n$num $id"      
+      set gaSet(entDUT) $id
+      #GetDbrName full
+      set res [RetriveIdTraceData $id OperationItem4Barcode]
+      set initName [regsub -all / $res .]
+      set gaSet(DutFullName) $res
+      set gaSet(DutInitName) $initName.tcl
+      source uutInits/$gaSet(DutInitName)  
+      GetDbrSW $id
+      #BuildTests
+      puts $fi "$num $id $gaSet(DutFullName)"
+      foreach tst $glTests {
+        set te $tst; #[lindex [split $tst ..] end]  
+        puts $fi "\t\t$te"
+      }
+      #puts $fi $glTests
+      puts $fi ""
+    }
+  }
+  close $fi
+  catch {gaSet(dataBase) close}
+}
