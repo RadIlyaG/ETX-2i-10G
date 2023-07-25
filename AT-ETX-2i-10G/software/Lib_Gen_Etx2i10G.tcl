@@ -941,6 +941,8 @@ proc RetriveDutFam {{dutInitName ""}} {
     set PS DC
   } elseif {[string match *19.NULL.* $dutInitName]==1} {
     set PS AC
+  }  elseif {[string match *.AR.* $dutInitName]==1} {
+    set PS AC
   }
   foreach {b r p d ps np up} [split $gaSet(dutFam) .] {
     set gaSet(dutFam) $b.$r.$p.$d.$PS.$np.$up  
@@ -1518,7 +1520,8 @@ proc RetriveFansCheckJ {} {
         [string match *_C.19.H.* $gaSet(DutInitName)]    || \
         [string match *_C.H.DR.OD.* $gaSet(DutInitName)] || \
         [string match *.19.H.* $gaSet(DutInitName)] || \
-        [string match *B.H.DC.OD* $gaSet(DutInitName)]} {
+        [string match *B.H.DC.OD* $gaSet(DutInitName)] || \
+        [string match *B_BRSD.H.AR.OD* $gaSet(DutInitName)]} {
       ## 26/05/2022 added *10G_ATT.H.*
       if {$np=="8SFPP" && $up=="0_0" && [regexp {ODU?\.8} $gaSet(DutInitName)]==1} {
         puts "if3.1.1"
