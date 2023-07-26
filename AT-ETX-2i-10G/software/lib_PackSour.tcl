@@ -23,6 +23,12 @@ source lib_DeleteOldApp.tcl
 DeleteOldApp
 DeleteOldUserDef
 
+if {[string match *avraham-bi* [info host]] || [string match *david-ya* [info host]]} {
+  set ::repairMode 1
+} else {
+  set ::repairMode 0
+}
+
 after 1000 
 set ::RadAppsPath c:/RadApps
 if 1 {
@@ -68,7 +74,7 @@ if 1 {
     }
     
     if {$gaSet(radNet)} {
-      if {[string match *avraham-bi* [info host]] || [string match *david-ya* [info host]] || [string match *ilya-g* [info host]]} {
+      if {$::repairMode || [string match *ilya-g* [info host]]} {
         set emailL [list]
       } else {
         set emailL {{yulia_s@rad.com ronen_be@rad.com} {} {} }

@@ -13,6 +13,12 @@ proc GUI {} {
   if {$gaSet(eraseTitle)==1} {
     wm title . "$gaSet(pair) : "
   }
+  if {![info exists ::repairMode]} {
+    set ::repairMode 0
+  }
+  if {![info exists gaSet(Etx220exists)]} {
+    set gaSet(Etx220exists) 1
+  }
   
   wm protocol . WM_DELETE_WINDOW {Quit}
   wm geometry . $gaGui(xy)
@@ -571,7 +577,7 @@ proc ButRun {} {
     }
     
     
-    if {$ret==0 && $gaSet(relDebMode)=="Debug" && ([string match *david-ya* [info host]]==0 || [string match *avraham-bi* [info host]]==0)} {
+    if {$ret==0 && $gaSet(relDebMode)=="Debug" && $::repairMode==0} {
       #RLSound::Play beep
       RLSound::Play information
       set txt "Be aware!\r\rYou are about to perform tests in Debug mode.\r\r\
@@ -1405,9 +1411,9 @@ proc GuiOpts {} {
   
   array unset gaTmpSet
   
-  set parL [list ddrMultyQty]
+  set parL [list ddrMultyQty Etx220exists]
   foreach par $parL {
-    if ![info exists gaSet($par)] {set gaSet($par) ??}
+    if ![info exists gaSet($par)] {set gaSet($par) 0}
     set gaTmpSet($par) $gaSet($par)
   }
   
@@ -1423,6 +1429,15 @@ proc GuiOpts {} {
     pack [Label $fr.lab$indx  -text "DDR multi Quantity" -width 15] -pady 1 -padx 2 -anchor w -side left
     pack [Entry $fr.cb$indx -justify center -width 15 -state normal -editable 1 -textvariable gaTmpSet(ddrMultyQty)] -pady 1 -padx 2 -anchor w -side left
   pack $fr  -anchor w  
+  
+  incr indx
+  set fr [frame $base.fr$indx -bd 0 -relief groove]
+    pack [checkbutton $fr.chb$indx  -text "Etx220 exists" -width 15 -variable gaTmpSet(Etx220exists)] -pady 1 -padx 2 -anchor w -side left
+    #pack [Entry $fr.chb$indx -justify center -width 15 -state normal -editable 1 -textvariable gaTmpSet(ddrMultyQty)] -pady 1 -padx 2 -anchor w -side left
+  if {$::repairMode} {
+    pack $fr  -anchor w 
+  }
+  
   
   #pack [Separator $base.sep[incr inx] -orient horizontal] -fill x -padx 2 -pady 3
   
@@ -1450,6 +1465,7 @@ proc ButOkOpts {} {
 
   array unset gaTmpSet
   SaveInit
+  BuildTests
   ButCancOpts
 }
 
@@ -1488,10 +1504,12 @@ proc GuiReadOperator {} {
   catch {array unset gaDBox} 
   catch {array unset gaGetOpDBox} 
   #set ret [GetOperator -i pause.gif -ti "title Get Operator" -te "text Operator's Name "]
-  if {[string match *david-ya* [info host]] || [string match *avraham-bi* [info host]]} {
+  if {$::repairMode} {
     ## 08:55 13/06/2022
     ## 08:28 22/06/2023
-    set ret "DavidYashar or AvrahamBismut"
+    #set ret "DavidYashar or AvrahamBismut"
+    ## 08:20 26/07/2023
+    set ret "RepairMode"
   } else {
     set sn [clock seconds]
     set ret [GetOperator -i images/oper32.ico -gn $::RadAppsPath]
