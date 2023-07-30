@@ -27,7 +27,15 @@ proc OpenRL {} {
 #   } 
 
   ## 14/01/2019 09:53:28 open Gen anyway
-  set openGens 1
+  if {$::repairMode} {
+    if {$gaSet(Etx220exists)} {
+      set openGens 1
+    } else {
+      set openGens 0
+    }
+  } else {
+    set openGens 1
+  }  
   if {$openGens==1} {  
     Status "Open ETH GENERATOR"
     set ret2 0
@@ -282,6 +290,11 @@ proc SaveInit {} {
     set gaSet(enVneNum) 0
   }
   puts $id "set gaSet(enVneNum) \"$gaSet(enVneNum)\""
+  
+  if {![info exists gaSet(Etx220exists)]} {
+    set gaSet(Etx220exists) 0
+  }
+  puts $id "set gaSet(Etx220exists) \"$gaSet(Etx220exists)\""
   
   close $id   
 }

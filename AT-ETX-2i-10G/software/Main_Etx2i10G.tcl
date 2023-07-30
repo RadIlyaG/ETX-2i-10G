@@ -129,7 +129,15 @@ proc BuildTests {} {
       if {$gaSet(rbTestMode) eq "Partial_444P"} {
         lappend lTests BIST
       } else {
-        lappend lTests DataTransmission_conf DataTransmission_run
+        if {$::repairMode} {
+          if {$gaSet(Etx220exists)} {
+            lappend lTests DataTransmission_conf DataTransmission_run
+          } else {
+            ## no gen - no data tests
+          }
+        } else {
+          lappend lTests DataTransmission_conf DataTransmission_run
+        }
       }
       
       if {$p=="P"} {
@@ -189,9 +197,10 @@ proc BuildTests {} {
         lappend lTests WriteSerialNumber
       }
       
-      if {[string match *david-ya* [info host]] || [string match *avraham-bi* [info host]]} {
+      if {$::repairMode} {        
         ## 08:25 13/06/2022 don't do it at David's
         ## 08:29 22/06/2023 don't do it at AviBi's
+        ## 08:21 26/07/2023 don't do it if repairMode ## [string match *david-ya* [info host]] || [string match *avraham-bi* [info host]]
       } else {
         lappend lTests Mac_BarCode 
       }
