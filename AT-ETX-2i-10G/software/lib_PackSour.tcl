@@ -18,6 +18,10 @@ foreach fi [glob -nocomplain -type f *.txt] {
 if [file exists c:/TEMP_FOLDER] {
   file delete -force c:/TEMP_FOLDER 
 }
+if [file exists Mains_Etx2i10G.tcl] {
+  file delete -force Mains_Etx2i10G.tcl
+}
+
 
 source lib_DeleteOldApp.tcl
 DeleteOldApp
@@ -86,7 +90,7 @@ if 1 {
     # java.exe -jar c:/RadApps/AutoSyncApp.jar "//prod-svm1/tds/AT-Testers/JER_AT/ilya/TCL/ETX-2i-10G/AT-ETX-2i-10G C:/AT-ETX-2i-10G //prod-svm1/tds/AT-Testers/JER_AT/ilya/TCL/ETX-2i-10G/download C:/download" "-noCheckFiles{init*.tcl skipped.txt *.db}" "-noCheckDirs{temp tmpFiles OLD old}"
     # Measure-Command {$foo = java.exe -jar c:/RadApps/AutoSyncApp.jar "//prod-svm1/tds/AT-Testers/JER_AT/ilya/TCL/ETX-2i-10G/AT-ETX-2i-10G C:/AT-ETX-2i-10G //prod-svm1/tds/AT-Testers/JER_AT/ilya/TCL/ETX-2i-10G/download C:/download" "-noCheckFiles{init*.tcl skipped.txt *.db}" "-noCheckDirs{temp tmpFiles OLD old}"} ; $foo 
     
-    set ret [RLAutoSync::AutoSync $sdL -noCheckFiles {init*.tcl skipped.txt *.db} \
+    set ret [RLAutoSync::AutoSync $sdL -noCheckFiles {init*.tcl skipped.txt *.db Mains_Etx2i10G.tcl} \
         -noCheckDirs {temp tmpFiles OLD old} -jarLocation $::RadAppsPath \
         -javaLocation $gaSet(javaLocation) -emailL $emailL -putsCmd 1 -radNet $gaSet(radNet)]
     #console show
