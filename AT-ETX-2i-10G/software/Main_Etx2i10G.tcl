@@ -91,7 +91,7 @@ proc BuildTests {} {
       }
 
       if {$gaSet(rbTestMode) eq "Comp"} {
-        lappend lTests SetToDefault 
+        lappend lTests SetToDefaultWD ; # 07:19 01/08/2023 SetToDefault 
       } else {  
         lappend lTests SetToDefaultWD
       }
@@ -210,8 +210,8 @@ proc BuildTests {} {
       if {$np=="8SFPP" && $up=="0_0"} {
         if {$gaSet(rbTestMode) eq "Comp"} {
           foreach tst {"BootDownload" "SetDownload" "SoftwareDownload" "DDR" \
-                        "SetToDefaultWD" "SFP_ID" "DataTransmission_conf" "DataTransmission_run"\
-                        "LoadDefaultConfiguration" "Mac_BarCode"} {
+                        "SFP_ID" "DataTransmission_conf" "DataTransmission_run"\
+                        "LoadDefaultConfiguration"} {
             set lTests [lreplace $lTests [lsearch $lTests $tst]  [lsearch $lTests $tst]]
           }
         }
