@@ -405,7 +405,7 @@ proc PS_IDTest {} {
     
   set sw_norm [join  [regsub -all {[\(\)]} $sw " "]  . ] ; # 6.8.2(0.33) -> 6.8.2.0.33
   puts "DutInitName:<$gaSet(DutInitName)> sw:<$sw> sw_norm:<$sw_norm>"; update
-  if {([string match {*ATT*} $gaSet(DutInitName)] || [string match {*_C.*} $gaSet(DutInitName)]) && \
+  if {([string match {*ATT*} $gaSet(DutInitName)] || [string match {*_C.*} $gaSet(DutInitName)] || [string match {*_VO.*} $gaSet(DutInitName)]) && \
       [package vcompare $sw_norm 6.7.1.0.15]!="-1"} {
     ## if sw_norm >=6.7.1.0.15
     
@@ -434,6 +434,15 @@ proc PS_IDTest {} {
         set max_sn_len 16
       } 
     }    
+    if [string match {*_VO.*} $gaSet(DutInitName)] {
+      if {[package vcompare $sw_norm 6.8.2.0.75]!="-1"} {
+        ## if sw_norm >=6.8.2.0.75
+        set max_sn_len 10
+      } else {
+        set max_sn_len 16
+      } 
+    }    
+    
     if {$man_sn_len!=$max_sn_len} {
       set gaSet(fail) "The length of the \'Serial Number\' is $man_sn_len. Should be $max_sn_len"  
       return -1
@@ -444,7 +453,8 @@ proc PS_IDTest {} {
     }
     AddToPairLog $gaSet(pair) "Manufacturer Serial Number: $val"
     
-    if {[package vcompare $sw_norm 6.8.2.0.33]!="-1"} {
+    if {([string match {*ATT*} $gaSet(DutInitName)] || [string match {*_C.*} $gaSet(DutInitName)]) &&\
+        [package vcompare $sw_norm 6.8.2.0.33]!="-1"} {
       ## if sw_norm >=6.8.2.0.33
       set res [regexp {CLEI Code[\s\:]+([\w]+)\s} $buffer ma val]
       puts "CLEI Code res:$res ma:$ma val:$val"
