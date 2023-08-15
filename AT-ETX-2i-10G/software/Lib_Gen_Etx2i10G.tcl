@@ -2070,16 +2070,23 @@ proc CheckFolder4NewFiles {path secNow} {
 # IsOptionReqsSerNum
 # ***************************************************************************
 proc IsOptionReqsSerNum {} {
-  global gaSet
+  global gaSet gaGui
   set res 0
   puts "\nIsOptionReqsSerNum $gaSet(DutFullName)"
-  set gaSet(insertSerNumOptsList) [list ETX-2I-10G_LY ETX-2I-10G-B_LY ] ; #11:01 07/08/2023 ETX-2I-10G-B_VO/19/ACR/4SFPP/4S4U
+  
+  set gaSet(insertSerNumOptsList) [list  ] ; #  07:31 08/08/2023 ETX-2I-10G_LY ETX-2I-10G-B_LY  #11:01 07/08/2023 ETX-2I-10G-B_VO/19/ACR/4SFPP/4S4U
   foreach opt $gaSet(insertSerNumOptsList)  {
     set res [string match *$opt* $gaSet(DutFullName)]
     puts "IsOptionReqsSerNum $opt $res"
     if $res break
   }
-  puts ""
+  puts "IsOptionReqsSerNum res:<$res>"
+  if $res {
+    set state normal
+  } else {
+    set  state disabled
+  }
+  $gaGui(enSerNum) configure -state $state
   update
   return $res
 }

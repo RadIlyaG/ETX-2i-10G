@@ -405,8 +405,10 @@ proc PS_IDTest {} {
     
   set sw_norm [join  [regsub -all {[\(\)]} $sw " "]  . ] ; # 6.8.2(0.33) -> 6.8.2.0.33
   puts "DutInitName:<$gaSet(DutInitName)> sw:<$sw> sw_norm:<$sw_norm>"; update
-  if {([string match {*ATT*} $gaSet(DutInitName)] || [string match {*_C.*} $gaSet(DutInitName)] || [string match {*_VO.*} $gaSet(DutInitName)]) && \
-      [package vcompare $sw_norm 6.7.1.0.15]!="-1"} {
+  if {([string match {*ATT*} $gaSet(DutInitName)] || [string match {*_C.*} $gaSet(DutInitName)] || \
+       [string match {*_VO.*} $gaSet(DutInitName)] || \
+       [string match {ETX-2I-10G_LY.*} $gaSet(DutInitName)] || [string match {ETX-2I-10G-B_LY.*} $gaSet(DutInitName)]) && \
+       [package vcompare $sw_norm 6.7.1.0.15]!="-1"} {
     ## if sw_norm >=6.7.1.0.15
     
     if {$res==0} {

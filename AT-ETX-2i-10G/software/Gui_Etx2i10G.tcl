@@ -1549,7 +1549,9 @@ proc ToggleEnSerNum {} {
   global gaSet glTests gaGui
   puts "ToggleEnSerNum $gaSet(enSerNum)"
   set txt [join [split $gaSet(insertSerNumOptsList)] \n] 
-  if {$gaSet(enSerNum) == 0 && [IsOptionReqsSerNum ] == 1} { 
+  set isOptionReqsSerNum [IsOptionReqsSerNum ]
+  if {[llength $gaSet(insertSerNumOptsList)]==0} {return 0}
+  if {$gaSet(enSerNum) == 0 && $isOptionReqsSerNum == 1} { 
     RLSound::Play information
     set ret [DialogBox -title "Confirm disable"\
       -type "yes no" -icon images/question -aspect 2000\
@@ -1571,8 +1573,8 @@ proc ToggleEnSerNum {} {
       }
       return {}
     }
-  } elseif {$gaSet(enSerNum) == 1 && [IsOptionReqsSerNum ] == 0} { 
-    RLSound::Play information
+  } elseif {$gaSet(enSerNum) == 1 && $isOptionReqsSerNum == 0} { 
+    RLSound::Play information    
     set ret [DialogBox -title "Confirm enable"\
       -type "OK" -icon images/error -aspect 2000\
       -text "The \'Insert Ser. Number\' CheckButton should be selected ONLY when the following is tested:\n\n$txt\n\n\
@@ -1580,6 +1582,7 @@ proc ToggleEnSerNum {} {
       # if {$ret=="no"} {
         # set gaSet(enSerNum) 0
       # }
+    
   }
   BuildTests  
 }
