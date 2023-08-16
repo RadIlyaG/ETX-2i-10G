@@ -241,8 +241,9 @@ proc PS_IDTest {} {
   set prompt $buffer
   set dutFullName $gaSet(DutFullName)  
   puts "prompt:<$prompt> dutFullName:<$dutFullName>\n"; update
-  if {([string match *-B* $prompt]  &&  [string match *-B* $dutFullName]) ||
-      (![string match *-B* $prompt] && ![string match *-B* $dutFullName])} {
+  if {([string match *-B* $prompt]  &&  [string match *-B* $dutFullName]) || \
+      (![string match *-B* $prompt] && ![string match *-B* $dutFullName]) || \
+      ([string match *RAD_ZTP* $prompt]  &&  [string match *-B_VO* $dutFullName])} {
         ## both promt and dutFullName have or haven't -B, it is OK
   } else {
     set gaSet(fail) "Mismatch between UUT's Prompt ($prompt) and Barcode ($dutFullName)" 
@@ -930,7 +931,7 @@ proc Login {} {
   } else {
     set ret 0
   }
-  puts "login lo:1 ret:<$ret>" ; update
+  puts "login lo:A01 ret:<$ret>" ; update
   if {[string match {*Are you sure?*} $buffer]==1} {
     Send $com n\r stam 1
     append gaSet(loginBuffer) "$buffer"
@@ -941,67 +942,73 @@ proc Login {} {
     set ret 0
     Send $com \r stam 0.25
     append gaSet(loginBuffer) "$buffer"
-    puts "login lo:2 ret:<$ret>" ; update
+    puts "login lo:A02 ret:<$ret>" ; update
   }
   if {[string match *FPGA* $buffer]} {
     set ret 0
     Send $com exit\r\r -2I
     append gaSet(loginBuffer) "$buffer"
-    puts "login lo:3 ret:<$ret>" ; update
+    puts "login lo:A03 ret:<$ret>" ; update
   }
   if {[string match *:~$* $buffer] || [string match *login:* $buffer] || \
       [string match *Password:* $buffer]  || [string match *rad#* $buffer]} {
     set ret 0
     Send $com \x1F\r\r -2I
-    puts "login lo:4 ret:<$ret>" ; update
+    puts "login lo:A04 ret:<$ret>" ; update
   }
   if {[string match *-2I* $buffer]} {
     set ret 0
     set gaSet(prompt) "ETX-2I"
-    puts "login lo:5 ret:<$ret>" ; update
+    puts "login lo:A05 ret:<$ret>" ; update
     return 0
   }
   if {[string match *ETX-2i* $buffer]} {
     set gaSet(prompt) "ETX-2i"
     set ret 0
-    puts "login lo:6 ret:<$ret>" ; update
+    puts "login lo:A06 ret:<$ret>" ; update
     return 0
   }
   if {[string match *ztp* $buffer]} {
     set ret 0
     set gaSet(prompt) "ztp"
-    puts "login lo:7 ret:<$ret>" ; update
+    puts "login lo:A07 ret:<$ret>" ; update
     return 0
   }
   if {[string match *ZTP* $buffer]} {
     set ret 0
     set gaSet(prompt) "ZTP"
-    puts "login lo:7.1 ret:<$ret>" ; update
+    puts "login lo:A07.1 ret:<$ret>" ; update
     return 0
   }
   if {[string match *CUST-LAB* $buffer]} {
     set ret 0
     set gaSet(prompt) "CUST-LAB-ETX203PLA-1"
-    puts "login lo:8 ret:<$ret>" ; update
+    puts "login lo:A08 ret:<$ret>" ; update
     return 0
   }
   if {[string match *WallGarden_TYPE-5* $buffer]} {
     set ret 0
     set gaSet(prompt) "WallGarden_TYPE-5"
-    puts "login lo:9 ret:<$ret>" ; update
+    puts "login lo:A09 ret:<$ret>" ; update
     return 0
   }
   if {[string match *BOOTSTRAP-2I10G* $buffer]} {
     set ret 0
     set gaSet(prompt) "BOOTSTRAP-2I10G"
-    puts "login lo:10 ret:<$ret>" ; update
+    puts "login lo:A0A ret:<$ret>" ; update
+    return 0
+  }
+  if {[string match *RAD_ZTP* $buffer]} {
+    set ret 0
+    set gaSet(prompt) "RAD_ZTP"
+    puts "login lo:A0B ret:<$ret>" ; update
     return 0
   }
   
   if {[string match {*C:\\*} $buffer]} {
     set ret 0
     set gaSet(prompt) "ETX-2I"
-    puts "login lo:11 ret:<$ret>" ; update
+    puts "login lo:A0C ret:<$ret>" ; update
     return 0
   } 
   if {[string match *user>* $buffer]} {
@@ -1011,7 +1018,7 @@ proc Login {} {
     if {[string match *ETX-2i* $buffer]} {
       set gaSet(prompt) "ETX-2i"
       set ret 0
-      puts "login lo:12 ret:<$ret>" ; update
+      puts "login lo:B01 ret:<$ret>" ; update
     }
     $gaSet(runTime) configure -text ""
     #set gaSet(prompt) "ETX-2I"
@@ -1048,7 +1055,7 @@ proc Login {} {
         [string match {*-2i*} $buffer]==1) && ([string match {*Device*} $buffer]==0)} {      
       puts "if1 <$buffer>"
       set ret 0
-      puts "login lo:13 ret:<$ret>" ; update
+      puts "login lo:C01 ret:<$ret>" ; update
       break
     }
     ## exit from boot menu 
@@ -1059,12 +1066,12 @@ proc Login {} {
     if {[string match *login:* $buffer]} { }
     if {[string match *:~$* $buffer] || [string match *login:* $buffer] || [string match *Password:* $buffer]} {
       Send $com \x1F\r\r -2I
-      puts "login lo:14 0" ; update
+      puts "login lo:C02 0" ; update
       return 0
     }
     if {[string match {*C:\\*} $buffer]} {
       set ret 0
-      puts "login lo:15 ret:<$ret>" ; update
+      puts "login lo:C02 ret:<$ret>" ; update
       return 0
     } 
   }
@@ -1075,49 +1082,54 @@ proc Login {} {
       if {[string match *220* $buffer]} {
         set gaSet(prompt) "ETX-220"
         set ret 0
-        puts "login lo:16 ret:<$ret>" ; update
+        puts "login lo:C04 ret:<$ret>" ; update
       }
       if {[string match *203* $buffer]} {
         set gaSet(prompt) "ETX-203"
         set ret 0
-        puts "login lo:17 ret:<$ret>" ; update
+        puts "login lo:C05 ret:<$ret>" ; update
       }
       if {[string match *ztp* $buffer]} {
         set gaSet(prompt) "ztp"
         set ret 0
-        puts "login lo:18 ret:<$ret>" ; update
+        puts "login lo:C06 ret:<$ret>" ; update
       }
       if {[string match *ETX-2I* $buffer]} {
         set gaSet(prompt) "ETX-2I"
         set ret 0
-        puts "login lo:19 ret:<$ret>" ; update
+        puts "login lo:C07 ret:<$ret>" ; update
       }
       if {[string match *CUST-LAB* $buffer]} {
         set gaSet(prompt) "CUST-LAB-ETX203PLA-1"
         set ret 0
-        puts "login lo:20 ret:<$ret>" ; update
+        puts "login lo:C08 ret:<$ret>" ; update
       }
       if {[string match *WallGarden_TYPE-5* $buffer]} {
         set gaSet(prompt) "WallGarden_TYPE-5"
         set ret 0
-        puts "login lo:21 ret:<$ret>" ; update
+        puts "login lo:C09 ret:<$ret>" ; update
       }
       if {[string match *BOOTSTRAP-2I10G* $buffer]} {
         set gaSet(prompt) "BOOTSTRAP-2I10G"
         set ret 0
-        puts "login lo:22 ret:<$ret>" ; update
+        puts "login lo:C0A ret:<$ret>" ; update
       } 
       if {[string match *ETX-2i* $buffer]} {
         set gaSet(prompt) "ETX-2i"
         set ret 0
-        puts "login lo:23 ret:<$ret>" ; update
+        puts "login lo:C0B ret:<$ret>" ; update
       }    
+      if {[string match *RAD_ZTP* $buffer]} {
+        set ret 0
+        set gaSet(prompt) "RAD_ZTP"
+        puts "login lo:C0C ret:<$ret>" ; update
+      }
     }
   }  
   if {$ret!=0} {
     set gaSet(fail) "Login to ETX-2I Fail"
   }
-  puts "login lo:24 ret:<$ret>" ; update
+  puts "login lo:D00 ret:<$ret>" ; update
   $gaSet(runTime) configure -text ""
   if {$gaSet(act)==0} {return -2}
   Status $statusTxt
