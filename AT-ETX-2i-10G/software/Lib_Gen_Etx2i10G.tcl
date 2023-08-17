@@ -318,9 +318,14 @@ proc Send {com sent {expected stamm} {timeOut 8}} {
 
   #puts "sent:<$sent>"
   
-  ## replace a few empties by one empty
-  regsub -all {[ ]+} $sent " " sent
-  
+  if ![info exists ::reduceSpaces] {
+    set ::reduceSpaces 1
+  }
+  if {$::reduceSpaces==1} {  
+    ## replace a few empties by one empty
+    regsub -all {[ ]+} $sent " " sent
+  } 
+
   #puts "sent:<[string trimleft $sent]>"
   ##set cmd [list RLSerial::SendSlow $com $sent 50 buffer $expected $timeOut]
   if {$expected=="stamm"} {
@@ -347,6 +352,8 @@ proc Send {com sent {expected stamm} {timeOut 8}} {
     return $ret
     
   }
+  
+  #puts "Send sent:<$sent>" 
   set cmd [list RLSerial::Send $com $sent buffer $expected $timeOut]
   ##set cmd [list RLCom::Send $com $sent buffer $expected $timeOut]
   if {$gaSet(act)==0} {return -2}
@@ -381,7 +388,7 @@ proc Send {com sent {expected stamm} {timeOut 8}} {
       append sentNew "\\r"
     } elseif {[scan $car %c]=="10"} {
       append sentNew "\\n"
-    } {
+    } else {
       append sentNew $car
     }
   }
@@ -1009,7 +1016,9 @@ proc DownloadConfFile {cf cfTxt save com} {
         ## perform the configuration fast (without expected)
         set ret 0
         set buffer bbb
+        set ::reduceSpaces 0
         RLSerial::Send $com "$line\r" 
+        set ::reduceSpaces 1
         ##RLCom::Send $com "$line\r" 
       } else {
         if {[string match *Aux* $cfTxt]} {
@@ -1035,7 +1044,16 @@ proc DownloadConfFile {cf cfTxt save com} {
         if {[string match *ZTP* $line]} {
           set gaSet(prompt) "ZTP"
         }
-        set ret [Send $com $line\r $gaSet(prompt) 60]
+        if {[string match *2i10G-COV-* $line]} {
+          set gaSet(prompt) "2i10G-COV-"
+        }
+        set ::reduceSpaces 0
+        if {[string match {*login-message*} $line]} {
+          Send $com $line\r stam 1
+        } else {
+          set ret [Send $com $line\r $gaSet(prompt) 60]
+        }  
+        set ::reduceSpaces 1
 #         Send $com "$line\r"
 #         set ret [MyWaitFor $com {205A 2I ztp} 0.25 60]
       }  

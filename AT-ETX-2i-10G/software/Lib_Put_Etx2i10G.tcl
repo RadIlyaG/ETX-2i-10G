@@ -1004,13 +1004,18 @@ proc Login {} {
     puts "login lo:A0B ret:<$ret>" ; update
     return 0
   }
-  
   if {[string match {*C:\\*} $buffer]} {
     set ret 0
     set gaSet(prompt) "ETX-2I"
     puts "login lo:A0C ret:<$ret>" ; update
     return 0
   } 
+  if {[string match *2i10G-COV-* $buffer]} {
+    set ret 0
+    set gaSet(prompt) "2i10G-COV-"
+    puts "login lo:A0D ret:<$ret>" ; update
+    return 0
+  }
   if {[string match *user>* $buffer]} {
     Send $com su\r stam 0.25
     puts "login user1 prmpt:<$gaSet(prompt)>"
@@ -1123,6 +1128,11 @@ proc Login {} {
         set ret 0
         set gaSet(prompt) "RAD_ZTP"
         puts "login lo:C0C ret:<$ret>" ; update
+      }
+      if {[string match *2i10G-COV-* $buffer]} {
+        set ret 0
+        set gaSet(prompt) "2i10G-COV-"
+        puts "login lo:C0D ret:<$ret>" ; update
       }
     }
   }  
