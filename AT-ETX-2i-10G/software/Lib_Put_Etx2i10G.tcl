@@ -2573,7 +2573,7 @@ proc FanStatusTest {} {
     if {$ret!=0} {return $ret}
     set ret [Send $com "configure port ethernet 0/1\r" $gaSet(prompt)]
     if {$ret!=0} {return $ret}
-    set ret [Send $com "show status\r" more 4]
+    set ret [Send $com "show status\r" more 8]
     if {$ret!=0} {
       set gaSet(fail) "Read Laser Temperature fail"
       return $ret
