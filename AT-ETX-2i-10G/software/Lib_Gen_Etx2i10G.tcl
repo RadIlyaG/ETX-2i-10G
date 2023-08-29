@@ -860,7 +860,8 @@ proc RetriveDutFam {{dutInitName ""}} {
       ## 29/06/2022 14:27:11
       ## exceptions
       if {$dutInitName == "ETX-2I-10G_CELLCOM.ACDC.24SFP.tcl" || \
-          $dutInitName == "ETX-2I-10G_CELLCOM.ACDC.2SFPP.24SFP.tcl"} {
+          $dutInitName == "ETX-2I-10G_CELLCOM.ACDC.2SFPP.24SFP.tcl" || \
+          $dutInitName == "ETX-2I-10G_CELLCOM.ACDC.4SFPP.24SFP.tcl"} {
         puts "if 0121"
         set gaSet(dutFam) 19.0.0.0.0.0.0
       }
