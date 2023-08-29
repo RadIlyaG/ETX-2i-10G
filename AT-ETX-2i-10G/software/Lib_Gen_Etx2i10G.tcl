@@ -834,6 +834,7 @@ proc RetriveDutFam {{dutInitName ""}} {
   }
   puts "RetriveDutFam $dutInitName"
   if {[string match *10G-B* $dutInitName]==1 || [string match *10G_C* $dutInitName]==1} {
+    puts "if 01"
     if {[string match *B.AC.* $dutInitName]==1 || \
         [string match *.DDC.* $dutInitName]==1 || [string match *B.8.5.* $dutInitName]==1 ||\
         [string match *B_PLD.8.5.* $dutInitName]==1 || [string match *B_OPT.* $dutInitName]==1 ||\
@@ -841,6 +842,7 @@ proc RetriveDutFam {{dutInitName ""}} {
         [string match *B_C.8.5.* $dutInitName]==1 || [string match *_C.8.5.* $dutInitName]==1 ||\
         [string match *B_FTR.8.5.* $dutInitName]==1 || [string match *B_MMC.8.5.* $dutInitName]==1} {
       set gaSet(dutFam) Half19B.0.0.0.0.0.0
+      puts "if 011"
     } elseif {[string match *B.19.DCR.8SFPP* $dutInitName]==1 || [string match *B.19.ACR.8SFPP* $dutInitName]==1 || \
               [string match *.ACDCI.* $dutInitName]==1 || [string match *.ACACI.* $dutInitName]==1 || \
               [string match *B.19.* $dutInitName]==1 || \
@@ -853,18 +855,22 @@ proc RetriveDutFam {{dutInitName ""}} {
               [string match *_C.19.H.DR.* $dutInitName]==1 || [string match *_C.19.DR.* $dutInitName]==1 || \
               [string match *B_TWC.19.* $dutInitName]==1 || [string match *B_VT.19.* $dutInitName]==1 || \
               [string match *B_GC.19.*.4SFPP4SFP $dutInitName]==1 } {
+      puts "if 012"
       set gaSet(dutFam) 19B.0.0.0.0.0.0
       ## 29/06/2022 14:27:11
       ## exceptions
       if {$dutInitName == "ETX-2I-10G_CELLCOM.ACDC.24SFP.tcl" || \
           $dutInitName == "ETX-2I-10G_CELLCOM.ACDC.2SFPP.24SFP.tcl"} {
+        puts "if 0121"
         set gaSet(dutFam) 19.0.0.0.0.0.0
       }
     }
   } elseif {[string match *.8.5.* $dutInitName]==1} {
+    puts "if 02"
     ## 10:50 08/11/2022
     set gaSet(dutFam) Half19B.0.0.0.0.0.0
   } elseif {[string match *10G_ATT.*.8SFPP* $dutInitName]} {
+    puts "if 03"
     ## 09:31 26/05/2022 In new 2I-10G parts defined with FPGA 660 the -B was removed from the Marketing and the DBR Assembly
       ## ETX-2I-10G_ATT/19/AC/8SFPP
       ## ETX-2I-10G_ATT/19/ACR/8SFPP
@@ -874,19 +880,29 @@ proc RetriveDutFam {{dutInitName ""}} {
     ## but still it is the 19B box
     set gaSet(dutFam) 19B.0.0.0.0.0.0
   } elseif {[regexp {10G\.19\.[AD]CR?\.8S?F?P?P}  $dutInitName]} {
+    puts "if 04"
     ## 07/08/2022 New naming format
     set gaSet(dutFam) 19B.0.0.0.0.0.0
   } elseif {[regexp {10G\.19\.H?\.?[AD]CR?\.8S?F?P?P}  $dutInitName]} {
+    puts "if 05"
     ## 08/11/2022 New naming format
     set gaSet(dutFam) 19B.0.0.0.0.0.0
   } else {
+    puts "if 06"
     if {[string match *.12SFP* $dutInitName]==1 || [string match *.12S12U* $dutInitName]==1 || [string match *.24SFP* $dutInitName]==1 || [string match *.12CMB.* $dutInitName]==1} {
+      puts "if 061"
       set gaSet(dutFam) 19.0.0.0.0.0.0
     } else {
+      puts "if 062"
       set gaSet(dutFam) Half19.0.0.0.0.0.0
     }
   }
   if {$dutInitName == "ETX-2I-10G_COV.ACR.4SFPP.24SFP.tcl"} {
+    puts "if 07"
+    set gaSet(dutFam) 19.0.0.0.0.0.0
+  }
+   if {$dutInitName == "ETX-2I-10G_FTR.19.HN.DCR.8SFPP.K04N.tcl"} {
+    puts "if 08"
     set gaSet(dutFam) 19.0.0.0.0.0.0
   }
   
@@ -1542,6 +1558,7 @@ proc RetriveFansCheckJ {} {
     set fans 2
     set res [regexp {st\s+([\d\.\-]+)\s+([\d\.]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+} $buffer ma A B D F G]
   } elseif {$np=="8SFPP" && $up=="0_0"} {
+    puts "if3.0"
     if {[string match *B.19.N.* $gaSet(DutInitName)]     || \
         [string match *B.19.H.* $gaSet(DutInitName)]     || \
         [string match *B_C.19.H.* $gaSet(DutInitName)]   || \
@@ -1552,7 +1569,8 @@ proc RetriveFansCheckJ {} {
         [string match *_C.H.DR.OD.* $gaSet(DutInitName)] || \
         [string match *.19.H.* $gaSet(DutInitName)] || \
         [string match *B.H.DC.OD* $gaSet(DutInitName)] || \
-        [string match *B_BRSD.H.AR.OD* $gaSet(DutInitName)]} {
+        [string match *B_BRSD.H.AR.OD* $gaSet(DutInitName)] || \
+        [string match *10G_FTR.19.HN.DCR.8SFPP.K04N* $gaSet(DutInitName)]} {
       ## 26/05/2022 added *10G_ATT.H.*
       if {$np=="8SFPP" && $up=="0_0" && [regexp {ODU?\.8} $gaSet(DutInitName)]==1} {
         puts "if3.1.1"
