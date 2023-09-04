@@ -899,11 +899,15 @@ proc RetriveDutFam {{dutInitName ""}} {
     }
   }
   if {$dutInitName == "ETX-2I-10G_COV.ACR.4SFPP.24SFP.tcl"} {
-    puts "if 07"
+    puts "if 07.1"
     set gaSet(dutFam) 19.0.0.0.0.0.0
   }
-   if {$dutInitName == "ETX-2I-10G_FTR.19.HN.DCR.8SFPP.K04N.tcl"} {
-    puts "if 08"
+  if {$dutInitName == "ETX-2I-10G_FTR.19.HN.DCR.8SFPP.K04N.tcl"} {
+    puts "if 07.2"
+    set gaSet(dutFam) 19.0.0.0.0.0.0
+  }
+  if {$dutInitName == "ETX-2I-10G.19.H.ACDC.8SFPP.PTP.tcl"} {
+    puts "if 07.3"
     set gaSet(dutFam) 19.0.0.0.0.0.0
   }
   
@@ -1585,7 +1589,7 @@ proc RetriveFansCheckJ {} {
         puts "if3.1"
         set fans 4
         set checkJ no
-        set res [regexp {st\s+([\d\.\-]+)\s+([\d\.]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([\d\.]+)\s+([\d\.]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+} $buffer ma A B D F G x1 J C E H I]    
+        set res [regexp {st\s+([\d\.\-]+)\s+([\d\.]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([\d\.]+)\s+([\d\.]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+} $buffer ma A B D F G x1 J C E H I] 
       }
     } elseif {[string match *B_C.19.DR.* $gaSet(DutInitName)] || \
               [string match *B_ATT.19.* $gaSet(DutInitName)]  || \
@@ -1612,6 +1616,12 @@ proc RetriveFansCheckJ {} {
     set fans 4
     set checkJ yes
     set res [regexp {st\s+([\d\.\-]+)\s+([\d\.]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([\d\.]+)\s+([\d\.]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+} $buffer ma A B D F G x1 J C E H I]    
+  }
+  if {$gaSet(DutInitName) == "ETX-2I-10G.19.H.ACDC.8SFPP.PTP.tcl"} {
+    puts "if6.1" 
+    set fans 4
+    set checkJ yes
+    set res [regexp {st\s+([\d\.\-]+)\s+([\d\.]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([\d\.]+)\s+([\d\.]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+} $buffer ma A B D F G x1 J C E H I] 
   }
   puts "ST fans-$fans checkJ-$checkJ"
   if {$res==0} {
@@ -1680,8 +1690,11 @@ proc PrepareDwnlJatPll {} {
 # ***************************************************************************
 # TestNewOption
 # ***************************************************************************
-proc TestNewOption {opt} {
+proc TestNewOption {{opt ""}} {
   global gaSet
+  if {$opt==""} {
+    set opt $gaSet(DutFullName)
+  }
   puts "TestNewOption $opt"
   set initName  [regsub -all / $opt .].tcl
   set gaSet(DutInitName) $initName
