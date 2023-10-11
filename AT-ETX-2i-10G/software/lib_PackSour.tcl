@@ -81,7 +81,7 @@ if 1 {
       if {$::repairMode || [string match *ilya-g* [info host]]} {
         set emailL [list]
       } else {
-        set emailL {{yulia_s@rad.com ronen_be@rad.com} {} {} }
+        set emailL {{yulia_s@rad.com} {} {} }
       }  
     } else {
       set emailL [list]
