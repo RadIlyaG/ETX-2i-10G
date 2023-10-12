@@ -152,6 +152,7 @@ proc BuildTests {} {
           if {$gaSet(rbTestMode) eq "Partial_444P"} {
             ## no ExtClk and SyncE at Ionics for 4SFPP/4SFP4UTP/PTP
           } else {
+            lappend lTests PtpClock_conf PtpClock_run ; # 08:52 12/10/2023
             lappend lTests ExtClk SyncE_conf SyncE_run 
           }
         }
