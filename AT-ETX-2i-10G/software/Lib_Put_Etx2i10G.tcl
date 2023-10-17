@@ -3363,7 +3363,7 @@ proc PtpClock_run_perf {} {
     after 4000
   }
   set sec2 [clock seconds]
-  AddToPairLog $gaSet(pair) "After [expr {$sec2 -sec1}] seconds Clock State Time : $val. "
+  AddToPairLog $gaSet(pair) "After [expr {$sec2 - $sec1}] seconds Clock State Time : $val. "
   if {$val!="Locked"} {
     set gaSet(fail) "Clock State Time : $val"
     return -1
