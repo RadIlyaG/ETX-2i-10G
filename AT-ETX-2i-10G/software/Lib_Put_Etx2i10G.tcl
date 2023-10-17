@@ -3342,6 +3342,7 @@ proc PtpClock_run_perf {} {
   set ret [ReadPtpStats master]
   if {$ret!=0} {return $ret}
   
+  set sec1 [clock seconds]
   for {set i 1} {$i<=20} {incr i} {
     Status "Read recovered g.8275-1 status ($i)"
     set ret [Send $com "show con sys clock recovered 0/1 ptp g.8275-1 status\r" $gaSet(prompt)]
@@ -3361,7 +3362,8 @@ proc PtpClock_run_perf {} {
     }
     after 4000
   }
-  AddToPairLog $gaSet(pair) "Clock State Time : $val"
+  set sec2 [clock seconds]
+  AddToPairLog $gaSet(pair) "After [expr {$sec2 -sec1}] seconds Clock State Time : $val. "
   if {$val!="Locked"} {
     set gaSet(fail) "Clock State Time : $val"
     return -1
