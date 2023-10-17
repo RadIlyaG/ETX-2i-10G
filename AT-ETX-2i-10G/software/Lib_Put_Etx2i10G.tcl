@@ -3318,6 +3318,7 @@ proc PtpClock_run_perf {} {
   global gaSet buffer
   Status "PtpClock_run Test"
   Power all on
+  set sec1 [clock seconds]
   set ret [Login]
   if {$ret!=0} {
     #set ret [Login]
@@ -3342,7 +3343,6 @@ proc PtpClock_run_perf {} {
   set ret [ReadPtpStats master]
   if {$ret!=0} {return $ret}
   
-  set sec1 [clock seconds]
   for {set i 1} {$i<=20} {incr i} {
     Status "Read recovered g.8275-1 status ($i)"
     set ret [Send $com "show con sys clock recovered 0/1 ptp g.8275-1 status\r" $gaSet(prompt)]
