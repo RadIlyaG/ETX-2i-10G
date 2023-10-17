@@ -3334,6 +3334,31 @@ proc PtpClock_run_perf {} {
   set ret [ReadPtpStats recovered]
   if {$ret!=0} {return $ret}
   
+  for {set i 1} {$i<=20} {incr i} {
+    Status "Read recovered g.8275-1 status ($i)"
+    set ret [Send $com "show con sys clock recovered 0/1 ptp g.8275-1 status\r" $gaSet(prompt)]
+    if {$ret!=0} {
+      set gaSet(fail) "Read recovered g.8275-1 status fail"
+      return $ret
+    }
+    set res [regexp {Clock State Time : (\w+) Clock} $buffer ma val]
+    puts "i:<$i> res:<$res> ma:<$ma> val:<$val>"
+    if {$res==0} {
+      set gaSet(fail) "Read Clock State Time fail"
+      return -1
+    } 
+    if {$val=="Locked"} {
+      set ret 0
+      break
+    }
+    after 4000
+  }
+  AddToPairLog $gaSet(pair) "Clock State Time : $val"
+  if {$val!="Locked"} {
+    set gaSet(fail) "Clock State Time : $val"
+    return -1
+  }
+  
   set ret [Send $com "show con sys clock master 0/1 ptp g.8275-1 statistics running\r" $gaSet(prompt)]
   if {$ret!=0} {
     set gaSet(fail) "Read master g.8275-1 statistics fail"
@@ -3371,10 +3396,15 @@ proc ReadPtpStats {clk} {
     set gaSet(fail) "Read Tx Response of $clk clk fail"
     return -1
   }
-  AddToPairLog $gaSet(pair) "Rx Announce: $ann"
-  AddToPairLog $gaSet(pair) "Rx Sync: $sync"
-  AddToPairLog $gaSet(pair) "Tx Request: $req"
-  AddToPairLog $gaSet(pair) "Tx Response: $resp"
+  foreach txt {"Rx Announce" "Rx Sync" "Tx Request" "Tx Response" } val [list $ann $sync $req $resp] {
+    set ttxxtt "[set txt]: $val"
+    AddToPairLog $gaSet(pair) $ttxxtt
+    puts $ttxxtt
+  }
+  # AddToPairLog $gaSet(pair) "Rx Announce: $ann"
+  # AddToPairLog $gaSet(pair) "Rx Sync: $sync"
+  # AddToPairLog $gaSet(pair) "Tx Request: $req"
+  # AddToPairLog $gaSet(pair) "Tx Response: $resp"
   if {$ann==0 || $sync==0 || $req==0 || $resp==0} {
     set gaSet(fail) "Not all counters of $clk g.8275-1 are nonzero"
     return -1
