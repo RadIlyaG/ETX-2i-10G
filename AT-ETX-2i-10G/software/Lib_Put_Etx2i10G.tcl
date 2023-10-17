@@ -3334,6 +3334,14 @@ proc PtpClock_run_perf {} {
   set ret [ReadPtpStats recovered]
   if {$ret!=0} {return $ret}
   
+  set ret [Send $com "show con sys clock master 0/1 ptp g.8275-1 statistics running\r" $gaSet(prompt)]
+  if {$ret!=0} {
+    set gaSet(fail) "Read master g.8275-1 statistics fail"
+    return $ret
+  }
+  set ret [ReadPtpStats master]
+  if {$ret!=0} {return $ret}
+  
   for {set i 1} {$i<=20} {incr i} {
     Status "Read recovered g.8275-1 status ($i)"
     set ret [Send $com "show con sys clock recovered 0/1 ptp g.8275-1 status\r" $gaSet(prompt)]
@@ -3358,14 +3366,6 @@ proc PtpClock_run_perf {} {
     set gaSet(fail) "Clock State Time : $val"
     return -1
   }
-  
-  set ret [Send $com "show con sys clock master 0/1 ptp g.8275-1 statistics running\r" $gaSet(prompt)]
-  if {$ret!=0} {
-    set gaSet(fail) "Read master g.8275-1 statistics fail"
-    return $ret
-  }
-  set ret [ReadPtpStats master]
-  if {$ret!=0} {return $ret}
   
   return $ret
 }
@@ -3397,7 +3397,7 @@ proc ReadPtpStats {clk} {
     return -1
   }
   foreach txt {"Rx Announce" "Rx Sync" "Tx Request" "Tx Response" } val [list $ann $sync $req $resp] {
-    set ttxxtt "[set txt]: $val"
+    set ttxxtt "Clock [set clk], [set txt]: $val"
     AddToPairLog $gaSet(pair) $ttxxtt
     puts $ttxxtt
   }
