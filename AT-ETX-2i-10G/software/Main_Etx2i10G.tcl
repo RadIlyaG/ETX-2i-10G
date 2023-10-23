@@ -810,7 +810,11 @@ proc DataTransmissionTestPerf {checkTime} {
 proc ExtClk {run} {
   global gaSet
   Power all on
+  set ret [ExtClkTxTest dis]
+  if {$ret!=0} {return $ret}
   set ret [ExtClkTest Unlocked]
+  if {$ret!=0} {return $ret}
+  set ret [ExtClkTxTest en]
   if {$ret!=0} {return $ret}
   set ret [ExtClkTest Locked]
   if {$ret!=0} {
@@ -818,6 +822,8 @@ proc ExtClk {run} {
     after 3000
     Power all on  
     Wait "Wait for UP" 40
+    set ret [ExtClkTxTest en]
+    if {$ret!=0} {return $ret}
     set ret [ExtClkTest Locked]
   }
   return $ret
