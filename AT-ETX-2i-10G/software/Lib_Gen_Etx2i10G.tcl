@@ -1575,7 +1575,8 @@ proc RetriveFansCheckJ {} {
         [string match *.19.H.* $gaSet(DutInitName)] || \
         [string match *B.H.DC.OD* $gaSet(DutInitName)] || \
         [string match *B_BRSD.H.AR.OD* $gaSet(DutInitName)] || \
-        [string match *10G_FTR.19.HN.DCR.8SFPP.K04N* $gaSet(DutInitName)]} {
+        [string match *10G_FTR.19.HN.DCR.8SFPP.K04N* $gaSet(DutInitName)]  || \
+        [string match *B.H.ACR* $gaSet(DutInitName)]  } {
       ## 26/05/2022 added *10G_ATT.H.*
       if {$np=="8SFPP" && $up=="0_0" && [regexp {ODU?\.8} $gaSet(DutInitName)]==1} {
         puts "if3.1.1"
