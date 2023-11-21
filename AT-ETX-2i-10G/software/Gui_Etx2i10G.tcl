@@ -694,6 +694,9 @@ proc ButRun {} {
 	    ## do not include No Operator fail in statistics
       set gaSet(runStatus) ""  
 	  }
+    if {$gaSet(runStatus)!=""} {
+      UnregIdBarcode $gaSet(1.barcode1)
+    }
 	  pack $gaGui(frFailStatus)  -anchor w
 	  $gaSet(runTime) configure -text ""
 	  RLSound::Play fail
@@ -731,7 +734,6 @@ proc ButRun {} {
   
   update
 }
-
 
 #***************************************************************************
 #** ButStop
