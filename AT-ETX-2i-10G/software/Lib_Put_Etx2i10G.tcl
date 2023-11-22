@@ -406,9 +406,12 @@ proc PS_IDTest {} {
     
   set sw_norm [join  [regsub -all {[\(\)]} $sw " "]  . ] ; # 6.8.2(0.33) -> 6.8.2.0.33
   puts "DutInitName:<$gaSet(DutInitName)> sw:<$sw> sw_norm:<$sw_norm>"; update
-  if {([string match {*ATT*} $gaSet(DutInitName)] || [string match {*_C.*} $gaSet(DutInitName)] || \
-       [string match {*_VO.*} $gaSet(DutInitName)] || \
-       [string match {ETX-2I-10G_LY.*} $gaSet(DutInitName)] || [string match {ETX-2I-10G-B_LY.*} $gaSet(DutInitName)]) && \
+  if {([string match {*ATT*} $gaSet(DutInitName)]           || \
+       [string match {*_C.*} $gaSet(DutInitName)]           || \
+       [string match {*_BRSD.*} $gaSet(DutInitName)]        || \
+       [string match {*_VO.*} $gaSet(DutInitName)]          || \
+       [string match {ETX-2I-10G_LY.*} $gaSet(DutInitName)] || \
+       [string match {ETX-2I-10G-B_LY.*} $gaSet(DutInitName)]) && \
        [package vcompare $sw_norm 6.7.1.0.15]!="-1"} {
     ## if sw_norm >=6.7.1.0.15
     
@@ -478,6 +481,10 @@ proc PS_IDTest {} {
       }
       
       ## 08:45 20/04/2023
+      if {[lsearch $gaSet(CleiCodesL) $gaSet(DutFullName)]=="-1"} {
+        set gaSet(fail) "The \'$gaSet(DutFullName)\' doesn't exist in CleiCodes.txt"  
+        return -1
+      }
       set tblClei [lindex $gaSet(CleiCodesL) [expr {1 + [lsearch $gaSet(CleiCodesL) $gaSet(DutFullName)]}]]
       puts "\n DutFullName:<$gaSet(DutFullName)> tblClei:<$tblClei> Clei:<$val>"
       if {$val != $tblClei} {
