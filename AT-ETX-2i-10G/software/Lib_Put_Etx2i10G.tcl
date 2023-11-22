@@ -429,7 +429,7 @@ proc PS_IDTest {} {
         set max_sn_len 16
       } 
     } 
-    if [string match {*_C.*} $gaSet(DutInitName)] {
+    if {[string match {*_C.*} $gaSet(DutInitName)] || [string match {*_BRSD.*} $gaSet(DutInitName)]} {
       if {[package vcompare $sw_norm 6.8.2.0.52]!="-1"} {
         ## if sw_norm >=6.8.2.0.52
         set max_sn_len 10
@@ -456,7 +456,9 @@ proc PS_IDTest {} {
     }
     AddToPairLog $gaSet(pair) "Manufacturer Serial Number: $val"
     
-    if {([string match {*ATT*} $gaSet(DutInitName)] || [string match {*_C.*} $gaSet(DutInitName)]) &&\
+    if {([string match {*ATT*} $gaSet(DutInitName)] || \
+         [string match {*_C.*} $gaSet(DutInitName)] || \
+         [string match {*_BRSD.*} $gaSet(DutInitName)]) &&\
         [package vcompare $sw_norm 6.8.2.0.33]!="-1"} {
       ## if sw_norm >=6.8.2.0.33
       set res [regexp {CLEI Code[\s\:]+([\w]+)\s} $buffer ma val]
@@ -489,7 +491,9 @@ proc PS_IDTest {} {
     }
   } else {
     puts "No ATT or sw < 6.8.2(0.32)"
-    if {[string match {*ATT*} $gaSet(DutInitName)]==0 && [string match {*_C.*} $gaSet(DutInitName)]==0} {
+    if {[string match {*ATT*} $gaSet(DutInitName)]==0 && \
+        [string match {*_C.*} $gaSet(DutInitName)]==0 && \
+        [string match {*_BRSD.*} $gaSet(DutInitName)]==0} {
       if {$res==0} {
         puts "No ATT and no Lumen, No \'Manufacturer Serial Number\' field"          
       } else {
