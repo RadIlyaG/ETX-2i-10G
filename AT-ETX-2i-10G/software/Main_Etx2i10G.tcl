@@ -222,7 +222,7 @@ proc BuildTests {} {
         if {$gaSet(rbTestMode) eq "Comp_444P"} {
           foreach tst {"BootDownload" "Pages" "SetDownload" "SoftwareDownload" "FanEepromBurn" "DDR" \
                         "SetToDefaultWD" "OpenLicense" "ID" "UTP_ID"  "SFP_ID" \
-                        "LoadDefaultConfiguration" "Mac_BarCode"} {
+                        "LoadDefaultConfiguration"} {
             set lTests [lreplace $lTests [lsearch $lTests $tst]  [lsearch $lTests $tst]]
           }
         }
@@ -842,7 +842,9 @@ proc Leds_FAN_conf {run} {
     return $ret
   }
   
-  if {$gaSet(rbTestMode) eq "MainBoard" || $gaSet(rbTestMode) eq "Full"} {
+  if {$gaSet(rbTestMode) eq "MainBoard" || \
+      $gaSet(rbTestMode) eq "Full" || \
+      $gaSet(rbTestMode) eq "Comp_444P"} {
     set ret [Login]
     if {$ret!=0} {
       #set ret [Login]
@@ -863,6 +865,9 @@ proc Leds_FAN_conf {run} {
     set cf $gaSet([set b]CF) 
     set cfTxt "$b"    
     set ret [DownloadConfFile $cf $cfTxt 0 $com]
+    if {$ret!=0} {return $ret}
+    
+    set ret [ExtClkTxTest en]
     if {$ret!=0} {return $ret}
   }
   
