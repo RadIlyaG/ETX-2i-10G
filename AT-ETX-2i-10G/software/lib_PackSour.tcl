@@ -27,7 +27,8 @@ source lib_DeleteOldApp.tcl
 DeleteOldApp
 DeleteOldUserDef
 
-if {[string match *avraham-bi* [info host]] || [string match *david-ya* [info host]]} {
+set host_name  [info host]
+if {[string match *avraham-bi* $host_name] || [string match *david-ya* $host_name] || [string match *ofer-m-* $host_name]} {
   set ::repairMode 1
 } else {
   set ::repairMode 0
