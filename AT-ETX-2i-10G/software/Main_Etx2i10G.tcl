@@ -39,7 +39,7 @@ proc BuildTests {} {
           set ret [GetDbrSWAgain]
           if {$ret!=0} {return $ret}
         }
-        set sw_norm [join [regsub -all {[\(\)]} $gaSet(dbrSW) " "]  . ] ; # 6.8.2(0.33) -> 6.8.2.0.33
+        set sw_norm [join [regsub -all {[\(\)A-Z]} $gaSet(dbrSW) " "]  . ] ; # 6.8.5(1.27T5) -> 6.8.5.1.27T5
         
         set doorTestApp1 "6.8.2.2.75" ; ## 07:29 17/04/2023 "6.8.2.2.76"  
         set doorTestApp2 "6.8.2.0.75" ; ## 08:37 18/04/2023   

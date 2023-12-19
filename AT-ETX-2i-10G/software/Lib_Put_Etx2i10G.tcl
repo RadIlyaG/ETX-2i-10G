@@ -404,7 +404,7 @@ proc PS_IDTest {} {
   set res [regexp {Manufacturer Serial Number[\s\:]+([\w\s]+)\sConnectors} $buffer ma val]
   puts "Manufacturer Serial Number res:$res ma:$ma val:$val"
     
-  set sw_norm [join  [regsub -all {[\(\)]} $sw " "]  . ] ; # 6.8.2(0.33) -> 6.8.2.0.33
+  set sw_norm [join  [regsub -all {[\(\)A-Z]} $sw " "]  . ] ; # 6.8.5(1.27T5) -> 6.8.5.1.27T5
   puts "DutInitName:<$gaSet(DutInitName)> sw:<$sw> sw_norm:<$sw_norm>"; update
   if {([string match {*ATT*} $gaSet(DutInitName)]           || \
        [string match {*_C.*} $gaSet(DutInitName)]           || \
