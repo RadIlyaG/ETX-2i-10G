@@ -2175,6 +2175,7 @@ proc RetriveIdTraceData {args} {
   package require http
   package require tls
   package require base64
+  package require json
   ::http::register https 8445 ::tls::socket
   global gaSet
   set gaSet(fail) ""
@@ -2208,11 +2209,43 @@ proc RetriveIdTraceData {args} {
   set body $state(body)
   ::http::cleanup $tok
   
-  set re {[{}\[\]\,\t\:\"]}
-  set tt [regsub -all $re $body " "]
-  set ret [regsub -all {\s+}  $tt " "]
+  if 0 {
+    https://ws-proxy01.rad.com:8445/ATE_WS/ws/rest/PCBTraceabilityIDData?barcode=null&traceabilityID=21181408
+    {
+    "PCBTraceabilityIDData": [
+      {
+        "rownum": "1",
+        "po number": "5744272",
+        "sub_po_number": "/0",
+        "pdn": "1001804312",
+        "product": "SF1P/PS12V/RG/PS3/TERNA/3PIN/R06",
+        "pcb_pdn": "1001802039",
+        "pcb": "SF-1V/PS.REV0.3I"
+      }
+    ]
+    }
+  }
   
-  return [lindex $ret end]
+  set asadict [::json::json2dict $body]
+  foreach {name whatis} $asadict {
+    foreach {par val} [lindex $whatis 0] {
+      puts "<$par> <$val>"
+      if {$val!="null"} {
+        dict set di $par $val
+      }  
+    }
+  }
+  if [info exist di] {
+    return $di ; #[dict get $di $retPar]
+  } else {
+    return -1
+  }
+  
+  # set re {[{}\[\]\,\t\:\"]}
+  # set tt [regsub -all $re $body " "]
+  # set ret [regsub -all {\s+}  $tt " "]
+  
+  # return [lindex $ret end]
 }
 
 # ***************************************************************************
@@ -2226,13 +2259,15 @@ proc GetPcbID {board} {
   if {$barc==""} {
     # do nothing
   } else {
-    set pcbName [RetriveIdTraceData $barc PCBTraceabilityIDData]
+    set ret [RetriveIdTraceData $barc PCBTraceabilityIDData]
   }
   puts "GetPcbID board:<$board> barc:<$barc> pcbName:<$pcbName>" 
   if {$pcbName=="-1"} {
     return -1
   } else {
+    set pcbName [dict get $ret pcb]
     set gaSet([set board]PcbId) $pcbName
+    
     #set gaSet([set board]PcbIdBarc) ""
     if {$board=="main"} {
       focus -force $gaGui(entPCB_SUB_CARD_1_IDbarc) 

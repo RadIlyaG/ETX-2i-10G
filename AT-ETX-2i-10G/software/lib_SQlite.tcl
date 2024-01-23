@@ -70,6 +70,18 @@ proc SQliteAddLine {} {
   } else {
     set operator 0
   }
+  
+  if ![info exists gaSet(1.traceId)] {set gaSet(1.traceId) ""}
+  if {$gaSet(1.traceId)=""} {
+    set poNumber ""
+  } else {
+    set ret [RetriveIdTraceData $gaSet(1.traceId) PCBTraceabilityIDData]
+  }
+  if {$ret=="-1"} {
+    set poNumber ""
+  } else {
+    set poNumber [dict get $ret "po number"]
+  }
 
   for {set tr 1} {$tr <= 6} {incr tr} {
     if [catch {UpdateDB $barcode $uut $hostDescription $date $tim-$gaSet(ButRunTime) $status $failTestsList $failReason $operator} res] {
