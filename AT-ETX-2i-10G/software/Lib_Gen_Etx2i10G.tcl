@@ -2178,7 +2178,7 @@ proc RetriveIdTraceData {args} {
   package require json
   ::http::register https 8445 ::tls::socket
   global gaSet
-  set gaSet(fail) ""
+  #set gaSet(fail) ""
   puts "RetriveIdTraceData $args"
   set barc [format %.11s [lindex $args 0]]
   
