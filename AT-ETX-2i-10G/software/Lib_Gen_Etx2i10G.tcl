@@ -854,14 +854,17 @@ proc RetriveDutFam {{dutInitName ""}} {
               [regexp {ODU?\.8} $dutInitName]==1 || \
               [string match *_C.19.H.DR.* $dutInitName]==1 || [string match *_C.19.DR.* $dutInitName]==1 || \
               [string match *B_TWC.19.* $dutInitName]==1 || [string match *B_VT.19.* $dutInitName]==1 || \
-              [string match *B_GC.19.*.4SFPP4SFP $dutInitName]==1 } {
+              [string match *B_GC.19.*.4SFPP4SFP $dutInitName]==1 || \
+              [string match *CELLCOM.*C* $dutInitName]==1 } {
       puts "if 012"
       set gaSet(dutFam) 19B.0.0.0.0.0.0
       ## 29/06/2022 14:27:11
       ## exceptions
       if {$dutInitName == "ETX-2I-10G_CELLCOM.ACDC.24SFP.tcl" || \
           $dutInitName == "ETX-2I-10G_CELLCOM.ACDC.2SFPP.24SFP.tcl" || \
-          $dutInitName == "ETX-2I-10G_CELLCOM.ACDC.4SFPP.24SFP.tcl"} {
+          $dutInitName == "ETX-2I-10G_CELLCOM.ACDC.4SFPP.24SFP.tcl" || \
+          $dutInitName == "ETX-2I-10G_CELLCOM.ACR.24SFP.tcl"  || \
+          $dutInitName == "ETX-2I-10G_CELLCOM.DCR.24SFP.tcl" } {
         puts "if 0121"
         set gaSet(dutFam) 19.0.0.0.0.0.0
       }
