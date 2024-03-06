@@ -533,6 +533,7 @@ proc ButRun {} {
     if {$gaSet(cleiCodeMode)==1 || $gaSet(rbTestMode) eq "BP" || $gaSet(rbTestMode) eq "On_Off"} {
       set ret 0
       set gaSet(operator) ""
+      set gaSet(operatorID) ""
     } else {  
       set ret [GuiReadOperator]
     }
