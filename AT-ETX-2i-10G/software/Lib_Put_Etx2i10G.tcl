@@ -447,7 +447,10 @@ proc PS_IDTest {} {
       } else {
         set max_sn_len 16
       } 
-    }    
+    }  
+    if {[string match {ETX-2I-10G_LY.*} $gaSet(DutInitName)] || [string match {ETX-2I-10G-B_LY.*} $gaSet(DutInitName)]} {
+      set max_sn_len 10       
+    }  
     
     if {$man_sn_len!=$max_sn_len} {
       set gaSet(fail) "The length of the \'Serial Number\' is $man_sn_len. Should be $max_sn_len"  
