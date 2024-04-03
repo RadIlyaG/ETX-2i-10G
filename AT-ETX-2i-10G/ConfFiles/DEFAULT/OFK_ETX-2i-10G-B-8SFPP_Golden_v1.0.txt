@@ -1,0 +1,119 @@
+# configuration file
+configure
+router 1 interface 32 shut
+
+
+exit all
+    configure 
+#       System Configuration
+        system 
+#           LLDP Configuration
+            lldp 
+                no shutdown 
+            exit
+        exit
+#       Management configuration
+        management 
+            access 
+                ssh-encryption all 
+                ssh-mac all 
+            exit
+        exit
+#       Port Configuration
+        port 
+#           Ethernet - Port Configuration
+            ethernet 0/1 
+                lldp 
+                    nearest-bridge-mode tx-rx 
+                    nearest-bridge-basic-management port-description sys-name sys-capabilities management-address 
+                    nearest-bridge-802.3 mac-phy-configuration max-frame-size 
+                exit
+				dwdm-frequency 192100
+            exit
+            ethernet 0/2 
+                lldp 
+                    nearest-bridge-mode tx-rx 
+                    nearest-bridge-basic-management port-description sys-name sys-capabilities management-address 
+                    nearest-bridge-802.3 mac-phy-configuration max-frame-size 
+                exit
+            exit
+#           Service Virtual Interface- Port Configuration
+            svi 1 
+                no shutdown 
+            exit
+            svi 96 
+                no shutdown 
+            exit
+        exit
+#       Flows Configuration
+        flows 
+#           Classifier Profile Configuration
+            classifier-profile "mng_untagged" match-any 
+                match untagged 
+            exit
+            classifier-profile "mng_all" match-any 
+                match all 
+            exit
+            classifier-profile "WAN_UNTAGGED" match-any 
+                match untagged 
+            exit
+            classifier-profile "WAN_ALL" match-any 
+                match all 
+            exit
+#           Flow Configuration
+            flow "mng_access_default_in" 
+                classifier "mng_untagged" 
+                no policer 
+                ingress-port ethernet 0/101 
+                egress-port svi 96 
+                no shutdown 
+            exit
+            flow "mng_access_default_out" 
+                classifier "mng_all" 
+                no policer 
+                ingress-port svi 96 
+                egress-port ethernet 0/101 
+                no shutdown 
+            exit
+            flow "WAN_1_IN" 
+                classifier "WAN_UNTAGGED" 
+                no policer 
+                ingress-port ethernet 0/1 
+                egress-port svi 1 
+                no shutdown 
+            exit
+            flow "WAN_1_OUT" 
+                classifier "WAN_ALL" 
+                no policer 
+                ingress-port svi 1 
+                egress-port ethernet 0/1 queue 0 block 0/1 
+                no shutdown 
+            exit
+        exit
+        router 1 
+            name "Router#1" 
+            dhcp-client 
+                dhcpv6-option-request 
+            exit
+            interface 1 
+                bind svi 1 
+                dhcp-client 
+                    client-id mac 
+                exit
+                dhcpv6-client 
+                ipv6-autoconfig 
+                no shutdown 
+            exit
+            interface 32 
+                address 169.254.1.1/16 
+                bind svi 96 
+                dhcp-client 
+                    client-id mac 
+                exit
+                no shutdown 
+            exit
+        exit
+    exit
+
+    configure 
+    exit

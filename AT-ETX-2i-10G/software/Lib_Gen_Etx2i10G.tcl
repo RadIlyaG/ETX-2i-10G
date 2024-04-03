@@ -840,7 +840,8 @@ proc RetriveDutFam {{dutInitName ""}} {
         [string match *B_PLD.8.5.* $dutInitName]==1 || [string match *B_OPT.* $dutInitName]==1 ||\
         [string match *B_TWC.8.5.* $dutInitName]==1 || \
         [string match *B_C.8.5.* $dutInitName]==1 || [string match *_C.8.5.* $dutInitName]==1 ||\
-        [string match *B_FTR.8.5.* $dutInitName]==1 || [string match *B_MMC.8.5.* $dutInitName]==1} {
+        [string match *B_FTR.8.5.* $dutInitName]==1 || [string match *B_MMC.8.5.* $dutInitName]==1 ||\
+        [string match *B_OFK.8.5.* $dutInitName]==1 } {
       set gaSet(dutFam) Half19B.0.0.0.0.0.0
       puts "if 011"
     } elseif {[string match *B.19.DCR.8SFPP* $dutInitName]==1 || [string match *B.19.ACR.8SFPP* $dutInitName]==1 || \
