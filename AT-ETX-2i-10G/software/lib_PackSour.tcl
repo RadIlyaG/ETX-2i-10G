@@ -187,6 +187,7 @@ source LibUrl.tcl
 source Lib_GetOperator.tcl
 source Lib_GetSerNum.tcl
 source lib_EcoCheck.tcl
+source Lib_Ramzor.tcl
 
 source lib_DeleteOldApp.tcl
 DeleteOldApp
