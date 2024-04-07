@@ -186,6 +186,7 @@ source lib_SQlite.tcl
 source LibUrl.tcl
 source Lib_GetOperator.tcl
 source Lib_GetSerNum.tcl
+source lib_EcoCheck.tcl
 
 source lib_DeleteOldApp.tcl
 DeleteOldApp
