@@ -220,6 +220,11 @@ proc DeleteOldUserDef {} {
 #       puts "delete [file tail $userDef]"
 #       catch {file delete -force $userDef}
 #     } 
+
+    if {[string match -nocase {FTR-etx_2i_10g_b_8sfpp_golden_EDIT.txt} [file tail $userDef]]} {
+      puts "delete [file tail $userDef]"
+      catch {file delete -force $userDef}
+    }
     update
   }
 }
