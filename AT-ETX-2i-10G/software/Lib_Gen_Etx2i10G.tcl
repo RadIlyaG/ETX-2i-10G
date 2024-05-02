@@ -705,7 +705,7 @@ proc GetDbrName {mode} {
     set gaSet(fail) "Network connection problem"
     RLSound::Play fail
 	  Status "Test FAIL"  red
-    DialogBox -aspect 2000 -type Ok -message $gaSet(fail) -icon images/error -title "Get DbrName Problem"
+    DialogBoxRamzor -aspect 2000 -type Ok -message $gaSet(fail) -icon images/error -title "Get DbrName Problem"
     pack $gaGui(frFailStatus)  -anchor w
 	  $gaSet(runTime) configure -text ""
   	return -1
@@ -717,7 +717,7 @@ proc GetDbrName {mode} {
     #exec C:\\RLFiles\\Tools\\Btl\\failbeep.exe &
     RLSound::Play fail
 	  Status "Test FAIL"  red
-    DialogBox -aspect 2000 -type Ok -message $gaSet(fail) -icon images/error -title "Get DbrName Problem"
+    DialogBoxRamzor -aspect 2000 -type Ok -message $gaSet(fail) -icon images/error -title "Get DbrName Problem"
     pack $gaGui(frFailStatus)  -anchor w
 	  $gaSet(runTime) configure -text ""
   	return -1
@@ -768,7 +768,7 @@ proc GetDbrName {mode} {
     if {$ret!=0} {
       RLSound::Play fail
   	  Status "Test FAIL"  red
-      DialogBox -aspect 2000 -type Ok -message $gaSet(fail) -icon images/error -title "Get DbrName Problem"
+      DialogBoxRamzor -aspect 2000 -type Ok -message $gaSet(fail) -icon images/error -title "Get DbrName Problem"
       pack $gaGui(frFailStatus)  -anchor w
   	  $gaSet(runTime) configure -text ""
     }
@@ -1205,7 +1205,7 @@ proc GetDbrSW {barcode} {
     set gaSet(fail) "There is no SW ID for $gaSet(swPack) ID:$barcode. Verify the Barcode."
     RLSound::Play fail
 	  Status "Test FAIL"  red
-    DialogBox -aspect 2000 -type Ok -message $gaSet(fail) -icon images/error -title "Get DbrSW Problem"
+    DialogBoxRamzor -aspect 2000 -type Ok -message $gaSet(fail) -icon images/error -title "Get DbrSW Problem"
     pack $gaGui(frFailStatus)  -anchor w
 	  $gaSet(runTime) configure -text ""
   	return -1
@@ -1219,7 +1219,7 @@ proc GetDbrSW {barcode} {
     set gaSet(fail) "There is no Boot SW ID for $gaSet(dbrBVerSw) ID:$barcode. Verify the Barcode."
     RLSound::Play fail
 	  Status "Test FAIL"  red
-    DialogBox -aspect 2000 -type Ok -message $gaSet(fail) -icon images/error -title "Get DbrSW Problem"
+    DialogBoxRamzor -aspect 2000 -type Ok -message $gaSet(fail) -icon images/error -title "Get DbrSW Problem"
     pack $gaGui(frFailStatus)  -anchor w
 	  $gaSet(runTime) configure -text ""
   	return -1
@@ -1530,7 +1530,7 @@ proc UpdateSourceScripts {} {
  
   if {[lsearch $updFileL lib_PackSour.tcl] != "-1"} {
     set txt "Some Tester's files have been updated.\n\nThe GUI will automatically close and open"
-    set ret [DialogBox -title "Restart the Tester" -icon images/info -type "OK" -message $txt]
+    set ret [DialogBoxRamzor -title "Restart the Tester" -icon images/info -type "OK" -message $txt]
     if {$ret=="OK"} {
       wm iconify . ; update
       after 2000 exit
@@ -1755,7 +1755,7 @@ proc CheckTitleDbrNameVsUutDbrName {} {
     #exec C:\\RLFiles\\Tools\\Btl\\failbeep.exe &
     RLSound::Play fail
 	  Status "Test FAIL"  red
-    DialogBox -aspect 2000 -type Ok -message $gaSet(fail) -icon images/error -title "Get DbrName Problem"
+    DialogBoxRamzor -aspect 2000 -type Ok -message $gaSet(fail) -icon images/error -title "Get DbrName Problem"
     pack $gaGui(frFailStatus)  -anchor w
 	  $gaSet(runTime) configure -text ""
   	return -1
@@ -2063,7 +2063,7 @@ proc InformAboutNewFiles {} {
     }  
     #append msg "\nwas sent"
     append msg "\nAre you sure you want to upload it to TDS?"
-    set res [DialogBox -message $msg -type {Yes No} -justify left -icon question -title "Tester update" -aspect 2000]
+    set res [DialogBoxRamzor -message $msg -type {Yes No} -justify left -icon question -title "Tester update" -aspect 2000]
     #set res "Yes"
     if {$res=="Yes"} {
       if [string match *ilya-g-* [info host]] {
@@ -2089,7 +2089,7 @@ proc InformAboutNewFiles {} {
     }
   } else {
     set msg "No new files"
-    DialogBox -message $msg -type Ok -icon info -title "Tester update" -aspect 2000
+    DialogBoxRamzor -message $msg -type Ok -icon info -title "Tester update" -aspect 2000
     puts "msg:<$msg>"
   }
   
@@ -2286,4 +2286,14 @@ proc GetPcbID {board} {
     }
     return 0
   }
+}
+# ***************************************************************************
+# DialogBoxRamzor
+# ***************************************************************************
+proc DialogBoxRamzor {args}  {
+  Ramzor red on
+  set ret [eval DialogBox $args]
+  puts "DialogBoxRamzor ret after DialogBox:<$ret>"
+  Ramzor green on
+  return $ret
 }

@@ -323,7 +323,7 @@ proc Testing {} {
     Power all off
     RLSound::Play information
     set txt "Remove PS-1 and PS-2"
-    set res [DialogBox -type "OK" -icon /images/info -title "No PS option" \
+    set res [DialogBoxRamzor -type "OK" -icon /images/info -title "No PS option" \
           -message $txt -bg yellow -font {TkDefaultFont 11}]
     update
   }
@@ -431,7 +431,7 @@ proc DyingGasp_run {run} {
       MuxMngIO mngToPc nc
       RLSound::Play information
       set txt "Connect the MNG cable with SFP-30 to port 8"
-      set res [DialogBox -type "Ok Stop" -icon /images/info -title "Dying Gasp"\
+      set res [DialogBoxRamzor -type "Ok Stop" -icon /images/info -title "Dying Gasp"\
         -message $txt]
       if {$res=="Stop"} {
         return -2
@@ -473,7 +473,7 @@ proc DyingGasp_run {run} {
     if {$gaSet(rbTestMode) eq "Full"} {
       RLSound::Play information
       set txt "Connect the MNG cable to MNG-ETH port and the SFP-P with optic loop to port 8"
-      set res [DialogBox -type "Ok Stop" -icon /images/info -title "Dying Gasp"\
+      set res [DialogBoxRamzor -type "Ok Stop" -icon /images/info -title "Dying Gasp"\
         -message $txt]
       if {$res=="Stop"} {
         return -2
@@ -656,7 +656,7 @@ proc Combo_UTP_ID {run} {
   
   RLSound::Play information
   set txt "Disconnect all cables and optic fibers (except POWER and CONTROL) and verify GREEN leds are OFF"
-  set res [DialogBox -type "OK Fail" -icon /images/question -title "LED Test" -message $txt]
+  set res [DialogBoxRamzor -type "OK Fail" -icon /images/question -title "LED Test" -message $txt]
   update
   if {$res!="OK"} {
     set gaSet(fail) "LED Test failed"
@@ -964,7 +964,7 @@ proc Leds_FAN {run} {
     RLSound::Play information
     set txt "Disconnect the 3 fiber optics and \n\
     connect the 3 regular cables of the tester to ports 9, 11, 17 of the UUT"
-    set res [DialogBox -type "Ok Stop" -icon /images/info -title "Sync_E in 24SFP/PTP"\
+    set res [DialogBoxRamzor -type "Ok Stop" -icon /images/info -title "Sync_E in 24SFP/PTP"\
       -message $txt]
     if {$res=="Stop"} {
       return -2
@@ -975,7 +975,7 @@ proc Leds_FAN {run} {
     RLSound::Play information
     set txt "Disconnect the 3 fiber optics and \n\
     connect the 3 regular cables of the tester to ports 1, 3, 5 of the UUT"
-    set res [DialogBox -type "Ok Stop" -icon /images/info -title "Sync_E in 8SFPP"\
+    set res [DialogBoxRamzor -type "Ok Stop" -icon /images/info -title "Sync_E in 8SFPP"\
       -message $txt]
     if {$res=="Stop"} {
       return -2
@@ -1035,7 +1035,7 @@ proc Leds_FAN {run} {
   } 
   append txt $txt3
   
-  set res [DialogBox -type "OK Fail" -icon /images/question -title "LEDs_FAN Test" -message $txt]
+  set res [DialogBoxRamzor -type "OK Fail" -icon /images/question -title "LEDs_FAN Test" -message $txt]
   update
   
   catch {exec pskill.exe -t $pingId}
@@ -1085,7 +1085,7 @@ proc Leds_FAN {run} {
       } else {  
         RLSound::Play information
         set txt "Verify on PS-$ps that RED led is ON"
-        set res [DialogBox -type "OK Fail" -icon /images/question -title "LED Test" -message $txt]
+        set res [DialogBoxRamzor -type "OK Fail" -icon /images/question -title "LED Test" -message $txt]
       }
       update
       if {$res!="OK"} {
@@ -1112,7 +1112,7 @@ proc Leds_FAN {run} {
         } else {
           RLSound::Play information
           set txt "Remove PS-$ps and verify that led is OFF"
-          set res [DialogBox -type "OK Cancel" -icon /images/info -title "LED Test" -message $txt]
+          set res [DialogBoxRamzor -type "OK Cancel" -icon /images/info -title "LED Test" -message $txt]
         }
         update
         if {$res!="OK"} {
@@ -1139,7 +1139,7 @@ proc Leds_FAN {run} {
           
           RLSound::Play information
           set txt "Assemble PS-$ps"
-          set res [DialogBox -type "OK Cancel" -icon /images/info -title "LED Test" -message $txt]
+          set res [DialogBoxRamzor -type "OK Cancel" -icon /images/info -title "LED Test" -message $txt]
           update
           if {$res!="OK"} {
             set gaSet(fail) "PS_ID Test failed"
@@ -1155,7 +1155,7 @@ proc Leds_FAN {run} {
     if {$np=="8SFPP" && $up=="0_0" && [regexp {ODU?\.8} $gaSet(DutInitName)]==1 && $gaSet(rbTestMode) eq "Full"} {
       RLSound::Play information
       set txt "Close the screws of both PSs firmly and verify PSs are ON"
-      set res [DialogBox -type "OK Cancel" -icon /images/info -title "LED Test" -message $txt]
+      set res [DialogBoxRamzor -type "OK Cancel" -icon /images/info -title "LED Test" -message $txt]
       update
       if {$res!="OK"} {
         set gaSet(fail) "PS_ID Test failed"
@@ -1185,7 +1185,7 @@ proc Leds_FAN {run} {
     } else {
       RLSound::Play information
       set txt "Remove the EXT CLK cable and verify the SD led is OFF"
-      set res [DialogBox -type "OK Fail" -icon /images/question -title "LED Test" -message $txt]
+      set res [DialogBoxRamzor -type "OK Fail" -icon /images/question -title "LED Test" -message $txt]
       update
       if {$res!="OK"} {
         set gaSet(fail) "LED Test failed"
@@ -1207,7 +1207,7 @@ proc Leds_FAN {run} {
       RLSound::Play information
       set txt "Disconnect all cables and optic fibers (except POWER and CONTROL) and verify GREEN leds are OFF"
       
-      set res [DialogBox -type "OK Fail" -icon /images/question -title "LED Test" -message $txt]
+      set res [DialogBoxRamzor -type "OK Fail" -icon /images/question -title "LED Test" -message $txt]
       update
       if {$res!="OK"} {
         set gaSet(fail) "LED Test failed"
@@ -1234,7 +1234,7 @@ proc Leds_FAN {run} {
         Power 2 off
         RLSound::Play information
         set txt "Remove PS-2"
-        set res [DialogBox -type "OK Cancel" -icon /images/info -title "LED Test" \
+        set res [DialogBoxRamzor -type "OK Cancel" -icon /images/info -title "LED Test" \
           -message $txt -bg yellow -font {TkDefaultFont 11}]
         update
         
@@ -1497,7 +1497,7 @@ proc SyncE_conf {run} {
     Port 1 of AUX 2 (A) to Port 11 of the UUT\n\
     Port 1 of AUX 1 (B) to Port 17 of the UUT\n\
     Port 3 of AUX 1 (C) to Port 9 of the UUT"
-    set res [DialogBox -type "Ok Stop" -icon /images/info -title "Sync_E in 24SFP/PTP"\
+    set res [DialogBoxRamzor -type "Ok Stop" -icon /images/info -title "Sync_E in 24SFP/PTP"\
       -message $txt]
     if {$res=="Stop"} {
       return -2
@@ -1509,7 +1509,7 @@ proc SyncE_conf {run} {
     Port 1 of AUX 2 (A) to Port 5 of the UUT\n\
     Port 1 of AUX 1 (B) to Port 1 of the UUT\n\
     Port 3 of AUX 1 (C) to Port 3 of the UUT"
-    set res [DialogBox -type "Ok Stop" -icon /images/info -title "Sync_E in 8SPP"\
+    set res [DialogBoxRamzor -type "Ok Stop" -icon /images/info -title "Sync_E in 8SPP"\
       -message $txt]
     if {$res=="Stop"} {
       return -2
@@ -1714,7 +1714,7 @@ proc FD_button {run} {
   global gaSet gaGui buffer
   RLSound::Play information
   set txt "Press the \'FD\' button for 8-10 seconds and verify the UUT is resetting"
-  set res [DialogBox -type "Ok Stop" -icon /images/info -title "FD button Test" -message $txt]
+  set res [DialogBoxRamzor -type "Ok Stop" -icon /images/info -title "FD button Test" -message $txt]
   if {$res=="Stop"} {
     return -1
   }
@@ -1874,7 +1874,7 @@ proc BP_test {run} {
           
     RLSound::Play information
     set txt "Remove PS-$ps and verify that led is OFF"
-    set res [DialogBox -type "OK Cancel" -icon /images/info -title "LED Test" -message $txt]
+    set res [DialogBoxRamzor -type "OK Cancel" -icon /images/info -title "LED Test" -message $txt]
     if {$res!="OK"} {
       set gaSet(fail) "PS_ID Test failed"
       return -1
@@ -1893,7 +1893,7 @@ proc BP_test {run} {
           
     RLSound::Play information
     set txt "Assemble PS-$ps"
-    set res [DialogBox -type "OK Cancel" -icon /images/info -title "LED Test" -message $txt]
+    set res [DialogBoxRamzor -type "OK Cancel" -icon /images/info -title "LED Test" -message $txt]
     update
     if {$res!="OK"} {
       set gaSet(fail) "PS_ID Test failed"

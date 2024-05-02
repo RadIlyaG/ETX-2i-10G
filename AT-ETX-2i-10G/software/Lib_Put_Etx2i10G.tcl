@@ -887,7 +887,7 @@ proc ReadMac {} {
     if {($mac2<0x0020D2500000 || $mac2>0x0020D2FFFFFF) && ($mac2<0x1806F5000000 || $mac2>0x1806F5FFFFFF )} {  
       RLSound::Play fail
       set gaSet(fail) "The MAC of UUT is $mac"
-      set ret [DialogBox -type "Terminate Continue" -icon /images/error -title "MAC check"\
+      set ret [DialogBoxRamzor -type "Terminate Continue" -icon /images/error -title "MAC check"\
           -text $gaSet(fail) -aspect 2000]
       if {$ret=="Terminate"} {
         return -1
@@ -3023,7 +3023,7 @@ proc TstAlmLedTest {} {
     }
     set txt "Verify that TST/ALR led $stt"
     RLSound::Play information
-    set res [DialogBox -type "OK Fail" -icon /images/question -title "LED_FAN Test" -message $txt]
+    set res [DialogBoxRamzor -type "OK Fail" -icon /images/question -title "LED_FAN Test" -message $txt]
     update
     if {$res!="OK"} {
       set gaSet(fail) "TST/ALR led lights wrong"
@@ -3640,7 +3640,7 @@ proc DoorSwitchTestPerf {} {
   foreach doorState {"Pull Out" "Release" "Push"} regSB $regSBL {
     RLSound::Play information
     set txt "$doorState the Door Button"
-    set res [DialogBox -type "Ok Stop" -icon /images/info -title "Door Switch" -message $txt]
+    set res [DialogBoxRamzor -type "Ok Stop" -icon /images/info -title "Door Switch" -message $txt]
     if {$res=="Stop"} {
       return -2
     }

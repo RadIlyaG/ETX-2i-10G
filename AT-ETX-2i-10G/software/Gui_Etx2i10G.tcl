@@ -371,6 +371,8 @@ proc About {} {
 proc ButRun {} {
   global gaSet gaGui glTests gRelayState gMessage
   
+  Ramzor green on
+  
   console eval {.console delete 1.0 end}
   console eval {set ::tk::console::maxLines 100000}
   
@@ -402,7 +404,7 @@ proc ButRun {} {
     set txt "Since the last update more than $maxHours hours have passed.\n\n\
     The GUI will be reopened.\n\n\
     Rerun the Tester after update."
-    set ret [DialogBox -title "Restart the Tester" -icon images/error -type {"OK"} -message $txt -justify center]
+    set ret [DialogBoxRamzor -title "Restart the Tester" -icon images/error -type {"OK"} -message $txt -justify center]
     if {$ret=="OK"} {
       wm iconify . ; update
       after 1000 exit
@@ -488,7 +490,7 @@ proc ButRun {} {
     if {$gaSet(rbTestMode) eq "Comp"} {
       RLSound::Play information
       set txt "Be aware!\r\rYou are about to perform Complementary Tests only!"
-      set res [DialogBox -icon images/info -type "Continue Abort" -text $txt -default 0 -aspect 2000 -title "ETX-2i-10G"]
+      set res [DialogBoxRamzor -icon images/info -type "Continue Abort" -text $txt -default 0 -aspect 2000 -title "ETX-2i-10G"]
       if {$res=="Abort"} {
         set ret -2
         set gaSet(fail) "Complementary Tests abort"
@@ -535,7 +537,9 @@ proc ButRun {} {
       set gaSet(operator) ""
       set gaSet(operatorID) ""
     } else {  
+      Ramzor red on
       set ret [GuiReadOperator]
+      Ramzor green on
     }
   }
   parray gaSet *arco*
@@ -583,7 +587,7 @@ proc ButRun {} {
       RLSound::Play information
       set txt "Be aware!\r\rYou are about to perform tests in Debug mode.\r\r\
       If you are not sure, in the GUI's \'Tools\'->\'Release / Debug mode\' choose \"Release Mode\""
-      set res [DialogBox -icon images/info -type "Continue Abort" -text $txt -default 1 -aspect 2000 -title "ETX-2i-10G"]
+      set res [DialogBoxRamzor -icon images/info -type "Continue Abort" -text $txt -default 1 -aspect 2000 -title "ETX-2i-10G"]
       if {$res=="Abort"} {
         set ret -2
         set gaSet(fail) "Debug mode abort"
@@ -737,6 +741,10 @@ proc ButRun {} {
     wm title . "$gaSet(pair) : "
   }
   
+  set res [DialogBox -type "OK" -icon /images/info -title "Finish" -message "The test is done" ]
+  update
+  Ramzor all off
+  
   update
 }
 
@@ -842,7 +850,7 @@ proc GuiInventory {} {
     #exec C:\\RLFiles\\Tools\\Btl\\failbeep.exe &
     RLSound::Play fail    
     set txt "Define the UUT first"
-    DialogBox -title "Wrong UUT" -message $txt -type OK -icon images/error
+    DialogBoxRamzor -title "Wrong UUT" -message $txt -type OK -icon images/error
     focus -force $gaGui(entDUT)
     return -1
   }
@@ -1011,7 +1019,7 @@ proc ButOkInventory {} {
     set res Save
     if {[file exists uutInits/$gaSet(DutInitName)]} {
       set txt "Init file for \'$gaSet(DutFullName)\' exists.\n\nAre you sure you want overwright the file?"
-      set res [DialogBox -title "Save init file" -message  $txt -icon images/question \
+      set res [DialogBoxRamzor -title "Save init file" -message  $txt -icon images/question \
           -type [list Save "Save As" Cancel] -default 2]
       if {$res=="Cancel"} {return -1}
     }
@@ -1170,7 +1178,7 @@ proc ToogleEraseTitle {changeTo} {
 # ***************************************************************************
 proc ShowComs {} {                                                                        
   global gaSet gaGui
-  DialogBox -title "COMs definitions" -type OK \
+  DialogBoxRamzor -title "COMs definitions" -type OK \
     -message "UUT: COM $gaSet(comDut)\nETX220-Gen: COM $gaSet(com220)"
   return {}
 }
@@ -1560,7 +1568,7 @@ proc ToggleEnSerNum {} {
   if {[llength $gaSet(insertSerNumOptsList)]==0} {return 0}
   if {$gaSet(enSerNum) == 0 && $isOptionReqsSerNum == 1} { 
     RLSound::Play information
-    set ret [DialogBox -title "Confirm disable"\
+    set ret [DialogBoxRamzor -title "Confirm disable"\
       -type "yes no" -icon images/question -aspect 2000\
       -text "The \'Insert Ser. Number\' CheckButton should be selected when the following is tested:\n\n$txt\n\n\
       Are you sure you want to uncheck it?"]
@@ -1582,7 +1590,7 @@ proc ToggleEnSerNum {} {
     }
   } elseif {$gaSet(enSerNum) == 1 && $isOptionReqsSerNum == 0} { 
     RLSound::Play information    
-    set ret [DialogBox -title "Confirm enable"\
+    set ret [DialogBoxRamzor -title "Confirm enable"\
       -type "OK" -icon images/error -aspect 2000\
       -text "The \'Insert Ser. Number\' CheckButton should be selected ONLY when the following is tested:\n\n$txt\n\n\
       Your UUT is $gaSet(DutFullName)"]
@@ -1622,7 +1630,7 @@ proc ToggleTestMode {} {
   $gaSet(statBarShortTest) configure -bg yellow -text $let ; #"[string index $gaSet(rbTestMode) 0]"
   BuildTests
   if {$gaSet(rbTestMode) eq "On_Off"} {
-    DialogBox -title "Power OFF and ON" -type OK \
+    DialogBoxRamzor -title "Power OFF and ON" -type OK \
       -message "Use the \'UUT's barcode\' entry to define the Power OFF-ON cycles quantity"
   }
 }
@@ -1660,7 +1668,7 @@ proc ToggleCleiCodeGuiMode {} {
   if {$gaSet(cleiCodeMode)==0} {
     set gaSet(cleiCodeMode) 1
     set txt "CLEI mode!"
-    set res [DialogBox -type "OK Cancel" -icon /images/info -title "Warning" \
+    set res [DialogBoxRamzor -type "OK Cancel" -icon /images/info -title "Warning" \
           -message $txt -bg yellow -font {TkDefaultFont 11}]
     update
     if {$res=="Cancel"} {
