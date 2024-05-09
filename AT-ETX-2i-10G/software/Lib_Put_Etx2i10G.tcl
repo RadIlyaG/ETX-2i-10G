@@ -646,6 +646,9 @@ proc DyingGaspPerf {psOffOn psOff} {
   }
 
   if {$res==1} {
+    Power all off
+    after 4000
+    Power all on
     set ret [Wait "Wait UUT up" 30 white]
     if {$ret!=0} {return $ret}
     set ret [Dyigasp_ReadLog]
