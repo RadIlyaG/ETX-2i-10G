@@ -2311,3 +2311,56 @@ proc DialogBoxRamzor {args}  {
   Ramzor green on
   return $ret
 }
+
+# ***************************************************************************
+# GetUcFile
+# ***************************************************************************
+proc GetUcFile {dbrName tmpLocalUCF} {
+  set ret 0
+  set res ""
+  set url "http://ws-proxy01.rad.com:10211/ATE_WS/ws/configDownload/ConfigFile?"
+  set param "dbrAssembly=[set dbrName]"
+  append url $param
+  puts "\nGetUcFile url:<$url>"
+  
+  if ![file exists c:/temp] {
+    file mkdir c:/temp
+    after 1000
+  }
+  set localUCF c:/temp/$tmpLocalUCF
+  if [file exists $localUCF] {
+    file delete -force $localUCF
+     after 1000
+  }
+  set f [open $localUCF w+]
+  if [catch {set tok [::http::geturl $url -channel $f -binary 1 -headers [list Authorization "Basic [base64::encode webservices:radexternal]"]]} res] {
+    close $f
+    return $res
+  } 
+  catch {close $f}
+  update
+  set st [::http::status $tok]
+  set nc [::http::ncode $tok]
+  if {$st=="ok" && $nc=="200"} {
+    #puts "Get $command from $barc done successfully"
+  } else {
+    puts "http::status: <$st> http::ncode: <$nc>"
+    set ret -1
+  }
+  upvar #0 $tok state
+  #parray state
+  #puts "body:<$state(body)>"
+  #set ret $state(body)
+  set ret $state(currentsize)
+  ::http::cleanup $tok
+  
+  if {$ret==0} {
+    if [catch {file size $localUCF} size] {
+      set ret -1
+    } else {
+      set ret $size
+    }
+  }
+  return $ret
+}
+
