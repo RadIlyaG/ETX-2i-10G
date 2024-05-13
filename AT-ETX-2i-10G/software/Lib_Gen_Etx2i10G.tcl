@@ -775,6 +775,21 @@ proc GetDbrName {mode} {
   #Status ""
   update
   if {$mode=="full"} {
+    set ::tmpLocalUCF [clock format [clock seconds] -format  "%Y.%m.%d-%H.%M.%S"]_${gaSet(DutInitName)}_$gaSet(pair).txt
+    set ret [GetUcFile $gaSet(DutFullName) $::tmpLocalUCF]
+    puts "BuildTests ret of GetUcFile  $gaSet(DutFullName) $gaSet(DutInitName): <$ret>"
+    if {$ret=="-1"} {
+      set gaSet(fail) "Get User Configuration File Fail"
+      RLSound::Play fail
+  	  Status "Test FAIL"  red
+      DialogBoxRamzor -aspect 2000 -type Ok -message $gaSet(fail) -icon images/error -title "Get User Conf. File Problem"
+      pack $gaGui(frFailStatus)  -anchor w
+  	  $gaSet(runTime) configure -text ""
+      return -1
+    }	else {
+      set ret 0
+    }
+    
     BuildTests
     
     set ret [GetDbrSW $barcode]
