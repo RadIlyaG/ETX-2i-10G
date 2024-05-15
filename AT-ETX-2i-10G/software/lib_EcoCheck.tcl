@@ -147,7 +147,7 @@ proc Retrive_WS {url paramName} {
     after 2000
     if [catch {::http::geturl $url -headers [list Authorization "Basic [base64::encode webservices:radexternal]"]} tok] {
        set res_val -1
-       set res_txt "Fail to get OperationItem4Barcode for $paramName"
+       set res_txt "Fail to get $paramName"
        return [list $res_val $res_txt]
     }
   }
