@@ -121,7 +121,7 @@ proc Retrive_MktPdn {dbr_asmbl_unit} {
   set url "https://ws-proxy01.rad.com:8445/ATE_WS/ws/rest/"
   set param MKTPDNByDBRAssembly?dbrAssembly=[set dbr_asmbl_unit]
   append url $param
-  return [Retrive_WS $url]
+  return [Retrive_WS $url "Marketing Number"]
 } 
 # ***************************************************************************
 # Retrive_OperationItem4Barcode
@@ -133,21 +133,21 @@ proc Retrive_OperationItem4Barcode {barcode} {
   set url "https://ws-proxy01.rad.com:8445/ATE_WS/ws/rest/"
   set param OperationItem4Barcode\?barcode=[set barc]\&traceabilityID=null
   append url $param
-  return [Retrive_WS $url]
+  return [Retrive_WS $url "DBR Assembly Name"]
 } 
 
 # ***************************************************************************
 # Retrive_WS
 # ***************************************************************************
-proc Retrive_WS {url} {
-  puts "Retrive_WS $url"
+proc Retrive_WS {url paramName} {
+  puts "Retrive_WS $url $paramName"
   set res_val 0
   set res_txt [list]
   if [catch {::http::geturl $url -headers [list Authorization "Basic [base64::encode webservices:radexternal]"]} tok] {
     after 2000
     if [catch {::http::geturl $url -headers [list Authorization "Basic [base64::encode webservices:radexternal]"]} tok] {
        set res_val -1
-       set res_txt "Fail to get OperationItem4Barcode for $barc"
+       set res_txt "Fail to get OperationItem4Barcode for $paramName"
        return [list $res_val $res_txt]
     }
   }
