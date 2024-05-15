@@ -702,7 +702,6 @@ proc GetDbrName {mode} {
     }
   }
   
-  
   if [file exists MarkNam_$barcode.txt] {
     file delete -force MarkNam_$barcode.txt
   }
@@ -779,15 +778,24 @@ proc GetDbrName {mode} {
     set ret [GetUcFile $gaSet(DutFullName) $::tmpLocalUCF]
     puts "BuildTests ret of GetUcFile  $gaSet(DutFullName) $gaSet(DutInitName): <$ret>"
     if {$ret=="-1"} {
-      set gaSet(fail) "Get User Configuration File Fail"
+      set gaSet(fail) "Get Default Configuration File Fail"
       RLSound::Play fail
   	  Status "Test FAIL"  red
-      DialogBoxRamzor -aspect 2000 -type Ok -message $gaSet(fail) -icon images/error -title "Get User Conf. File Problem"
+      DialogBoxRamzor -aspect 2000 -type Ok -message $gaSet(fail) -icon images/error -title "Get Default Configuration File Problem"
       pack $gaGui(frFailStatus)  -anchor w
   	  $gaSet(runTime) configure -text ""
       return -1
     }	else {
-      set ret 0
+      if {$gaSet(DefaultCF)!="" && $gaSet(DefaultCF)!="c:/aa"} {
+        if {$ret=="0"} {
+          set gaSet(fail) "No Default Configuration File at Agile"
+          Status "Test FAIL"  red
+          DialogBoxRamzor -aspect 2000 -type Ok -message $gaSet(fail) -icon images/error -title "Get Default Configuration File Problem"
+          pack $gaGui(frFailStatus)  -anchor w
+          $gaSet(runTime) configure -text ""
+          return -1
+        }
+      }  
     }
     
     BuildTests

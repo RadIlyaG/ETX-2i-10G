@@ -185,18 +185,18 @@ proc BuildTests {} {
         lappend lTests CloseLicense
       } 
 
-      set ::tmpLocalUCF [clock format [clock seconds] -format  "%Y.%m.%d-%H.%M.%S"]_${gaSet(DutInitName)}_$gaSet(pair).txt
-      set ret [GetUcFile $gaSet(DutFullName) $::tmpLocalUCF]
-      puts "BuildTests ret of GetUcFile  $gaSet(DutFullName) $gaSet(DutInitName): <$ret>"
-      if {$ret=="-1"} {
-        set gaSet(fail) "Get User Configuration File Fail"
-        return -1
-      }
+      #set ::tmpLocalUCF [clock format [clock seconds] -format  "%Y.%m.%d-%H.%M.%S"]_${gaSet(DutInitName)}_$gaSet(pair).txt
+      #set ret [GetUcFile $gaSet(DutFullName) $::tmpLocalUCF]
+      #puts "BuildTests ret of GetUcFile  $gaSet(DutFullName) $gaSet(DutInitName): <$ret>"
+      #if {$ret=="-1"} {
+      #  set gaSet(fail) "Get User Configuration File Fail"
+      #  return -1
+      #}
       if {$gaSet(DefaultCF)!="" && $gaSet(DefaultCF)!="c:/aa"} {
-        if {$ret=="0"} {
-          set gaSet(fail) "Agile User Configuration File's size is 0"
-          return -1
-        }
+        # if {$ret=="0"} {
+          # set gaSet(fail) "No User Configuration File at Agile"
+          # return -1
+        # }
         lappend lTests LoadDefaultConfiguration CheckUserDefaultFile
       }
       
