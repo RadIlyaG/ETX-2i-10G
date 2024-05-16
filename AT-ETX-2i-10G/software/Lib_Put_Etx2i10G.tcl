@@ -1563,7 +1563,7 @@ proc LoadDefConf {} {
   set com $gaSet(comDut)
   Send $com "exit all\r" stam 0.25 
   
-  set cf $localUCF ; #$gaSet(DefaultCF) 
+  set cf c:/temp/$localUCF ; #$gaSet(DefaultCF) 
   set cfTxt "DefaultConfiguration"
   set ret [DownloadConfFile $cf $cfTxt 1 $com]
   if {$ret!=0} {return $ret}
