@@ -245,7 +245,7 @@ DeleteOldTeFiles
 DeleteOldCaptConsFiles
 
 GUI
-BuildTests
+## 07:39 16/05/2024 BuildTests
 update
 
 wm deiconify .
@@ -253,5 +253,5 @@ wm geometry . $gaGui(xy)
 update
 Status "Ready"
 #set ret [SQliteOpen]
-ToggleTestMode
+## 07:45 16/05/2024 ToggleTestMode
 #InformAboutNewFiles
