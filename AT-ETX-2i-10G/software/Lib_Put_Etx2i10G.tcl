@@ -1058,6 +1058,13 @@ proc Login {} {
     if {$gaSet(act)==0} {return -2}
     Status "Login into ETX-2I"
     puts "Login into ETX-2I i:$i"; update
+    if {[expr {60 % 10}]==0} {
+      puts "Login CloseComUut+OpenComUut"; update
+      CloseComUut
+      after 1500
+      OpenComUut
+    }
+    
     $gaSet(runTime) configure -text $i; update
     Send $com \r stam 5
     
