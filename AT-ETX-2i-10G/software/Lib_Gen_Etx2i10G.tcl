@@ -758,6 +758,11 @@ proc GetDbrName {mode} {
   
   if {[file exists uutInits/$gaSet(DutInitName)]} {
     source uutInits/$gaSet(DutInitName)  
+    if {$gaSet(DefaultCF)=="" || $gaSet(DefaultCF)=="c:/aa"} {  
+      set ::chbUcf 0 ; ## for GuiInventory
+    } else {
+      set ::chbUcf 1
+    }
     #UpdateAppsHelpText  
   } else {
     ## if the init file doesn't exist, fill the parameters by ? signs

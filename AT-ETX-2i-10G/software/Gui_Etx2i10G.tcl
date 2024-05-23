@@ -915,7 +915,7 @@ proc GuiInventory {} {
   
   set txtWidth 37
   if {$gaSet(dutBox)=="19" || $gaSet(dutBox)=="Half19" || $gaSet(dutBox)=="19B" || $gaSet(dutBox)=="Half19B"} {
-    foreach indx {Boot SW 19 Half19  19B Half19B DGasp ExtClk 19SyncE Half19SyncE 19BSyncE Half19BSyncE Aux1 Aux2 Default} {
+    foreach indx {Boot SW 19 Half19  19B Half19B DGasp ExtClk 19SyncE Half19SyncE 19BSyncE Half19BSyncE Aux1 Aux2} {
       if {$indx==$gaSet(dutBox) || $indx=="DGasp" || $indx=="ExtClk" || $indx=="${gaSet(dutBox)}SyncE" || $indx=="Aux1" || $indx=="Aux2" || $indx=="Boot" || $indx=="SW" || $indx=="Default"} {
         if {$p!="P" && ($indx=="ExtClk" || $indx=="${gaSet(dutBox)}SyncE" || $indx=="Aux1" || $indx=="Aux2")} {
           ## don't show files, reffered to PPT, in UUT without PPT 
@@ -935,6 +935,11 @@ proc GuiInventory {} {
         pack $fr  -fill x -pady 3
       }
     } 
+    
+    set fr  [frame $base.frUcf -bd 2 -relief groove]
+      set gaGui(chbUcf) [ttk::checkbutton $fr.chbUcf -text "User Default Configuration File" -variable ::chbUcf -command {ToggleUCF}]
+      pack $gaGui(chbUcf)  -pady 1 -padx 3 -anchor w 
+    pack $fr -fill x -pady 3
   }
   #pack [Separator $base.sep3 -orient horizontal] -fill x -padx 2 -pady 3
   
@@ -1686,4 +1691,16 @@ proc ToggleCleiCodeGuiMode {} {
   }
   if {$gaSet(cleiCodeMode)==0} {ToggleTestMode}
   BuildTests
+}
+# ***************************************************************************
+# ToggleUCF
+# ***************************************************************************
+proc ToggleUCF {} {
+  global gaTmpSet
+  puts "ToggleUCF ::chbUcf:<$::chbUcf>"
+  if {$::chbUcf && ($gaTmpSet(DefaultCF)=="" || $gaTmpSet(DefaultCF)=="c:/aa")} {  
+    set gaTmpSet(DefaultCF) "UserDefConf_exists"
+  } else {
+    set gaTmpSet(DefaultCF) ""
+  }
 }
