@@ -795,7 +795,16 @@ proc GetDbrName {mode} {
           $gaSet(runTime) configure -text ""
           return -1
         }
-      }  
+      } elseif {$gaSet(DefaultCF)=="" || $gaSet(DefaultCF)=="c:/aa"} {  
+        if {$ret!="0"} {
+          set gaSet(fail) "Default Configuration File shouldn't be at Agile"
+          Status "Test FAIL"  red
+          DialogBoxRamzor -aspect 2000 -type Ok -message $gaSet(fail) -icon images/error -title "Get Default Configuration File Problem"
+          pack $gaGui(frFailStatus)  -anchor w
+          $gaSet(runTime) configure -text ""
+          return -1
+        }  
+      }
     }
     
     BuildTests
