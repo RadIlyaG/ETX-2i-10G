@@ -1561,6 +1561,19 @@ proc LoadDefConf {} {
     set gaSet(fail) "Get Default Configuration File Fail"
     return -1
   }
+  
+  set entDUTconfFile $::tmpLocalUCF
+  set entDUTconfFileSize [file size c:/temp/$entDUTconfFile]
+  
+  set localUCFSize [file size c:/temp/$localUCF]
+  
+  puts "\nDUT entry $entDUTconfFile:<$entDUTconfFileSize>,  LoadDefConf $localUCF:<$localUCFSize>"
+  if {$entDUTconfFileSize!=$localUCFSize} {
+    set gaSet(fail) "Problem with Default Configuration File's size ($entDUTconfFileSize != $localUCFSize)"
+    return -1
+  }
+  
+  
   set ret [Login]
   if {$ret!=0} {
     #set ret [Login]
