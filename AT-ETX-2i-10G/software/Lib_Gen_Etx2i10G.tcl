@@ -2403,3 +2403,26 @@ proc GetUcFile {dbrName tmpLocalUCF} {
   return $ret
 }
 
+# ***************************************************************************
+# LY_wait
+# ***************************************************************************
+proc LY_wait {} {
+  global gaSet
+  set LY_wait_list [list "ETX-2I-10G_LY.ACR.24SFP.tcl" "ETX-2I-10G_LY.ACR.2SFPP.24SFP.tcl" \
+    "ETX-2I-10G_LY.ACR.4SFPP.24SFP.tcl" "ETX-2I-10G_LY.DCR.12SFP12UTP.tcl" \
+    "ETX-2I-10G_LY.DCR.24SFP.tcl" "ETX-2I-10G_LY.DCR.2SFPP.24SFP.tcl" \
+    "ETX-2I-10G_LY.DCR.4SFPP.24SFP.tcl" "ETX-2I-10G_LY.H.DCR.4SFPP.24SFP.tcl"]
+    
+  if {[lsearch $LY_wait_list $gaSet(DutInitName)]>"-1"} {
+    set wait_option 1
+  } else {
+    set wait_option 0
+  }  
+  if {$wait_option && $gaSet(dbrSW)=="6.8.2(0.75)"} {
+    ## remain wait_option == 1
+  } else {
+    set wait_option 0
+  }
+  puts "\nLY_wait DutInitName:<$gaSet(DutInitName)> dbrSW:<$gaSet(dbrSW)> wait_option:<$wait_option>\n"
+  return $wait_option
+}

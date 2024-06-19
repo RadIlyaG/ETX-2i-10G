@@ -719,9 +719,9 @@ proc DataTransmission_run {run} {
   }
   if {$np=="8SFPP" && $up=="0_0"} {
     set 10GlineRate 50%
- }
-  Status "Config GENERATOR"
+  }
   
+  Status "Config GENERATOR"
   Etx220Config 1 $10GlineRate
   if {$np=="8SFPP" && $up=="0_0"} {
     ## no 1 G Ports
@@ -730,17 +730,29 @@ proc DataTransmission_run {run} {
   }
   set ret [DataTransmissionTestPerf 10]  
   if {$ret!=0} {
-    Etx220Config 1 $10GlineRate
-    if {$np=="8SFPP" && $up=="0_0"} {
-      ## no 1 G Ports
-    } else {
-      Etx220Config 5 $1GlineRate
+    for {set tr 1} {$tr <= 5} {incr tr} {
+      puts "\nDataTransmission_run tr:$tr"
+      Etx220Config 1 $10GlineRate
+      if {$np=="8SFPP" && $up=="0_0"} {
+        ## no 1 G Ports
+      } else {
+        Etx220Config 5 $1GlineRate
+      }
+      set ret [Wait "Waiting for data stabilization" 10 white]
+      if {$ret!=0} {return $ret}
+      set ret [DataTransmissionTestPerf 10]  
+      puts "DataTransmission_run tr:$tr ret::$ret\n"
+      if {$ret!=0} {
+        if [LY_wait] {
+          set ret [Wait "Wait for LY" 40]
+          if {$ret!=0} {return $ret}
+        } else {
+          return $ret
+        }
+      } 
     }
-    set ret [Wait "Waiting for data stabilization" 10 white]
-    if {$ret!=0} {return $ret}
-    set ret [DataTransmissionTestPerf 10]  
-    if {$ret!=0} {return $ret} 
   } 
+  if {$ret!=0} {return $ret}
   
   Etx220Config 1 $10GlineRate
   if {$np=="8SFPP" && $up=="0_0"} {
@@ -1004,6 +1016,12 @@ proc Leds_FAN {run} {
   } elseif {$p=="0"} {
     set tstLedState OFF ; # 21/11/2018 09:45:38
   }
+  
+  if [LY_wait] {
+    set ret [Wait "Wait for LY" 300]
+    if {$ret!=0} {return $ret}
+  }  
+  
  
   if {$np=="8SFPP" && $up=="0_0" && $gaSet(rbTestMode) eq "Comp"} {
     set txt1 "Verify that:\n\
@@ -1050,13 +1068,39 @@ proc Leds_FAN {run} {
   set res [DialogBoxRamzor -type "OK Fail" -icon /images/question -title "LEDs_FAN Test" -message $txt]
   update
   
-  catch {exec pskill.exe -t $pingId}
-  
   if {$res!="OK"} {
     set gaSet(fail) "LED Test failed"
-    return -1
+    if [LY_wait] {
+      set trQty 10
+      for {set tr 1} {$tr <= $trQty} {incr tr} {
+        set res [DialogBoxRamzor -type [list "OK" "Repeat ($tr/$trQty)" "Fail"] -icon /images/question -title "LEDs_FAN Test" -message $txt]
+        update
+        if {$res=="OK"} {
+          set ret 0
+          catch {exec pskill.exe -t $pingId}
+          break
+        } elseif {$res=="Fail"} {
+          set ret -1
+        } else {
+          set ret -1
+          continue
+        }
+        if {$ret!=0} {
+          catch {exec pskill.exe -t $pingId}
+          return $ret
+        }
+      }
+      if {$ret!=0} {
+        catch {exec pskill.exe -t $pingId}
+        return $ret
+      }
+    } else {
+      catch {exec pskill.exe -t $pingId}
+      return -1
+    }
   } else {
     set ret 0
+    catch {exec pskill.exe -t $pingId}
   }
   
   if {$np=="8SFPP" && $up=="0_0" && ($gaSet(rbTestMode) eq "Full" || $gaSet(rbTestMode) eq "MainBoard")} {
