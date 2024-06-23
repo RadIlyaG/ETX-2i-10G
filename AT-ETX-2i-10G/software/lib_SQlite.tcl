@@ -74,6 +74,7 @@ proc SQliteAddLine {} {
   if ![info exists gaSet(1.traceId)] {set gaSet(1.traceId) ""}
   if {$gaSet(1.traceId)==""} {
     set poNumber ""
+    set traceID ""
   } else {
     set traceID $gaSet(1.traceId)
     set ret [RetriveIdTraceData $gaSet(1.traceId) PCBTraceabilityIDData]
