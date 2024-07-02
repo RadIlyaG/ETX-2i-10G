@@ -486,6 +486,11 @@ proc ButRun {} {
 #   }
   #set ret 0
   
+  if {[$gaGui(startFrom) cget -text] == ""} {
+    set ret -2
+    set gaSet(fail) "No test to perform"
+  }
+  
   if {$ret==0} {
     if {$gaSet(rbTestMode) eq "Comp"} {
       RLSound::Play information

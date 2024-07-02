@@ -684,7 +684,7 @@ proc mparray {a {pattern *}} {
 # GetDbrName
 # ***************************************************************************
 proc GetDbrName {mode} {
-  global gaSet gaGui
+  global gaSet gaGui glTests      
   Status "Please wait for retriving DBR's parameters"
   set barcode [set gaSet(entDUT) [string toupper $gaSet(entDUT)]] ; update
   
@@ -789,28 +789,37 @@ proc GetDbrName {mode} {
       DialogBoxRamzor -aspect 2000 -type Ok -message $gaSet(fail) -icon images/error -title "Get Default Configuration File Problem"
       pack $gaGui(frFailStatus)  -anchor w
   	  $gaSet(runTime) configure -text ""
-      return -1
+      #return -1
     }	else {
       if {$gaSet(DefaultCF)!="" && $gaSet(DefaultCF)!="c:/aa"} {
         if {$ret=="0"} {
-          set gaSet(fail) "No Default Configuration File at Agile"
+          set gaSet(fail) "No Default Configuration File at Agile, but exists in init "
           Status "Test FAIL"  red
           DialogBoxRamzor -aspect 2000 -type Ok -message $gaSet(fail) -icon images/error -title "Get Default Configuration File Problem"
           pack $gaGui(frFailStatus)  -anchor w
           $gaSet(runTime) configure -text ""
-          return -1
+          set ret -1
         }
       } elseif {$gaSet(DefaultCF)=="" || $gaSet(DefaultCF)=="c:/aa"} {  
         if {$ret!="0"} {
-          set gaSet(fail) "Default Configuration File shouldn't be at Agile"
+          set gaSet(fail) "No Default Configuration File at init, but exists at Agile"
           Status "Test FAIL"  red
           DialogBoxRamzor -aspect 2000 -type Ok -message $gaSet(fail) -icon images/error -title "Get Default Configuration File Problem"
           pack $gaGui(frFailStatus)  -anchor w
           $gaSet(runTime) configure -text ""
-          return -1
+          set ret -1
         }  
       }
     }
+    if {$ret=="-1"} {
+      $gaGui(startFrom) configure -text "" -values [list]
+      set glTests [list]
+      set gaSet(curTest) ""
+      set gaSet(log.$gaSet(pair)) c:/logs/[clock format [clock seconds] -format  "%Y.%m.%d-%H.%M.%S"].txt
+      AddToPairLog $gaSet(pair) $gaSet(fail)
+      Status "Test FAIL"  red
+      return -2
+    }  
     
     BuildTests
     
@@ -907,7 +916,8 @@ proc RetriveDutFam {{dutInitName ""}} {
               [string match *_C.19.H.DR.* $dutInitName]==1 || [string match *_C.19.DR.* $dutInitName]==1 || \
               [string match *B_TWC.19.* $dutInitName]==1 || [string match *B_VT.19.* $dutInitName]==1 || \
               [string match *B_GC.19.*.4SFPP4SFP $dutInitName]==1 || \
-              [string match *CELLCOM.*C* $dutInitName]==1 } {
+              [string match *CELLCOM.*C* $dutInitName]==1 ||\
+              [string match *B_BRSD.19.* $dutInitName]==1 } {
       puts "if 012"
       set gaSet(dutFam) 19B.0.0.0.0.0.0
       ## 29/06/2022 14:27:11
