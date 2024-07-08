@@ -164,7 +164,7 @@ proc Retrive_WS {url paramName} {
     set res_txt "Fail to get $paramName"; # "http::status: <$st> http::ncode: <$nc>"
   }
   upvar #0 $tok state
-  #parray state
+  parray state
   #puts "$state(body)"
   set body $state(body)
   ::http::cleanup $tok

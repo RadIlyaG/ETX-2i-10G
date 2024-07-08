@@ -210,6 +210,7 @@ if [file exists uutInits/$gaSet(DutInitName)] {
   source [lindex [glob uutInits/ETX*.tcl] 0]
 }
 source lib_SQlite.tcl
+source lib_GuiIdTraceOper.tcl
 
 set gaSet(act) 1
 set gaSet(initUut) 1
