@@ -634,7 +634,7 @@ proc ButRun {} {
 #   
   if {$ret==0} {
      if !$::repairMode {
-       AddToPairLog $gaSet(pair) "$gaSet(operatorID) $gaSet(operator)"
+       AddToPairLog $gaSet(pair) " $gaSet(operatorID) $gaSet(operator)"
      }
 
     IPRelay-Green

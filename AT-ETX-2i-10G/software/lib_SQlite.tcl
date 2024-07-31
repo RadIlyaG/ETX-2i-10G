@@ -77,11 +77,17 @@ proc SQliteAddLine {} {
     set traceID ""
   } else {
     set traceID $gaSet(1.traceId)
-    set ret [RetriveIdTraceData $gaSet(1.traceId) PCBTraceabilityIDData]
-    if {$ret=="-1"} {
+    #set ret [RetriveIdTraceData $gaSet(1.traceId) PCBTraceabilityIDData]
+    # if {$ret=="-1"} {
+      # set poNumber ""
+    # } else {
+      # set poNumber [dict get $ret "po number"]
+    # }
+    foreach {ret resTxt} [Get_PcbTraceIdData $gaSet(1.traceId) "po number"] {}
+    if {$ret!="0"} {
       set poNumber ""
     } else {
-      set poNumber [dict get $ret "po number"]
+      set poNumber $resTxt
     }
   }  
 

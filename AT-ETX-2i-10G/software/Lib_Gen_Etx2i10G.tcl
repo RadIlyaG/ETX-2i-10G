@@ -712,48 +712,64 @@ proc GetDbrName {mode} {
     set gaSet(fail) "Java application is missing"
     return -1
   }
-  set res [catch {exec $gaSet(javaLocation)\\java -jar $::RadAppsPath/OI4Barcode.jar $barcode} b]
+  #set res [catch {exec $gaSet(javaLocation)\\java -jar $::RadAppsPath/OI4Barcode.jar $barcode} b]
   #puts "res:<$res> b:<$b>"
-  if [string match *Exception* $b] {
-    set gaSet(fail) "Network connection problem"
+  
+  # if [string match *Exception* $b] {
+    # set gaSet(fail) "Network connection problem"
+    # RLSound::Play fail
+	  # Status "Test FAIL"  red
+    # DialogBoxRamzor -aspect 2000 -type Ok -message $gaSet(fail) -icon images/error -title "Get DbrName Problem"
+    # pack $gaGui(frFailStatus)  -anchor w
+	  # $gaSet(runTime) configure -text ""
+  	# return -1
+  # }
+  # set fileName MarkNam_$barcode.txt
+  # after 1000
+  # if ![file exists MarkNam_$barcode.txt] {
+    # set gaSet(fail) "File $fileName is not created. Verify the Barcode"
+    # #exec C:\\RLFiles\\Tools\\Btl\\failbeep.exe &
+    # RLSound::Play fail
+	  # Status "Test FAIL"  red
+    # DialogBoxRamzor -aspect 2000 -type Ok -message $gaSet(fail) -icon images/error -title "Get DbrName Problem"
+    # pack $gaGui(frFailStatus)  -anchor w
+	  # $gaSet(runTime) configure -text ""
+  	# return -1
+  # }
+  
+  # set fileId [open "$fileName"]
+    # seek $fileId 0
+    # set res [read $fileId]    
+  # close $fileId
+  
+  # #set txt "$barcode $res"
+  # set txt "[string trim $res]"
+  # #set gaSet(entDUT) $txt
+  
+  foreach {ret resTxt} [Get_OI4Barcode $barcode] {}
+  if {$ret=="0"} {
+    #  set dbrName [dict get $ret "item"]
+    set dbrName $resTxt
+  } else {
+    set gaSet(fail) $resTxt
     RLSound::Play fail
 	  Status "Test FAIL"  red
-    DialogBoxRamzor -aspect 2000 -type Ok -message $gaSet(fail) -icon images/error -title "Get DbrName Problem"
+    DialogBoxRamzor -aspect 2000 -type Ok -message $gaSet(fail) -icon images/error
     pack $gaGui(frFailStatus)  -anchor w
 	  $gaSet(runTime) configure -text ""
   	return -1
   }
-  set fileName MarkNam_$barcode.txt
-  after 1000
-  if ![file exists MarkNam_$barcode.txt] {
-    set gaSet(fail) "File $fileName is not created. Verify the Barcode"
-    #exec C:\\RLFiles\\Tools\\Btl\\failbeep.exe &
-    RLSound::Play fail
-	  Status "Test FAIL"  red
-    DialogBoxRamzor -aspect 2000 -type Ok -message $gaSet(fail) -icon images/error -title "Get DbrName Problem"
-    pack $gaGui(frFailStatus)  -anchor w
-	  $gaSet(runTime) configure -text ""
-  	return -1
-  }
-  
-  set fileId [open "$fileName"]
-    seek $fileId 0
-    set res [read $fileId]    
-  close $fileId
-  
-  #set txt "$barcode $res"
-  set txt "[string trim $res]"
-  #set gaSet(entDUT) $txt
+  set txt "[string trim $dbrName]"
   set gaSet(entDUT) ""
   puts "GetDbrName <$txt>"
   
-  set initName [regsub -all / $res .]
-  puts "GetDbrName res:<$res>"
+  set initName [regsub -all / $dbrName .]
+  puts "GetDbrName dbrName:<$dbrName>"
   puts "GetDbrName initName:<$initName>"
-  set gaSet(DutFullName) $res
+  set gaSet(DutFullName) $dbrName
   set gaSet(DutInitName) $initName.tcl
   
-  file delete -force MarkNam_$barcode.txt
+  # file delete -force MarkNam_$barcode.txt
   #file mkdir [regsub -all / $res .]
   
   if {[file exists uutInits/$gaSet(DutInitName)]} {
@@ -1216,23 +1232,29 @@ proc Ping {dutIp} {
 # ***************************************************************************
 proc GetMac {fi} {
   puts "[MyTime] GetMac $fi" ; update
-  set macFile c:/tmp/mac[set fi].txt
-  exec $::RadAppsPath/MACServer.exe 0 1 $macFile 1
-  set ret [catch {open $macFile r} id]
+  # set macFile c:/tmp/mac[set fi].txt
+  # exec $::RadAppsPath/MACServer.exe 0 1 $macFile 1
+  # set ret [catch {open $macFile r} id]
+  # if {$ret!=0} {
+    # set gaSet(fail) "Open Mac File fail"
+    # return -1
+  # }
+  # set buffer [read $id]
+  # close $id
+  # file delete $macFile)
+  # set ret [regexp -all {ERROR} $buffer]
+  # if {$ret!=0} {
+    # set gaSet(fail) "MACServer ERROR"
+    # exec beep.exe
+    # return -1
+  # }
+  # return [lindex $buffer 0]
+  foreach {ret resTxt} [Get_Mac 1] {}
   if {$ret!=0} {
-    set gaSet(fail) "Open Mac File fail"
-    return -1
+    set gaSet(fail) $resTxt
+    return $ret
   }
-  set buffer [read $id]
-  close $id
-  file delete $macFile)
-  set ret [regexp -all {ERROR} $buffer]
-  if {$ret!=0} {
-    set gaSet(fail) "MACServer ERROR"
-    exec beep.exe
-    return -1
-  }
-  return [lindex $buffer 0]
+  return $resTxt
 }
 # ***************************************************************************
 # SplitString2Paires
@@ -1255,7 +1277,8 @@ proc GetDbrSW {barcode} {
     return -1
   }
   
-  catch {exec $gaSet(javaLocation)\\java -jar $::RadAppsPath/SWVersions4IDnumber.jar $barcode} b
+  # catch {exec $gaSet(javaLocation)\\java -jar $::RadAppsPath/SWVersions4IDnumber.jar $barcode} b
+  foreach {res b} [Get_SwVersions $barcode] {}
   puts "GetDbrSW b:<$b>" ; update
   after 1000
   if ![info exists gaSet(swPack)] {
@@ -1291,8 +1314,8 @@ proc GetDbrSW {barcode} {
   
   pack forget $gaGui(frFailStatus)
   
-  set swTxt [glob SW*_$barcode.txt]
-  catch {file delete -force $swTxt}
+  # set swTxt [glob SW*_$barcode.txt]
+  # catch {file delete -force $swTxt}
   
   Status ""
   update
@@ -1805,33 +1828,48 @@ proc CheckAccWinprogAte {} {
 proc CheckTitleDbrNameVsUutDbrName {} {
   global gaSet
   set barcode $gaSet(1.barcode1) 
-  set fileName MarkNam_$barcode.txt
-  if [file exists $fileName] {
-    file delete -force $fileName
-    after 1000
-  }
-  set res [catch {exec $gaSet(javaLocation)\\java -jar $::RadAppsPath/OI4Barcode.jar $barcode} b]
-  puts "CTDNVUDN barcode:<$barcode> res:<$res> b:<$b>"
+  # set fileName MarkNam_$barcode.txt
+  # if [file exists $fileName] {
+    # file delete -force $fileName
+    # after 1000
+  # }
+  # set res [catch {exec $gaSet(javaLocation)\\java -jar $::RadAppsPath/OI4Barcode.jar $barcode} b]
+  # puts "CTDNVUDN barcode:<$barcode> res:<$res> b:<$b>"
   
-  after 1000
-  if ![file exists $fileName] {
-    set gaSet(fail) "File $fileName is not created. Verify the Barcode"
-    #exec C:\\RLFiles\\Tools\\Btl\\failbeep.exe &
+  # after 1000
+  # if ![file exists $fileName] {
+    # set gaSet(fail) "File $fileName is not created. Verify the Barcode"
+    # #exec C:\\RLFiles\\Tools\\Btl\\failbeep.exe &
+    # RLSound::Play fail
+	  # Status "Test FAIL"  red
+    # DialogBoxRamzor -aspect 2000 -type Ok -message $gaSet(fail) -icon images/error -title "Get DbrName Problem"
+    # pack $gaGui(frFailStatus)  -anchor w
+	  # $gaSet(runTime) configure -text ""
+  	# return -1
+  # }
+  
+  # set fileId [open "$fileName"]
+    # seek $fileId 0
+    # set res [read $fileId]    
+  # close $fileId
+  # catch {file delete -force $fileName}
+  
+  # set uutDbrName "[string trim $res]"
+  
+  foreach {ret resTxt} [Get_OI4Barcode $barcode] {}
+  if {$ret=="0"} {
+    #  set dbrName [dict get $ret "item"]
+    set dbrName $resTxt
+  } else {
+    set gaSet(fail) $resTxt
     RLSound::Play fail
 	  Status "Test FAIL"  red
-    DialogBoxRamzor -aspect 2000 -type Ok -message $gaSet(fail) -icon images/error -title "Get DbrName Problem"
+    DialogBoxRamzor -aspect 2000 -type Ok -message $gaSet(fail) -icon images/error
     pack $gaGui(frFailStatus)  -anchor w
 	  $gaSet(runTime) configure -text ""
   	return -1
   }
-  
-  set fileId [open "$fileName"]
-    seek $fileId 0
-    set res [read $fileId]    
-  close $fileId
-  catch {file delete -force $fileName}
-  
-  set uutDbrName "[string trim $res]"
+  set uutDbrName "[string trim $dbrName]"
   puts "CTDNVUDN uutDbrName:<$uutDbrName> gaSet(DutFullName):<$gaSet(DutFullName)>"
   if {$uutDbrName != $gaSet(DutFullName)} {
     set gaSet(fail) "Mismatch between UUT's Barcode and GUI" 
@@ -2086,7 +2124,8 @@ proc GetDbrSWAgain {} {
   global gaSet
 
   set barcode $gaSet(1.barcode1)
-  catch {exec $gaSet(javaLocation)\\java -jar $::RadAppsPath/SWVersions4IDnumber.jar $barcode} b
+  # catch {exec $gaSet(javaLocation)\\java -jar $::RadAppsPath/SWVersions4IDnumber.jar $barcode} b
+  foreach {res b} [Get_SwVersions $barcode] {}
   puts "GetDbrSW b:<$b>" ; update
   after 1000
   if ![info exists gaSet(swPack)] {
@@ -2422,14 +2461,17 @@ proc LY_wait {} {
   set LY_wait_list [list "ETX-2I-10G_LY.ACR.24SFP.tcl" "ETX-2I-10G_LY.ACR.2SFPP.24SFP.tcl" \
     "ETX-2I-10G_LY.ACR.4SFPP.24SFP.tcl" "ETX-2I-10G_LY.DCR.12SFP12UTP.tcl" \
     "ETX-2I-10G_LY.DCR.24SFP.tcl" "ETX-2I-10G_LY.DCR.2SFPP.24SFP.tcl" \
-    "ETX-2I-10G_LY.DCR.4SFPP.24SFP.tcl" "ETX-2I-10G_LY.H.DCR.4SFPP.24SFP.tcl"]
+    "ETX-2I-10G_LY.DCR.4SFPP.24SFP.tcl" "ETX-2I-10G_LY.H.DCR.4SFPP.24SFP.tcl"\
+    "ETX-2I-10G_MMC.ACR.4SFPP.24SFP.tcl"]
     
   if {[lsearch $LY_wait_list $gaSet(DutInitName)]>"-1"} {
     set wait_option 1
   } else {
     set wait_option 0
   }  
-  if {$wait_option && $gaSet(dbrSW)=="6.8.2(0.75)"} {
+  if {$wait_option && \
+    (([string match *LY* $gaSet(DutInitName)] && $gaSet(dbrSW)=="6.8.2(0.75)") || \
+     ([string match *MMC* $gaSet(DutInitName)] && $gaSet(dbrSW)=="6.8.2(9.80)"))} {
     ## remain wait_option == 1
   } else {
     set wait_option 0
