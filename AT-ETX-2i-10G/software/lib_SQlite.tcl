@@ -83,11 +83,11 @@ proc SQliteAddLine {} {
     # } else {
       # set poNumber [dict get $ret "po number"]
     # }
-    foreach {ret resTxt} [Get_PcbTraceIdData $gaSet(1.traceId) "po number"] {}
+    foreach {ret resTxt} [Get_PcbTraceIdData $gaSet(1.traceId) {"po number"}] {}
     if {$ret!="0"} {
       set poNumber ""
     } else {
-      set poNumber $resTxt
+      set poNumber [lindex $resTxt 1]
     }
   }  
 
