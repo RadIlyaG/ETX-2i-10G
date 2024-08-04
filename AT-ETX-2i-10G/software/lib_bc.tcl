@@ -321,6 +321,7 @@ proc ReadBarcode {} {
         puts "Id-Mac link"
         set gaSet(1.barcode$la.IdMacLink) "link"
       }
+      set ret 0
     }
     if {$readTrace==0} {      
       set traceId ""  
