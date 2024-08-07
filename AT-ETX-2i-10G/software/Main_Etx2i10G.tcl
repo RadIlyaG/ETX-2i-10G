@@ -116,7 +116,12 @@ proc BuildTests {} {
           if {$gaSet(rbTestMode) eq "Comp"} {
           # no DG 
         } elseif {$gaSet(rbTestMode) eq "Full" || $gaSet(rbTestMode) eq "MainBoard"} {
-          lappend lTests DyingGasp_Log
+          set sw_norm [join [regsub -all {[\(\)A-Z]} $gaSet(dbrSW) " "]  . ] 
+          if {$gaSet(DutFullName)=="ETX-2I-10G-B/8.5/AC/8SFPP" && [package vcompare $sw_norm "6.8.5.1.44"] == "0" } {
+            lappend lTests DyingGasp_conf DyingGasp_run
+          } else {
+            lappend lTests DyingGasp_Log
+          }
         }
       } else {
         if {$gaSet(rbTestMode) eq "Partial_444P"} {
