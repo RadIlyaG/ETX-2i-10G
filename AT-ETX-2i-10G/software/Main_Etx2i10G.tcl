@@ -21,7 +21,12 @@ proc BuildTests {} {
       set lTests WriteCleiCode
     } else {
     
-      set lTests [list BootDownload Pages]
+      set lTests [list BootDownload]
+      if {$gaSet(rbTestMode) eq "Comp_Half19_8SFPP"} {
+        ## no Pages
+      } else {
+        lappend lTests Pages
+      }  
       
       if {$gaSet(enJat)==1 || $gaSet(enPll)==1} {
         lappend lTests Download_Jat_Pll Load_Jat_Pll
@@ -166,7 +171,7 @@ proc BuildTests {} {
       lappend lTests DDR 
 
       if {$np=="8SFPP" && $up=="0_0"} {
-        if {$gaSet(rbTestMode) eq "Comp"} {
+        if {$gaSet(rbTestMode) eq "Comp" || $gaSet(rbTestMode) eq "Comp_Half19_8SFPP"} {
           lappend lTests SetToDefaultAll_Save
         } elseif {$gaSet(rbTestMode) eq "Full" || $gaSet(rbTestMode) eq "MainBoard"} {
           lappend lTests SetToDefault
@@ -225,7 +230,7 @@ proc BuildTests {} {
       
       ## remove unnecessary tests for Complementary
       if {$np=="8SFPP" && $up=="0_0"} {
-        if {$gaSet(rbTestMode) eq "Comp"} {
+        if {$gaSet(rbTestMode) eq "Comp" || $gaSet(rbTestMode) eq "Comp_Half19_8SFPP"} {
           foreach tst {"BootDownload" "SetDownload" "SoftwareDownload" "DDR" \
                         "SFP_ID" "DataTransmission_conf" "DataTransmission_run"\
                         "LoadDefaultConfiguration"} {
@@ -873,7 +878,8 @@ proc Leds_FAN_conf {run} {
   
   if {$gaSet(rbTestMode) eq "MainBoard" || \
       $gaSet(rbTestMode) eq "Full" || \
-      $gaSet(rbTestMode) eq "Comp_444P"} {
+      $gaSet(rbTestMode) eq "Comp_444P" || \
+      $gaSet(rbTestMode) eq "Comp_Half19_8SFPP"} {
     set ret [Login]
     if {$ret!=0} {
       #set ret [Login]
@@ -1028,7 +1034,7 @@ proc Leds_FAN {run} {
   }  
   
  
-  if {$np=="8SFPP" && $up=="0_0" && $gaSet(rbTestMode) eq "Comp"} {
+  if {$np=="8SFPP" && $up=="0_0" && ($gaSet(rbTestMode) eq "Comp" || $gaSet(rbTestMode) eq "Comp_Half19_8SFPP") } {
     set txt1 "Verify that:\n\
   GREEN \'LINK\' and ORANGE \'ACT\' leds of \'Port 7\' are ON and Blinking respectively\n" ; # 07:38 01/06/2023
   } elseif {$gaSet(rbTestMode) eq "Partial_444P"} {
@@ -1045,7 +1051,7 @@ proc Leds_FAN {run} {
   set txt2_9 "" ; #"On PS GREEN \'PWR\' led is ON\n"
   
   if {$np=="8SFPP" && $up=="0_0"} {
-    if {$gaSet(rbTestMode) eq "Comp"} {
+    if {$gaSet(rbTestMode) eq "Comp" || $gaSet(rbTestMode) eq "Comp_Half19_8SFPP"} {
       set txt3 "FAN(-s) rotate"
     } elseif {$gaSet(rbTestMode) eq "MainBoard" || $gaSet(rbTestMode) eq "Full"} {
        set txt3 "GREEN \'LINK\' leds of 10GbE ports are ON and ORANGE \'ACT\' leds are Blinking\n\
@@ -1261,7 +1267,7 @@ proc Leds_FAN {run} {
   if {[string match *.12CMB.* $gaSet(DutInitName)]==0} {
     ## if an UUT is not CMB we should pull out all the cables
     ## if the product is CMB, we will pull out them later in UTP_ID
-    if {$np=="8SFPP" && $up=="0_0" && $gaSet(rbTestMode) eq "Comp"} {
+    if {$np=="8SFPP" && $up=="0_0" &&  ($gaSet(rbTestMode) eq "Comp" || $gaSet(rbTestMode) eq "Comp_Half19_8SFPP")} {
       ## don't check leds
       set ret 0
     } else {

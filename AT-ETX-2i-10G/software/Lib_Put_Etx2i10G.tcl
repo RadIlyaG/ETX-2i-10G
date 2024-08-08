@@ -3288,6 +3288,10 @@ proc Load_Jat_Pll_Perf {} {
 proc Dyigasp_ClearLog {} {
   global gaSet buffer
   Status "PS_ID Test"
+  set sw_norm [join [regsub -all {[\(\)A-Z]} $gaSet(dbrSW) " "]  . ]
+  if {[package vcompare $sw_norm "6.8.5.1.44"] == "0" } {
+    return 0
+  }
   Power all on
   set ret [Login]
   if {$ret!=0} {
@@ -3313,6 +3317,11 @@ proc Dyigasp_ClearLog {} {
 # ***************************************************************************
 proc Dyigasp_ReadLog {} {
   global gaSet buffer
+  set sw_norm [join [regsub -all {[\(\)A-Z]} $gaSet(dbrSW) " "]  . ]
+  if {[package vcompare $sw_norm "6.8.5.1.44"] == "0"} {
+    return 0
+  }
+  
   Status "Dyigasp ReadLog "
   Power all on
   set ret [Login]

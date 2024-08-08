@@ -119,6 +119,7 @@ proc GUI {} {
       {radiobutton "Full Test" {} "" {} -command {ToggleTestMode} -variable gaSet(rbTestMode) -value "Full"}  
       {radiobutton "Complementary Tests (8SFPP)" {} "" {} -command {ToggleTestMode} -variable gaSet(rbTestMode) -value "Comp"}  
       {radiobutton "Complementary Tests (4SFPP/4SFP4UTP/PTP)" {} "" {} -command {ToggleTestMode} -variable gaSet(rbTestMode) -value "Comp_444P"}  
+      {radiobutton "Complementary Tests (8.5/8SFPP)" {} "" {} -command {ToggleTestMode} -variable gaSet(rbTestMode) -value "Comp_Half19_8SFPP"} 
       {separator}
       {radiobutton "BP Test" {} "" {} -command {ToggleTestMode} -variable gaSet(rbTestMode) -value "BP"}  
       {radiobutton "On-Off Test" {} "" {} -command {ToggleTestMode} -variable gaSet(rbTestMode) -value "On_Off"} 
@@ -1640,6 +1641,7 @@ proc ToggleTestMode {} {
     Comp_444P    {set txt "Complementary Tests (4SFPP/4SFP4UTP/PTP)"; set let C4}  
     BP           {set txt "Back Plane Test"; set let B}  
     On_Off       {set txt "Off_On Test"; set let O}  
+    Comp_Half19_8SFPP {set txt "Complementary Tests (8.5/8SFPP)"; set let "C_8.5/8SFPP"}  
   }
   $gaSet(sstatus) configure -bg yellow -text $txt
   $gaSet(runTime) configure -text ""
