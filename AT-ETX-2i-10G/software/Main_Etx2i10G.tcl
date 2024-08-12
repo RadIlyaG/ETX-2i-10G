@@ -122,7 +122,8 @@ proc BuildTests {} {
           # no DG 
         } elseif {$gaSet(rbTestMode) eq "Full" || $gaSet(rbTestMode) eq "MainBoard"} {
           set sw_norm [join [regsub -all {[\(\)A-Z]} $gaSet(dbrSW) " "]  . ] 
-          if {$gaSet(DutFullName)=="ETX-2I-10G-B/8.5/AC/8SFPP" && [package vcompare $sw_norm "6.8.5.1.44"] == "0" } {
+          #if {$gaSet(DutFullName)=="ETX-2I-10G-B/8.5/AC/8SFPP" && [package vcompare $sw_norm "6.8.5.1.44"] == "0" } { }
+          if {[string match {*8.5*8SFPP*} $gaSet(DutFullName)] && [package vcompare $sw_norm "6.8.5.1.44"] == "0"} {
             lappend lTests DyingGasp_conf DyingGasp_run
           } else {
             lappend lTests DyingGasp_Log
@@ -450,6 +451,7 @@ proc DyingGasp_run {run} {
   }
   if {$np=="8SFPP" && $up=="0_0"} {
     if {$gaSet(rbTestMode) eq "Full"} {
+      set mngPort 0/8
       MuxMngIO mngToPc nc
       RLSound::Play information
       set txt "Connect the MNG cable with SFP-30 to port 8"

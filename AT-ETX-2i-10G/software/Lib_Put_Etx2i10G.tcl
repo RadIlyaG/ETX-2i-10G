@@ -3290,7 +3290,7 @@ proc Dyigasp_ClearLog {} {
   Status "PS_ID Test"
   set sw_norm [join [regsub -all {[\(\)A-Z]} $gaSet(dbrSW) " "]  . ]
   if {[package vcompare $sw_norm "6.8.5.1.44"] == "0" } {
-    return 0
+    #return 0
   }
   Power all on
   set ret [Login]
@@ -3319,7 +3319,7 @@ proc Dyigasp_ReadLog {} {
   global gaSet buffer
   set sw_norm [join [regsub -all {[\(\)A-Z]} $gaSet(dbrSW) " "]  . ]
   if {[package vcompare $sw_norm "6.8.5.1.44"] == "0"} {
-    return 0
+    #return 0
   }
   
   Status "Dyigasp ReadLog "
