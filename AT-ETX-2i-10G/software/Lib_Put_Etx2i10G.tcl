@@ -597,8 +597,10 @@ proc DyingGaspPerf {psOffOn psOff} {
   catch {exec arp.exe -d $dutIp} resArp
   puts "[MyTime] resArp:$resArp"
   
-  set ret [Dyigasp_ClearLog]
-  if {$ret!=0} {return $ret}
+  if $::DG_log {
+    set ret [Dyigasp_ClearLog]
+    if {$ret!=0} {return $ret}
+  }
   
   Power $psOffOn on
   Power $psOff off
@@ -651,7 +653,9 @@ proc DyingGaspPerf {psOffOn psOff} {
     Power all on
     set ret [Wait "Wait UUT up" 30 white]
     if {$ret!=0} {return $ret}
-    set ret [Dyigasp_ReadLog]
+    if $::DG_log {
+      set ret [Dyigasp_ReadLog]
+    }
   } elseif {$res==0} {
     set ret -1
     set gaSet(fail) "No \"DyingGasp\" trap was detected"
@@ -1058,7 +1062,7 @@ proc Login {} {
     if {$gaSet(act)==0} {return -2}
     Status "Login into ETX-2I"
     puts "Login into ETX-2I i:$i"; update
-    if {[expr {60 % 10}]==0} {
+    if {[expr {$i % 10}]==0} {
       puts "Login CloseComUut+OpenComUut"; update
       CloseComUut
       after 1500
