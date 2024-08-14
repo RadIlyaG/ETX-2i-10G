@@ -117,6 +117,8 @@ proc BuildTests {} {
     #   if {$b=="Half19" || $b=="19"} {
     #     lappend lTestNames USBport
     #   } 
+    
+      set ::DG_log 1
       if {$np=="8SFPP" && $up=="0_0"} {
           if {$gaSet(rbTestMode) eq "Comp"} {
           # no DG 
@@ -125,6 +127,7 @@ proc BuildTests {} {
           #if {$gaSet(DutFullName)=="ETX-2I-10G-B/8.5/AC/8SFPP" && [package vcompare $sw_norm "6.8.5.1.44"] == "0" } { }
           if {[string match {*8.5*8SFPP*} $gaSet(DutFullName)] && [package vcompare $sw_norm "6.8.5.1.44"] == "0"} {
             lappend lTests DyingGasp_conf DyingGasp_run
+            set ::DG_log 0
           } else {
             lappend lTests DyingGasp_Log
           }
