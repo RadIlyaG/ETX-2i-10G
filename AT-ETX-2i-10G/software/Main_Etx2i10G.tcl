@@ -1093,7 +1093,8 @@ proc Leds_FAN {run} {
         update
         if {$res=="OK"} {
           set ret 0
-          catch {exec pskill.exe -t $pingId}
+          #catch {exec pskill.exe -t $pingId}
+          ::twapi::end_process $pingId -force
           break
         } elseif {$res=="Fail"} {
           set ret -1
@@ -1102,21 +1103,25 @@ proc Leds_FAN {run} {
           continue
         }
         if {$ret!=0} {
-          catch {exec pskill.exe -t $pingId}
+          #catch {exec pskill.exe -t $pingId}
+          ::twapi::end_process $pingId -force
           return $ret
         }
       }
       if {$ret!=0} {
-        catch {exec pskill.exe -t $pingId}
+        #catch {exec pskill.exe -t $pingId}
+        ::twapi::end_process $pingId -force
         return $ret
       }
     } else {
-      catch {exec pskill.exe -t $pingId}
+      #catch {exec pskill.exe -t $pingId}
+      ::twapi::end_process $pingId -force
       return -1
     }
   } else {
     set ret 0
-    catch {exec pskill.exe -t $pingId}
+    #catch {exec pskill.exe -t $pingId}
+    ::twapi::end_process $pingId -force
   }
   
   if {$np=="8SFPP" && $up=="0_0" && ($gaSet(rbTestMode) eq "Full" || $gaSet(rbTestMode) eq "MainBoard")} {
