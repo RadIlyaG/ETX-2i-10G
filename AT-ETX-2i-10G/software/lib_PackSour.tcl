@@ -181,6 +181,7 @@ package require http
 package require RLAutoUpdate
 ##package require registry
 package require sqlite3
+package require twapi
 
 source Gui_Etx2i10G.tcl
 source Main_Etx2i10G.tcl

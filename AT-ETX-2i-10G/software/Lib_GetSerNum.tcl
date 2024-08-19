@@ -160,8 +160,11 @@ proc GetSnDlg {args} {
         [set ent$fi] delete 0 end					         
       }
     pack $fr -padx 2 -pady 2 -fill both -expand 1 
-    set taskL [exec tasklist.exe]
-    if {[regexp -all wish* $taskL]!="1"} {
+    
+    #set taskL [exec tasklist.exe]
+    #if {[regexp -all wish* $taskL]!="1"} {}
+    set taskL [twapi::get_process_ids -name wish86.exe]
+    if {[llength $taskL]!="1"} {
       if {$varent1focus==1} {
         focus -force $ent1
       }  
