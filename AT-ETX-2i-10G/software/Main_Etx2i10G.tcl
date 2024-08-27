@@ -234,10 +234,17 @@ proc BuildTests {} {
       
       ## remove unnecessary tests for Complementary
       if {$np=="8SFPP" && $up=="0_0"} {
-        if {$gaSet(rbTestMode) eq "Comp" || $gaSet(rbTestMode) eq "Comp_Half19_8SFPP"} {
+        if {$gaSet(rbTestMode) eq "Comp"} {
           foreach tst {"BootDownload" "SetDownload" "SoftwareDownload" "DDR" \
                         "SFP_ID" "DataTransmission_conf" "DataTransmission_run"\
                         "LoadDefaultConfiguration"} {
+            set lTests [lreplace $lTests [lsearch $lTests $tst]  [lsearch $lTests $tst]]
+          }
+        }
+        if {$gaSet(rbTestMode) eq "Comp_Half19_8SFPP"} {
+          foreach tst {"BootDownload" "SetDownload" "SoftwareDownload" "DDR" \
+                        "SFP_ID" "DataTransmission_conf" "DataTransmission_run"\
+                        "Leds_FAN_conf" "LoadDefaultConfiguration"} {
             set lTests [lreplace $lTests [lsearch $lTests $tst]  [lsearch $lTests $tst]]
           }
         }
@@ -1039,10 +1046,13 @@ proc Leds_FAN {run} {
   }  
   
  
-  if {$np=="8SFPP" && $up=="0_0" && ($gaSet(rbTestMode) eq "Comp" || $gaSet(rbTestMode) eq "Comp_Half19_8SFPP") } {
+  if {$np=="8SFPP" && $up=="0_0" && ($gaSet(rbTestMode) eq "Comp") } {
     set txt1 "Verify that:\n\
-  GREEN \'LINK\' and ORANGE \'ACT\' leds of \'Port 7\' are ON and Blinking respectively\n" ; # 07:38 01/06/2023
-  } elseif {$gaSet(rbTestMode) eq "Partial_444P"} {
+  GREEN \'LINK\' and ORANGE \'ACT\' leds of \'Port 7\' are ON and Blinking respectively\n"
+  } elseif {$np=="8SFPP" && $up=="0_0" && ($gaSet(rbTestMode) eq "Comp_Half19_8SFPP") } {
+    set txt1 "Verify that:\n\
+  GREEN \'LINK\' and ORANGE \'ACT\' leds of \'Port 5\' are ON and Blinking respectively\n"
+  }  elseif {$gaSet(rbTestMode) eq "Partial_444P"} {
     set txt1 "Verify that:\n\
   GREEN \'PWR\' led is ON\n\
   GREEN \'LINK\' led of \'MNG-ETH\' is ON\n"
