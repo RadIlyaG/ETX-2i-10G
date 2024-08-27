@@ -113,11 +113,11 @@ proc GUI {} {
 
     }
     "Test &Modes" modes modes 0 {	
-      {radiobutton "MainBoard Tests (8SFPP)" {} "" {} -command {ToggleTestMode} -variable gaSet(rbTestMode) -value "MainBoard"}  
+      {radiobutton "MainBoard Tests (19/8SFPP)" {} "" {} -command {ToggleTestMode} -variable gaSet(rbTestMode) -value "MainBoard"}  
       {radiobutton "Partial Tests (4SFPP/4SFP4UTP/PTP)" {} "" {} -command {ToggleTestMode} -variable gaSet(rbTestMode) -value "Partial_444P"}  
       {separator}
       {radiobutton "Full Test" {} "" {} -command {ToggleTestMode} -variable gaSet(rbTestMode) -value "Full"}  
-      {radiobutton "Complementary Tests (8SFPP)" {} "" {} -command {ToggleTestMode} -variable gaSet(rbTestMode) -value "Comp"}  
+      {radiobutton "Complementary Tests (19/8SFPP)" {} "" {} -command {ToggleTestMode} -variable gaSet(rbTestMode) -value "Comp"}  
       {radiobutton "Complementary Tests (4SFPP/4SFP4UTP/PTP)" {} "" {} -command {ToggleTestMode} -variable gaSet(rbTestMode) -value "Comp_444P"}  
       {radiobutton "Complementary Tests (8.5/8SFPP)" {} "" {} -command {ToggleTestMode} -variable gaSet(rbTestMode) -value "Comp_Half19_8SFPP"} 
       {separator}
