@@ -119,11 +119,15 @@ proc BuildTests {} {
     #   } 
     
       set ::DG_log 1
+      set sw_norm [join [regsub -all {[\(\)A-Z]} $gaSet(dbrSW) " "]  . ] 
+      if {[package vcompare $sw_norm "6.8.5.1.44"] == "0"} {
+        set ::DG_log 0
+      }
       if {$np=="8SFPP" && $up=="0_0"} {
           if {$gaSet(rbTestMode) eq "Comp"} {
           # no DG 
         } elseif {$gaSet(rbTestMode) eq "Full" || $gaSet(rbTestMode) eq "MainBoard"} {
-          set sw_norm [join [regsub -all {[\(\)A-Z]} $gaSet(dbrSW) " "]  . ] 
+          
           #if {$gaSet(DutFullName)=="ETX-2I-10G-B/8.5/AC/8SFPP" && [package vcompare $sw_norm "6.8.5.1.44"] == "0" } { }
           if {[string match {*8.5*8SFPP*} $gaSet(DutFullName)] && [package vcompare $sw_norm "6.8.5.1.44"] == "0"} {
             lappend lTests DyingGasp_conf DyingGasp_run
