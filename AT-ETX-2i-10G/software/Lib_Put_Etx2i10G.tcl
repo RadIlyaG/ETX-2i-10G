@@ -1560,7 +1560,7 @@ proc LoadDefConf {} {
   }
   set initName [regsub -all / $dbr_asmbl .]
   
-  set localUCF [clock format [clock seconds] -format  "%Y.%m.%d-%H.%M.%S"]_${initName}_$gaSet(pair).txt
+  set localUCF c:/temp/[clock format [clock seconds] -format  "%Y.%m.%d-%H.%M.%S"]_${initName}_$gaSet(pair).txt
   #set ret [GetUcFile $dbr_asmbl $localUCF]
   foreach {ret resTxt} [::RLWS::Get_ConfigurationFile $dbr_asmbl $localUCF] {}
   puts "LoadDefConf ret of GetUcFile  $gaSet(1.barcode1): <$ret> resTxt:<$resTxt>"
@@ -1571,9 +1571,9 @@ proc LoadDefConf {} {
   }
   
   set entDUTconfFile $::tmpLocalUCF
-  set entDUTconfFileSize [file size c:/temp/$entDUTconfFile]
+  set entDUTconfFileSize [file size $entDUTconfFile]
   
-  set localUCFSize [file size c:/temp/$localUCF]
+  set localUCFSize [file size $localUCF]
   
   puts "\nDUT entry $entDUTconfFile:<$entDUTconfFileSize>,  LoadDefConf $localUCF:<$localUCFSize>"
   if {$entDUTconfFileSize!=$localUCFSize} {
@@ -1591,7 +1591,7 @@ proc LoadDefConf {} {
   set com $gaSet(comDut)
   Send $com "exit all\r" stam 0.25 
   
-  set cf c:/temp/$localUCF ; #$gaSet(DefaultCF) 
+  set cf $localUCF ; #$gaSet(DefaultCF) 
   set cfTxt "DefaultConfiguration"
   set ret [DownloadConfFile $cf $cfTxt 1 $com]
   if {$ret!=0} {return $ret}

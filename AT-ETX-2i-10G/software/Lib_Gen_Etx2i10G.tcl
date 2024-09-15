@@ -795,7 +795,7 @@ proc GetDbrName {mode} {
   #Status ""
   update
   if {$mode=="full"} {
-    set ::tmpLocalUCF [clock format [clock seconds] -format  "%Y.%m.%d-%H.%M.%S"]_${gaSet(DutInitName)}_$gaSet(pair).txt
+    set ::tmpLocalUCF c:/temp/[clock format [clock seconds] -format  "%Y.%m.%d-%H.%M.%S"]_${gaSet(DutInitName)}_$gaSet(pair).txt
     #set ret [GetUcFile $gaSet(DutFullName) $::tmpLocalUCF]
     foreach {ret resTxt} [::RLWS::Get_ConfigurationFile  $gaSet(DutFullName) $::tmpLocalUCF] {}
     puts "BuildTests ret of GetUcFile  $gaSet(DutFullName) $gaSet(DutInitName): <$ret> resTxt:<$resTxt>"
