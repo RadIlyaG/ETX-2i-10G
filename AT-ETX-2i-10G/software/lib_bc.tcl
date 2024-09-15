@@ -308,7 +308,7 @@ proc ReadBarcode {} {
         # puts "Id-Mac link or error"
         # set gaSet(1.barcode$la.IdMacLink) "link"
       # }
-      foreach {ret resTxt} [CheckMac $barcode AABBCCFFEEDD] {}
+      foreach {ret resTxt} [::RLWS::CheckMac $barcode AABBCCFFEEDD] {}
       puts "CheckMac $barcode ret:<$ret> resTxt:<$resTxt>" ; update
       if {$ret=="-1"} {
         puts "Id-Mac error:  $resTxt"
@@ -356,7 +356,7 @@ proc ReadBarcode {} {
 # UnregIdBarcode $gaSet(1.barcode1)
 # UnregIdBarcode EA100463652
 # ***************************************************************************
-proc UnregIdBarcode {barcode {mac {}}} {
+proc neUnregIdBarcode {barcode {mac {}}} {
   global gaSet
   Status "Unreg ID Barcode $barcode"
   set res [UnregIdMac $barcode $mac]
@@ -374,7 +374,7 @@ proc UnregIdBarcode {barcode {mac {}}} {
 # ***************************************************************************
 # UnregIdMac
 # ***************************************************************************
-proc UnregIdMac {barcode {mac {}}} {
+proc neUnregIdMac {barcode {mac {}}} {
   set ret 0
   set res ""
   set url "http://ws-proxy01.rad.com:10211/ATE_WS/ws/rest/"

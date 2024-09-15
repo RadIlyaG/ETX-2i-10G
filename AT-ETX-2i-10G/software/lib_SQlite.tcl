@@ -83,17 +83,17 @@ proc SQliteAddLine {} {
     # } else {
       # set poNumber [dict get $ret "po number"]
     # }
-    foreach {ret resTxt} [Get_PcbTraceIdData $gaSet(1.traceId) {"po number"}] {}
+    foreach {ret resTxt} [::RLWS::Get_PcbTraceIdData $gaSet(1.traceId) {"po number"}] {}
     if {$ret!="0"} {
       set poNumber ""
     } else {
-      set poNumber [lindex $resTxt 1]
+      set poNumber $resTxt
     }
   }  
 
   for {set tr 1} {$tr <= 6} {incr tr} {
     #if [catch {UpdateDB $barcode $uut $hostDescription $date $tim-$gaSet(ButRunTime) $status $failTestsList $failReason $operator} res] {}
-    if [catch {UpdateDB2 $barcode $uut $hostDescription $date $tim-$gaSet(ButRunTime) $status $failTestsList $failReason $operator $traceID $poNumber "" "" ""} res] {
+    if [catch {::RLWS::UpdateDB2 $barcode $uut $hostDescription $date $tim-$gaSet(ButRunTime) $status $failTestsList $failReason $operator $traceID $poNumber "" "" ""} res] {
       set res "Try${tr}_fail.$res"
       puts "[MyTime] Web DataBase is not updated. Try:<$tr>. Res:<$res>" ; update
       after [expr {int(rand()*3000+60)}] 

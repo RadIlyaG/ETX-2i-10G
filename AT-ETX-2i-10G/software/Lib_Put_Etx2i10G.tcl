@@ -1550,7 +1550,7 @@ proc LoadDefConf {} {
   # set res [Retrive_OperationItem4Barcode $gaSet(1.barcode1)]
   # foreach {res_val res_txt} $res {}
   # puts "LoadDefConf OperationItem4Barcode res_val:<$res_val> res_txt:<$res_txt>"
-  foreach {res_val res_txt} [Get_OI4Barcode $gaSet(1.barcode1)] {}
+  foreach {res_val res_txt} [::RLWS::Get_OI4Barcode $gaSet(1.barcode1)] {}
   puts "MainEcoCheck OperationItem4Barcode res_val:<$res_val> res_txt:<$res_txt>"
   if {$res_val=="-1"} {
     set gaSet(fail) $res_txt
@@ -1561,10 +1561,12 @@ proc LoadDefConf {} {
   set initName [regsub -all / $dbr_asmbl .]
   
   set localUCF [clock format [clock seconds] -format  "%Y.%m.%d-%H.%M.%S"]_${initName}_$gaSet(pair).txt
-  set ret [GetUcFile $dbr_asmbl $localUCF]
-  puts "LoadDefConf ret of GetUcFile  $gaSet(1.barcode1): <$ret>"
+  #set ret [GetUcFile $dbr_asmbl $localUCF]
+  foreach {ret resTxt} [::RLWS::Get_ConfigurationFile $dbr_asmbl $localUCF] {}
+  puts "LoadDefConf ret of GetUcFile  $gaSet(1.barcode1): <$ret> resTxt:<$resTxt>"
   if {$ret=="-1"} {
-    set gaSet(fail) "Get Default Configuration File Fail"
+    #set gaSet(fail) "Get Default Configuration File Fail"
+    set gaSet(fail) $resTxt
     return -1
   }
   

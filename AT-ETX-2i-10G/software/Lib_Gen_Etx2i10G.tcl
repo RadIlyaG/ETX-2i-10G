@@ -746,7 +746,7 @@ proc GetDbrName {mode} {
   # set txt "[string trim $res]"
   # #set gaSet(entDUT) $txt
   
-  foreach {ret resTxt} [Get_OI4Barcode $barcode] {}
+  foreach {ret resTxt} [::RLWS::Get_OI4Barcode $barcode] {}
   if {$ret=="0"} {
     #  set dbrName [dict get $ret "item"]
     set dbrName $resTxt
@@ -796,10 +796,12 @@ proc GetDbrName {mode} {
   update
   if {$mode=="full"} {
     set ::tmpLocalUCF [clock format [clock seconds] -format  "%Y.%m.%d-%H.%M.%S"]_${gaSet(DutInitName)}_$gaSet(pair).txt
-    set ret [GetUcFile $gaSet(DutFullName) $::tmpLocalUCF]
-    puts "BuildTests ret of GetUcFile  $gaSet(DutFullName) $gaSet(DutInitName): <$ret>"
+    #set ret [GetUcFile $gaSet(DutFullName) $::tmpLocalUCF]
+    foreach {ret resTxt} [::RLWS::Get_ConfigurationFile  $gaSet(DutFullName) $::tmpLocalUCF] {}
+    puts "BuildTests ret of GetUcFile  $gaSet(DutFullName) $gaSet(DutInitName): <$ret> resTxt:<$resTxt>"
     if {$ret=="-1"} {
-      set gaSet(fail) "Get Default Configuration File Fail"
+      #set gaSet(fail) "Get Default Configuration File Fail"
+      set gaSet(fail) $resTxt
       RLSound::Play fail
   	  Status "Test FAIL"  red
       DialogBoxRamzor -aspect 2000 -type Ok -message $gaSet(fail) -icon images/error -title "Get Default Configuration File Problem"
@@ -808,7 +810,7 @@ proc GetDbrName {mode} {
       #return -1
     }	else {
       if {$gaSet(DefaultCF)!="" && $gaSet(DefaultCF)!="c:/aa"} {
-        if {$ret=="0"} {
+        if {$resTxt=="0"} {
           set gaSet(fail) "No Default Configuration File at Agile, but exists in init "
           Status "Test FAIL"  red
           DialogBoxRamzor -aspect 2000 -type Ok -message $gaSet(fail) -icon images/error -title "Get Default Configuration File Problem"
@@ -817,7 +819,7 @@ proc GetDbrName {mode} {
           set ret -1
         }
       } elseif {$gaSet(DefaultCF)=="" || $gaSet(DefaultCF)=="c:/aa"} {  
-        if {$ret!="0"} {
+        if {$resTxt!="0"} {
           set gaSet(fail) "No Default Configuration File at init, but exists at Agile"
           Status "Test FAIL"  red
           DialogBoxRamzor -aspect 2000 -type Ok -message $gaSet(fail) -icon images/error -title "Get Default Configuration File Problem"
@@ -1249,7 +1251,7 @@ proc GetMac {fi} {
     # return -1
   # }
   # return [lindex $buffer 0]
-  foreach {ret resTxt} [Get_Mac 1] {}
+  foreach {ret resTxt} [::RLWS::Get_Mac 1] {}
   if {$ret!=0} {
     set gaSet(fail) $resTxt
     return $ret
@@ -1278,7 +1280,7 @@ proc GetDbrSW {barcode} {
   }
   
   # catch {exec $gaSet(javaLocation)\\java -jar $::RadAppsPath/SWVersions4IDnumber.jar $barcode} b
-  foreach {res b} [Get_SwVersions $barcode] {}
+  foreach {res b} [::RLWS::Get_SwVersions $barcode] {}
   puts "GetDbrSW b:<$b>" ; update
   after 1000
   if ![info exists gaSet(swPack)] {
@@ -1856,7 +1858,7 @@ proc CheckTitleDbrNameVsUutDbrName {} {
   
   # set uutDbrName "[string trim $res]"
   
-  foreach {ret resTxt} [Get_OI4Barcode $barcode] {}
+  foreach {ret resTxt} [::RLWS::Get_OI4Barcode $barcode] {}
   if {$ret=="0"} {
     #  set dbrName [dict get $ret "item"]
     set dbrName $resTxt
@@ -2125,7 +2127,7 @@ proc GetDbrSWAgain {} {
 
   set barcode $gaSet(1.barcode1)
   # catch {exec $gaSet(javaLocation)\\java -jar $::RadAppsPath/SWVersions4IDnumber.jar $barcode} b
-  foreach {res b} [Get_SwVersions $barcode] {}
+  foreach {res b} [::RLWS::Get_SwVersions $barcode] {}
   puts "GetDbrSW b:<$b>" ; update
   after 1000
   if ![info exists gaSet(swPack)] {
@@ -2404,7 +2406,7 @@ proc DialogBoxRamzor {args}  {
 # ***************************************************************************
 # GetUcFile
 # ***************************************************************************
-proc GetUcFile {dbrName tmpLocalUCF} {
+proc neGetUcFile {dbrName tmpLocalUCF} {
   set ret 0
   set res ""
   set url "http://ws-proxy01.rad.com:10211/ATE_WS/ws/configDownload/ConfigFile?"
