@@ -1,5 +1,5 @@
 set gaSet(sw)          "??"
-set gaSet(dbrSW)       ""
+set gaSet(dbrSW)       "6.8.2(9.80)"
 set gaSet(swPack)      "SW3887"
 set gaSet(dbrBVerSw)   "SW3356"
 set gaSet(dbrBVer)     "1.10"
