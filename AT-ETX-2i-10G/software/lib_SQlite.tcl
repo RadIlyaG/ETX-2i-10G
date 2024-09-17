@@ -37,6 +37,7 @@ proc SQliteClose {} {
 # ***************************************************************************
 proc SQliteAddLine {} {
   global gaSet
+  if $::repairMode {return 0}
   
   set barcode $gaSet(1.barcode1)
   puts "[MyTime] SQliteAddLine $barcode"

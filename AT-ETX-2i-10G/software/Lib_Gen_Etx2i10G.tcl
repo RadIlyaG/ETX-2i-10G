@@ -2128,7 +2128,7 @@ proc GetDbrSWAgain {} {
   set barcode $gaSet(1.barcode1)
   # catch {exec $gaSet(javaLocation)\\java -jar $::RadAppsPath/SWVersions4IDnumber.jar $barcode} b
   foreach {res b} [::RLWS::Get_SwVersions $barcode] {}
-  puts "GetDbrSW b:<$b>" ; update
+  puts "GetDbrSWAgain b:<$b>" ; update
   after 1000
   if ![info exists gaSet(swPack)] {
     set gaSet(swPack) ""

@@ -11,6 +11,17 @@ proc BuildTests {} {
   puts "\n[MyTime] BuildTests DutInitName:$gaSet(DutInitName)\n"
   
   RetriveDutFam 
+  
+  ## 17/09/2024 12:55:57
+  if {$gaSet(dbrSW)=="" || $gaSet(dbrSW)=="??"} {
+    if {[string match {*There is no SW ID for SW*} $gaSet(fail)]} {
+      regexp {:([A-Z0-9]+)\.} $gaSet(fail) ma val
+      set gaSet(1.barcode1) $val
+    }
+    set ret [GetDbrSWAgain]
+    if {$ret!=0} {return $ret}
+  }
+  
   foreach {b r p d ps np up} [split $gaSet(dutFam) .] {}
   if {$gaSet(rbTestMode) eq "BP"} {
     set lTests BP_test

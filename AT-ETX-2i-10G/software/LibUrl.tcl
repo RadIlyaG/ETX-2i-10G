@@ -383,28 +383,28 @@ proc ::RLWS::CheckMac {id mac} {
   set li [::RLWS::_chk_connection_to_mac $mac]
   foreach {res connected_id} $li {}
   if {$res!=0} {
-    return $connected_id
+    return [list $res $connected_id]
   }
   set short_id [format %.11s $id]
   set li [::RLWS::_chk_connection_to_id $short_id]
   foreach {res connected_mac} $li {}
   if {$res!=0} {
-    return $connected_mac
+    return [list $res $connected_mac]
   }
   if $::RLWS::debugWS {puts "CheckMac input_id:<$short_id>, to $mac connected id: <$connected_id>"}
   if $::RLWS::debugWS {puts "CheckMac input_mac:<$mac>, to $short_id connected mac: <$connected_mac>"}
   
   if {$connected_id == $short_id && $connected_mac == $mac} {
-    return [list 0 "$id->$mac"]
+    return [list 0 "$id connected $mac"]
   }
   if {$connected_id == "" && $connected_mac == ""} {
-    return [list 0 "NC, NC"]
+    return [list 0 "$mac & $id aren't connected at all"]
   }
   if {$connected_id != "" && $connected_id != $short_id} {
-    return [list 1 "$mac is already connected to $connected_id"]
+    return [list 1 "$mac already connected to $connected_id"]
   }
   if {$connected_mac != "" && $connected_mac != $mac} {
-    return [list 1 "$id is already connected to $connected_mac"]
+    return [list 1 "$id already connected to $connected_mac"]
   }
   return "-100 None"
 }
