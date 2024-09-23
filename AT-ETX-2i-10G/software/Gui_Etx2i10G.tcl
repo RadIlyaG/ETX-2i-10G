@@ -633,6 +633,17 @@ proc ButRun {} {
 #   puts "[MyTime] source Lib_Put_RicEth_$gaSet(dutFam).tcl" ; update
 #   source Lib_Put_RicEth_$gaSet(dutFam).tcl
 #   
+  if {$ret==0 && $gaSet(rbTestMode)=="Comp_Half19_8SFPP"} {
+    RLSound::Play information
+    set txt "Connect SFP loop to Port 1 and Generator to Port 5"
+    set res [DialogBoxRamzor -icon images/info -type "Continue Abort" -text $txt -default 0 -aspect 2000 -title "ETX-2i-10G"]
+    if {$res=="Abort"} {
+      set ret -2
+      set gaSet(fail) "User stop"
+    } else {
+      set ret 0
+    }
+  }
   if {$ret==0} {
      if !$::repairMode {
        AddToPairLog $gaSet(pair) " $gaSet(operatorID) $gaSet(operator)"
