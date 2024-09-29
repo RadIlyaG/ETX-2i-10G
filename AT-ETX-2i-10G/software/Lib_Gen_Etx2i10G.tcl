@@ -2466,7 +2466,7 @@ proc LY_wait {} {
     "ETX-2I-10G_LY.DCR.4SFPP.24SFP.tcl" "ETX-2I-10G_LY.H.DCR.4SFPP.24SFP.tcl"\
     "ETX-2I-10G_MMC.ACR.4SFPP.24SFP.tcl" "ETX-2I-10G_SH.8.5.AC.4SFPP.8SFP.tcl"\
     "ETX-2I-10G_SH.19.ACR.4SFPP.24SFP.tcl" "ETX-2I-10G.ACR.4SFPP.24SFP.tcl" \
-    "ETX-2I-10G.AC.4SFP.8SFP.tcl"]
+    "ETX-2I-10G.AC.4SFP.8SFP.tcl" "ETX-2I-10G.H.DCR.4SFPP.24SFP.tcl"]
     
   if {[lsearch $LY_wait_list $gaSet(DutInitName)]>"-1"} {
     set wait_option 1
@@ -2478,7 +2478,8 @@ proc LY_wait {} {
      ([string match *MMC* $gaSet(DutInitName)] && $gaSet(dbrSW)=="6.8.2(9.80)") || \
      ([string match *_SH* $gaSet(DutInitName)] && $gaSet(dbrSW)=="6.8.2(0.85)") || \
      ([string match *ETX-2I-10G.ACR.4SFPP.24SFP* $gaSet(DutInitName)] && $gaSet(dbrSW)=="6.8.5(1.44)") || \
-     ([string match *ETX-2I-10G.AC.4SFPP.8SFP* $gaSet(DutInitName)] && $gaSet(dbrSW)=="6.8.5(1.44)"))} {
+     ([string match *ETX-2I-10G.AC.4SFPP.8SFP* $gaSet(DutInitName)] && $gaSet(dbrSW)=="6.8.5(1.44)") || \
+     ([string match *ETX-2I-10G.H.DCR.4SFPP.24SFP* $gaSet(DutInitName)] && $gaSet(dbrSW)=="6.8.5(1.44)"))} {
     ## remain wait_option == 1
   } else {
     set wait_option 0
