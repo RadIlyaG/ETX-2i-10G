@@ -935,7 +935,8 @@ proc RetriveDutFam {{dutInitName ""}} {
               [string match *B_TWC.19.* $dutInitName]==1 || [string match *B_VT.19.* $dutInitName]==1 || \
               [string match *B_GC.19.*.4SFPP4SFP $dutInitName]==1 || \
               [string match *CELLCOM.*C* $dutInitName]==1 ||\
-              [string match *B_BRSD.19.* $dutInitName]==1 } {
+              [string match *B_BRSD.19.* $dutInitName]==1 || \
+              [string match *B_GCS.19.*.4SFPP4SFP $dutInitName]==1} {
       puts "if 012"
       set gaSet(dutFam) 19B.0.0.0.0.0.0
       ## 29/06/2022 14:27:11
@@ -1689,7 +1690,8 @@ proc RetriveFansCheckJ {} {
               [string match *_C.19.DR.* $gaSet(DutInitName)] || \
               [string match *_EIR.19.ACR.* $gaSet(DutInitName)] || \
               [string match *_EIR.19.DCR.* $gaSet(DutInitName)] || \
-              [string match *_GC.19.ACR.4SFPP4SFP.* $gaSet(DutInitName)]} {
+              [string match *_GC.19.ACR.4SFPP4SFP.* $gaSet(DutInitName)] || \
+              [string match *_GCS.19.ACR.4SFPP4SFP.* $gaSet(DutInitName)]} {
       ## 26/05/2022 added *10G_ATT.19.*
       puts "if3.2"
       set fans 2
