@@ -140,12 +140,19 @@ proc DeleteOldApp {} {
     if {[string match -nocase {6.8.2(0.59)} [file tail $fol]]} {
       catch {file delete -force $fol}
     }
-    if {[string match -nocase {6.8.2(0.59)_VO} [file tail $fol]]} {
-      catch {file delete -force $fol}
-    }
+    
+    ## 16:20 07/10/2024
+    #if {[string match -nocase {6.8.2(0.59)_VO} [file tail $fol]]} {
+    #  catch {file delete -force $fol}
+    #}
+    
     if {[string match -nocase {6.8.4(1.22)_ATT} [file tail $fol]]} {
       catch {file delete -force $fol}
     }
+    if {[string match -nocase {6.8.2(0.75)_VO} [file tail $fol]]} {
+      catch {file delete -force $fol}
+    }
+    
   }
 }
 
