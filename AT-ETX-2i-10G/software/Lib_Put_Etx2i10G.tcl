@@ -441,8 +441,12 @@ proc PS_IDTest {} {
       } 
     }    
     if [string match {*_VO.*} $gaSet(DutInitName)] {
-      if {[package vcompare $sw_norm 6.8.2.0.75]!="-1"} {
-        ## if sw_norm >=6.8.2.0.75
+      # if {[package vcompare $sw_norm 6.8.2.0.75]!="-1"} {
+        # ## if sw_norm >=6.8.2.0.75
+      # }  
+      ## 09:50 09/10/2024
+      if {[package vcompare $sw_norm 6.8.2.0.59]!="-1"} {
+        ## if sw_norm >=6.8.2.0.59  
         set max_sn_len 10
       } else {
         set max_sn_len 16
