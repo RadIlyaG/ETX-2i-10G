@@ -1,8 +1,11 @@
 Hardware malfunction
 Exception
 !!! PCIe 1 FAILURE !!!
+!!! PCIe 0 FAILURE !!!
 ERROR ERROR DDR FPGA FAILD INIT 
+ERROR ERROR           Test FPGA
 ERROR Read Write
 ERROR Read
 ERROR HWPORTG_FAN_control_write 2
 ERROR HWPORTG_FAN_control_write 1
+
