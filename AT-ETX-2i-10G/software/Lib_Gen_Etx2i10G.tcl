@@ -915,7 +915,7 @@ proc RetriveDutFam {{dutInitName ""}} {
     puts "if 01"
     if {[string match *B.AC.* $dutInitName]==1 || \
         [string match *.DDC.* $dutInitName]==1 || [string match *B.8.5.* $dutInitName]==1 ||\
-        [string match *B_PLD.8.5.* $dutInitName]==1 || [string match *B_OPT.* $dutInitName]==1 ||\
+        [string match *B_PLD.8.5.* $dutInitName]==1 || [string match *B_OPT.AC* $dutInitName]==1 ||\
         [string match *B_TWC.8.5.* $dutInitName]==1 || \
         [string match *B_C.8.5.* $dutInitName]==1   || [string match *_C.8.5.* $dutInitName]==1 ||\
         [string match *B_FTR.8.5.* $dutInitName]==1 || [string match *B_MMC.8.5.* $dutInitName]==1 ||\
