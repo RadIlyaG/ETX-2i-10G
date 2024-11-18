@@ -522,6 +522,53 @@ proc PS_IDTest {} {
       }
     }
   }
+  
+  foreach {b r p d ps np up} [split $gaSet(dutFam) .] {}
+  puts "\nSerial Number DutInitName:<$gaSet(DutInitName)> sw:<$sw> sw_norm:<$sw_norm>"; update
+  if {[package vcompare $sw_norm 6.8.5.3.31]!="-1"} {
+    ## if sw_norm >=6.8.5.3.31
+    if {([string match {*ATT*} $gaSet(DutInitName)])} {
+      if {[string match {*.ODU.*} $gaSet(DutInitName)]} {
+        set invPs1 4002
+        set invPs2 4003
+      } else {
+        set invPs1 4004
+        set invPs2 4005      
+      }
+      puts "\nSerial Number ATT invPs1:<$invPs1> invPs2:<$invPs2>"; update  
+      foreach ps {1 2} {
+        set inv [set invPs${ps}]
+        puts "ps-$ps inv-$inv"
+        set ret [Send $com "exit all\r" $gaSet(prompt)]
+        if {$ret!=0} {set gaSet(fail) "exit all fail"; return $ret}
+        set ret [Send $com "config system\r" "config>system"]
+        if {$ret!=0} {set gaSet(fail) "config system fail"; return $ret}
+        set ret [Send $com "inventory $inv\r" ($inv)]
+        if {$ret!=0} {set gaSet(fail) "inventory $inv fail"; return $ret}
+        set ret [Send $com "show status\r" ($inv)]
+        if {$ret!=0} {set gaSet(fail) "show status fail"; return $ret}
+        set res [regexp {Serial Number[\s:]+([a-zA-Z\d]+)\sMFG} $buffer ma val]
+        if {$res==0} {
+          set gaSet(fail) "Fail to get Serial Number of PS-$ps ($inv)"
+          return -1
+        }
+        
+        set sn_len [string length $val]
+        puts "ps-$ps inv-$inv sn:<$val> sn_len:<$sn_len>\n"
+        if {[string is digit $val]==0} {
+          set gaSet(fail) "Serial Number $val is not Digit Number"
+          return -1
+        }
+        if {$sn_len!=10} {
+          set gaSet(fail) "Serial Number's Length is $sn_len instead of 10"
+          return -1
+        }
+        AddToPairLog $gaSet(pair) "PS-$ps Serial Number: $val"        
+      }       
+    }
+  }
+
+    
     
 #   set ret [ReadCPLD]
 #   if {$ret!=0} {return $ret}
