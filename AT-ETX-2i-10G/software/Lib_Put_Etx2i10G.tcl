@@ -1604,8 +1604,15 @@ proc LoadDefConf {} {
   foreach {res_val res_txt} [::RLWS::Get_OI4Barcode $gaSet(1.barcode1)] {}
   puts "MainEcoCheck OperationItem4Barcode res_val:<$res_val> res_txt:<$res_txt>"
   if {$res_val=="-1"} {
-    set gaSet(fail) $res_txt
-    return -1
+    after 2000
+    foreach {res_val res_txt} [::RLWS::Get_OI4Barcode $gaSet(1.barcode1)] {}
+    puts "MainEcoCheck OperationItem4Barcode res_val:<$res_val> res_txt:<$res_txt>"
+    if {$res_val=="-1"} {
+      set gaSet(fail) $res_txt
+      return -1
+    } else {
+      set dbr_asmbl $res_txt
+    }
   } else {
     set dbr_asmbl $res_txt
   }
