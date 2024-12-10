@@ -131,7 +131,7 @@ proc BuildTests {} {
     
       set ::DG_log 1
       set sw_norm [join [regsub -all {[\(\)A-Z]} $gaSet(dbrSW) " "]  . ] 
-      if {[package vcompare $sw_norm "6.8.5.1.44"] == "0"} {
+      if {[package vcompare $sw_norm "6.8.5.1.44"] == "0" || [package vcompare $sw_norm "6.8.5.1.38"] == "0"} {
         set ::DG_log 0
       }
       if {$np=="8SFPP" && $up=="0_0"} {
