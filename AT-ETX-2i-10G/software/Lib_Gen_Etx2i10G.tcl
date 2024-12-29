@@ -712,39 +712,6 @@ proc GetDbrName {mode} {
     set gaSet(fail) "Java application is missing"
     return -1
   }
-  #set res [catch {exec $gaSet(javaLocation)\\java -jar $::RadAppsPath/OI4Barcode.jar $barcode} b]
-  #puts "res:<$res> b:<$b>"
-  
-  # if [string match *Exception* $b] {
-    # set gaSet(fail) "Network connection problem"
-    # RLSound::Play fail
-	  # Status "Test FAIL"  red
-    # DialogBoxRamzor -aspect 2000 -type Ok -message $gaSet(fail) -icon images/error -title "Get DbrName Problem"
-    # pack $gaGui(frFailStatus)  -anchor w
-	  # $gaSet(runTime) configure -text ""
-  	# return -1
-  # }
-  # set fileName MarkNam_$barcode.txt
-  # after 1000
-  # if ![file exists MarkNam_$barcode.txt] {
-    # set gaSet(fail) "File $fileName is not created. Verify the Barcode"
-    # #exec C:\\RLFiles\\Tools\\Btl\\failbeep.exe &
-    # RLSound::Play fail
-	  # Status "Test FAIL"  red
-    # DialogBoxRamzor -aspect 2000 -type Ok -message $gaSet(fail) -icon images/error -title "Get DbrName Problem"
-    # pack $gaGui(frFailStatus)  -anchor w
-	  # $gaSet(runTime) configure -text ""
-  	# return -1
-  # }
-  
-  # set fileId [open "$fileName"]
-    # seek $fileId 0
-    # set res [read $fileId]    
-  # close $fileId
-  
-  # #set txt "$barcode $res"
-  # set txt "[string trim $res]"
-  # #set gaSet(entDUT) $txt
   
   foreach {ret resTxt} [::RLWS::Get_OI4Barcode $barcode] {}
   if {$ret=="0"} {
@@ -769,8 +736,12 @@ proc GetDbrName {mode} {
   set gaSet(DutFullName) $dbrName
   set gaSet(DutInitName) $initName.tcl
   
-  # file delete -force MarkNam_$barcode.txt
-  #file mkdir [regsub -all / $res .]
+  if [string match {*-PS*} $dbrName] {
+    set ::uutIsPs 1
+  } else {
+    set ::uutIsPs 0
+  }
+  puts "GetDbrName ::uutIsPs:<$::uutIsPs>"
   
   if {[file exists uutInits/$gaSet(DutInitName)]} {
     source uutInits/$gaSet(DutInitName)  
@@ -795,60 +766,64 @@ proc GetDbrName {mode} {
   #Status ""
   update
   if {$mode=="full"} {
-    set ::tmpLocalUCF c:/temp/[clock format [clock seconds] -format  "%Y.%m.%d-%H.%M.%S"]_${gaSet(DutInitName)}_$gaSet(pair).txt
-    #set ret [GetUcFile $gaSet(DutFullName) $::tmpLocalUCF]
-    foreach {ret resTxt} [::RLWS::Get_ConfigurationFile  $gaSet(DutFullName) $::tmpLocalUCF] {}
-    puts "BuildTests ret of GetUcFile  $gaSet(DutFullName) $gaSet(DutInitName): <$ret> resTxt:<$resTxt>"
-    if {$ret=="-1"} {
-      #set gaSet(fail) "Get Default Configuration File Fail"
-      set gaSet(fail) $resTxt
-      RLSound::Play fail
-  	  Status "Test FAIL"  red
-      DialogBoxRamzor -aspect 2000 -type Ok -message $gaSet(fail) -icon images/error -title "Get Default Configuration File Problem"
-      pack $gaGui(frFailStatus)  -anchor w
-  	  $gaSet(runTime) configure -text ""
-      #return -1
-    }	else {
-      if {$gaSet(DefaultCF)!="" && $gaSet(DefaultCF)!="c:/aa"} {
-        if {$resTxt=="0"} {
-          set gaSet(fail) "No Default Configuration File at Agile, but exists in init "
-          Status "Test FAIL"  red
-          DialogBoxRamzor -aspect 2000 -type Ok -message $gaSet(fail) -icon images/error -title "Get Default Configuration File Problem"
-          pack $gaGui(frFailStatus)  -anchor w
-          $gaSet(runTime) configure -text ""
-          set ret -1
+    if !$::uutIsPs {
+      set ::tmpLocalUCF c:/temp/[clock format [clock seconds] -format  "%Y.%m.%d-%H.%M.%S"]_${gaSet(DutInitName)}_$gaSet(pair).txt
+      #set ret [GetUcFile $gaSet(DutFullName) $::tmpLocalUCF]
+      foreach {ret resTxt} [::RLWS::Get_ConfigurationFile  $gaSet(DutFullName) $::tmpLocalUCF] {}
+      puts "BuildTests ret of GetUcFile  $gaSet(DutFullName) $gaSet(DutInitName): <$ret> resTxt:<$resTxt>"
+      if {$ret=="-1"} {
+        #set gaSet(fail) "Get Default Configuration File Fail"
+        set gaSet(fail) $resTxt
+        RLSound::Play fail
+        Status "Test FAIL"  red
+        DialogBoxRamzor -aspect 2000 -type Ok -message $gaSet(fail) -icon images/error -title "Get Default Configuration File Problem"
+        pack $gaGui(frFailStatus)  -anchor w
+        $gaSet(runTime) configure -text ""
+        #return -1
+      }	else {
+        if {$gaSet(DefaultCF)!="" && $gaSet(DefaultCF)!="c:/aa"} {
+          if {$resTxt=="0"} {
+            set gaSet(fail) "No Default Configuration File at Agile, but exists in init "
+            Status "Test FAIL"  red
+            DialogBoxRamzor -aspect 2000 -type Ok -message $gaSet(fail) -icon images/error -title "Get Default Configuration File Problem"
+            pack $gaGui(frFailStatus)  -anchor w
+            $gaSet(runTime) configure -text ""
+            set ret -1
+          }
+        } elseif {$gaSet(DefaultCF)=="" || $gaSet(DefaultCF)=="c:/aa"} {  
+          if {$resTxt!="0"} {
+            set gaSet(fail) "No Default Configuration File at init, but exists at Agile"
+            Status "Test FAIL"  red
+            DialogBoxRamzor -aspect 2000 -type Ok -message $gaSet(fail) -icon images/error -title "Get Default Configuration File Problem"
+            pack $gaGui(frFailStatus)  -anchor w
+            $gaSet(runTime) configure -text ""
+            set ret -1
+          }  
         }
-      } elseif {$gaSet(DefaultCF)=="" || $gaSet(DefaultCF)=="c:/aa"} {  
-        if {$resTxt!="0"} {
-          set gaSet(fail) "No Default Configuration File at init, but exists at Agile"
-          Status "Test FAIL"  red
-          DialogBoxRamzor -aspect 2000 -type Ok -message $gaSet(fail) -icon images/error -title "Get Default Configuration File Problem"
-          pack $gaGui(frFailStatus)  -anchor w
-          $gaSet(runTime) configure -text ""
-          set ret -1
-        }  
       }
-    }
-    if {$ret=="-1"} {
-      $gaGui(startFrom) configure -text "" -values [list]
-      set glTests [list]
-      set gaSet(curTest) ""
-      set gaSet(log.$gaSet(pair)) c:/logs/[clock format [clock seconds] -format  "%Y.%m.%d-%H.%M.%S"].txt
-      AddToPairLog $gaSet(pair) $gaSet(fail)
-      Status "Test FAIL"  red
-      return -2
-    }  
+      if {$ret=="-1"} {
+        $gaGui(startFrom) configure -text "" -values [list]
+        set glTests [list]
+        set gaSet(curTest) ""
+        set gaSet(log.$gaSet(pair)) c:/logs/[clock format [clock seconds] -format  "%Y.%m.%d-%H.%M.%S"].txt
+        AddToPairLog $gaSet(pair) $gaSet(fail)
+        Status "Test FAIL"  red
+        return -2
+      }
+    }       
     
     BuildTests
     
-    set ret [GetDbrSW $barcode]
-    puts "GetDbrName ret of GetDbrSW:$ret" ; update
-    if {$ret!=0} {
-      RLSound::Play fail
-  	  Status "Test FAIL"  red
-      DialogBoxRamzor -aspect 2000 -type Ok -message $gaSet(fail) -icon images/error -title "Get DbrName Problem"
-      pack $gaGui(frFailStatus)  -anchor w
-  	  $gaSet(runTime) configure -text ""
+    if !$::uutIsPs {
+      set ret [GetDbrSW $barcode]
+      puts "GetDbrName ret of GetDbrSW:$ret" ; update
+      if {$ret!=0} {
+        RLSound::Play fail
+        Status "Test FAIL"  red
+        DialogBoxRamzor -aspect 2000 -type Ok -message $gaSet(fail) -icon images/error -title "Get DbrName Problem"
+        pack $gaGui(frFailStatus)  -anchor w
+        $gaSet(runTime) configure -text ""
+      }
     }
   } else {
     set ret 0

@@ -10,7 +10,11 @@ proc BuildTests {} {
   }
   puts "\n[MyTime] BuildTests DutInitName:$gaSet(DutInitName)\n"
   
-  RetriveDutFam 
+  if $::uutIsPs {
+    PS_RetriveDutFam
+  } else {
+    RetriveDutFam
+  }
   
   ## 17/09/2024 12:55:57
   if {$gaSet(dbrSW)=="" || $gaSet(dbrSW)=="??"} {
@@ -30,247 +34,250 @@ proc BuildTests {} {
   } else {  
     if {$gaSet(cleiCodeMode) == 1} {
       set lTests WriteCleiCode
-    } else {
-    
-      set lTests [list BootDownload]
-      if {$gaSet(rbTestMode) eq "Comp_Half19_8SFPP"} {
-        ## no Pages
-      } else {
-        lappend lTests Pages
-      }  
-      
-      if {$gaSet(enJat)==1 || $gaSet(enPll)==1} {
-        lappend lTests Download_Jat_Pll Load_Jat_Pll
-      }
-      
-      
-      ## 13:19 11/09/2022
-      if {$gaSet(rbTestMode) eq "Full" && $np=="8SFPP" && $up=="0_0" && [regexp {ODU?\.8} $gaSet(DutInitName)]==1} {
-        puts "BuildTests gaSet(dbrSW):<$gaSet(dbrSW)>"
-        if {$gaSet(dbrSW)=="" || $gaSet(dbrSW)=="??"} {
-          if {[string match {*There is no SW ID for SW*} $gaSet(fail)]} {
-            regexp {:([A-Z0-9]+)\.} $gaSet(fail) ma val
-            set gaSet(1.barcode1) $val
-          }
-          set ret [GetDbrSWAgain]
-          if {$ret!=0} {return $ret}
-        }
-        set sw_norm [join [regsub -all {[\(\)A-Z]} $gaSet(dbrSW) " "]  . ] ; # 6.8.5(1.27T5) -> 6.8.5.1.27T5
-        
-        set doorTestApp1 "6.8.2.2.75" ; ## 07:29 17/04/2023 "6.8.2.2.76"  
-        set doorTestApp2 "6.8.2.0.75" ; ## 08:37 18/04/2023   
-        set doorTestApp3 "6.8.2.0.999" ; ## 07:32 19/04/2023       
-        if {[package vcompare $sw_norm $doorTestApp1] == "-1" &&\
-            ([package vcompare $sw_norm $doorTestApp2] == "-1" || [package vcompare $sw_norm $doorTestApp3] == "1")} {
-          ## If sw_norm < doorTestApp1 and (sw_norm < doorTestApp2 or w_norm < doorTestApp3), 
-          ## then download special APP before DoorSwitchTest
-          ## After the Test - download regular APP after DoorSwitchTest
-          set appSupportsSwitch 0
+    } else {   
+      if $::uutIsPs {
+        set lTests [list PS_ID PS_DataTransmission_conf PS_DataTransmission_run]
+      } else {      
+        set lTests [list BootDownload]
+        if {$gaSet(rbTestMode) eq "Comp_Half19_8SFPP"} {
+          ## no Pages
         } else {
-          set appSupportsSwitch 1
-        }
-        puts "\nsw_norm:<$sw_norm>, doorTestApp1:<$doorTestApp1>, \
-          doorTestApp2:<$doorTestApp2>, doorTestApp3:<$doorTestApp3>, \
-          appSupportsSwitch:<$appSupportsSwitch>\n"
-        if !$appSupportsSwitch {
-          lappend lTests DoorSwitchAppDownload
-        } else {
-          ## if sw_norm >= doorTestApp, then download regular APP
-          lappend lTests SoftwareDownload
-        }
-        
-        lappend lTests  DoorSwitchTest
-        
-        if !$appSupportsSwitch {
-          ## if sw_norm < doorTestApp and != doorTestApp2, then download regular APP after DoorSwitchTest
-          lappend lTests SoftwareDownload
-        }
-      } else {
-        lappend lTests SoftwareDownload
-      }
-      
-      if {$np=="8SFPP" && $up=="0_0"} {
-        ## 27/01/2021 07:30:56 in Itzik's product there is no FanEepromBurn
-      } else {
-        if {$b=="Half19" || $b=="Half19B" || $b=="19B"} {
-          lappend lTests FanEepromBurn
+          lappend lTests Pages
         }  
-      } 
-      
-      
-    ## 09/01/2018 07:43:31 All products should be tested with 4 10GbE ports open
-    ## therefor we open the license to all
-      if {$np=="8SFPP" && $up=="0_0"} {
-        ## in Itzik's product there is no License
-      } else {
-        lappend lTests  OpenLicense
-      }
-
-      if {$gaSet(rbTestMode) eq "Comp"} {
-        lappend lTests SetToDefaultWD ; # 07:19 01/08/2023 SetToDefault 
-      } else {  
-        lappend lTests SetToDefaultWD
-      }
-       
-      if {[string match *.12CMB.* $gaSet(DutInitName)]==0} {
-        ## if a product is NOT CMB, we cheeck ID now
-        ## CMB will be checked after download its SW
-        lappend lTests ID
-        if {$np=="8SFPP" && $up=="0_0"} {
-          ## in Itzik's product there are only SFPs, no UTP
-        } else {
-          lappend lTests UTP_ID
+        
+        if {$gaSet(enJat)==1 || $gaSet(enPll)==1} {
+          lappend lTests Download_Jat_Pll Load_Jat_Pll
         }
-        lappend lTests SFP_ID
-      }
-      
-      ## from 23/07/2020 08:08:40 USB port is not checked
-    #   if {$b=="Half19" || $b=="19"} {
-    #     lappend lTestNames USBport
-    #   } 
-    
-      set ::DG_log 1
-      set sw_norm [join [regsub -all {[\(\)A-Z]} $gaSet(dbrSW) " "]  . ] 
-      if {[package vcompare $sw_norm "6.8.5.1.44"] == "0" || [package vcompare $sw_norm "6.8.5.1.38"] == "0"} {
-        set ::DG_log 0
-      }
-      if {$np=="8SFPP" && $up=="0_0"} {
-          if {$gaSet(rbTestMode) eq "Comp"} {
-          # no DG 
-        } elseif {$gaSet(rbTestMode) eq "Full" || $gaSet(rbTestMode) eq "MainBoard"} {
+        
+        
+        ## 13:19 11/09/2022
+        if {$gaSet(rbTestMode) eq "Full" && $np=="8SFPP" && $up=="0_0" && [regexp {ODU?\.8} $gaSet(DutInitName)]==1} {
+          puts "BuildTests gaSet(dbrSW):<$gaSet(dbrSW)>"
+          if {$gaSet(dbrSW)=="" || $gaSet(dbrSW)=="??"} {
+            if {[string match {*There is no SW ID for SW*} $gaSet(fail)]} {
+              regexp {:([A-Z0-9]+)\.} $gaSet(fail) ma val
+              set gaSet(1.barcode1) $val
+            }
+            set ret [GetDbrSWAgain]
+            if {$ret!=0} {return $ret}
+          }
+          set sw_norm [join [regsub -all {[\(\)A-Z]} $gaSet(dbrSW) " "]  . ] ; # 6.8.5(1.27T5) -> 6.8.5.1.27T5
           
-          #if {$gaSet(DutFullName)=="ETX-2I-10G-B/8.5/AC/8SFPP" && [package vcompare $sw_norm "6.8.5.1.44"] == "0" } { }
-          if {[string match {*8.5*8SFPP*} $gaSet(DutFullName)] && [package vcompare $sw_norm "6.8.5.1.44"] == "0"} {
-            lappend lTests DyingGasp_conf DyingGasp_run
-            set ::DG_log 0
+          set doorTestApp1 "6.8.2.2.75" ; ## 07:29 17/04/2023 "6.8.2.2.76"  
+          set doorTestApp2 "6.8.2.0.75" ; ## 08:37 18/04/2023   
+          set doorTestApp3 "6.8.2.0.999" ; ## 07:32 19/04/2023       
+          if {[package vcompare $sw_norm $doorTestApp1] == "-1" &&\
+              ([package vcompare $sw_norm $doorTestApp2] == "-1" || [package vcompare $sw_norm $doorTestApp3] == "1")} {
+            ## If sw_norm < doorTestApp1 and (sw_norm < doorTestApp2 or w_norm < doorTestApp3), 
+            ## then download special APP before DoorSwitchTest
+            ## After the Test - download regular APP after DoorSwitchTest
+            set appSupportsSwitch 0
           } else {
-            lappend lTests DyingGasp_Log
+            set appSupportsSwitch 1
           }
-        }
-      } else {
-        if {$gaSet(rbTestMode) eq "Partial_444P"} {
-          ## no DyingGasp at Ionics for 4SFPP/4SFP4UTP/PTP
-        } else {
-          lappend lTests DyingGasp_conf DyingGasp_run
-        }
-      }  
-      
-      if {$gaSet(rbTestMode) eq "Partial_444P"} {
-        lappend lTests BIST
-      } else {
-        if {$::repairMode} {
-          if {$gaSet(Etx220exists)} {
-            lappend lTests DataTransmission_conf DataTransmission_run
+          puts "\nsw_norm:<$sw_norm>, doorTestApp1:<$doorTestApp1>, \
+            doorTestApp2:<$doorTestApp2>, doorTestApp3:<$doorTestApp3>, \
+            appSupportsSwitch:<$appSupportsSwitch>\n"
+          if !$appSupportsSwitch {
+            lappend lTests DoorSwitchAppDownload
           } else {
-            ## no gen - no data tests
+            ## if sw_norm >= doorTestApp, then download regular APP
+            lappend lTests SoftwareDownload
+          }
+          
+          lappend lTests  DoorSwitchTest
+          
+          if !$appSupportsSwitch {
+            ## if sw_norm < doorTestApp and != doorTestApp2, then download regular APP after DoorSwitchTest
+            lappend lTests SoftwareDownload
           }
         } else {
-          lappend lTests DataTransmission_conf DataTransmission_run
+          lappend lTests SoftwareDownload
         }
-      }
-      
-      if {$p=="P"} {
+        
         if {$np=="8SFPP" && $up=="0_0"} {
-          if {$gaSet(rbTestMode) eq "Comp"} {
-            # no PtpClock  
+          ## 27/01/2021 07:30:56 in Itzik's product there is no FanEepromBurn
+        } else {
+          if {$b=="Half19" || $b=="Half19B" || $b=="19B"} {
+            lappend lTests FanEepromBurn
+          }  
+        } 
+        
+        
+      ## 09/01/2018 07:43:31 All products should be tested with 4 10GbE ports open
+      ## therefor we open the license to all
+        if {$np=="8SFPP" && $up=="0_0"} {
+          ## in Itzik's product there is no License
+        } else {
+          lappend lTests  OpenLicense
+        }
+
+        if {$gaSet(rbTestMode) eq "Comp"} {
+          lappend lTests SetToDefaultWD ; # 07:19 01/08/2023 SetToDefault 
+        } else {  
+          lappend lTests SetToDefaultWD
+        }
+         
+        if {[string match *.12CMB.* $gaSet(DutInitName)]==0} {
+          ## if a product is NOT CMB, we cheeck ID now
+          ## CMB will be checked after download its SW
+          lappend lTests ID
+          if {$np=="8SFPP" && $up=="0_0"} {
+            ## in Itzik's product there are only SFPs, no UTP
+          } else {
+            lappend lTests UTP_ID
+          }
+          lappend lTests SFP_ID
+        }
+        
+        ## from 23/07/2020 08:08:40 USB port is not checked
+      #   if {$b=="Half19" || $b=="19"} {
+      #     lappend lTestNames USBport
+      #   } 
+      
+        set ::DG_log 1
+        set sw_norm [join [regsub -all {[\(\)A-Z]} $gaSet(dbrSW) " "]  . ] 
+        if {[package vcompare $sw_norm "6.8.5.1.44"] == "0" || [package vcompare $sw_norm "6.8.5.1.38"] == "0"} {
+          set ::DG_log 0
+        }
+        if {$np=="8SFPP" && $up=="0_0"} {
+            if {$gaSet(rbTestMode) eq "Comp"} {
+            # no DG 
           } elseif {$gaSet(rbTestMode) eq "Full" || $gaSet(rbTestMode) eq "MainBoard"} {
-            lappend lTests PtpClock_conf PtpClock_run
-            lappend lTests ExtClk SyncE_conf SyncE_run
+            
+            #if {$gaSet(DutFullName)=="ETX-2I-10G-B/8.5/AC/8SFPP" && [package vcompare $sw_norm "6.8.5.1.44"] == "0" } { }
+            if {[string match {*8.5*8SFPP*} $gaSet(DutFullName)] && [package vcompare $sw_norm "6.8.5.1.44"] == "0"} {
+              lappend lTests DyingGasp_conf DyingGasp_run
+              set ::DG_log 0
+            } else {
+              lappend lTests DyingGasp_Log
+            }
           }
         } else {
           if {$gaSet(rbTestMode) eq "Partial_444P"} {
-            ## no ExtClk and SyncE at Ionics for 4SFPP/4SFP4UTP/PTP
+            ## no DyingGasp at Ionics for 4SFPP/4SFP4UTP/PTP
           } else {
-            lappend lTests PtpClock_conf PtpClock_run ; # 08:52 12/10/2023
-            lappend lTests ExtClk SyncE_conf SyncE_run 
+            lappend lTests DyingGasp_conf DyingGasp_run
+          }
+        }  
+        
+        if {$gaSet(rbTestMode) eq "Partial_444P"} {
+          lappend lTests BIST
+        } else {
+          if {$::repairMode} {
+            if {$gaSet(Etx220exists)} {
+              lappend lTests DataTransmission_conf DataTransmission_run
+            } else {
+              ## no gen - no data tests
+            }
+          } else {
+            lappend lTests DataTransmission_conf DataTransmission_run
           }
         }
         
-      }
-      lappend lTests DDR 
+        if {$p=="P"} {
+          if {$np=="8SFPP" && $up=="0_0"} {
+            if {$gaSet(rbTestMode) eq "Comp"} {
+              # no PtpClock  
+            } elseif {$gaSet(rbTestMode) eq "Full" || $gaSet(rbTestMode) eq "MainBoard"} {
+              lappend lTests PtpClock_conf PtpClock_run
+              lappend lTests ExtClk SyncE_conf SyncE_run
+            }
+          } else {
+            if {$gaSet(rbTestMode) eq "Partial_444P"} {
+              ## no ExtClk and SyncE at Ionics for 4SFPP/4SFP4UTP/PTP
+            } else {
+              lappend lTests PtpClock_conf PtpClock_run ; # 08:52 12/10/2023
+              lappend lTests ExtClk SyncE_conf SyncE_run 
+            }
+          }
+          
+        }
+        lappend lTests DDR 
 
-      if {$np=="8SFPP" && $up=="0_0"} {
-        if {$gaSet(rbTestMode) eq "Comp" || $gaSet(rbTestMode) eq "Comp_Half19_8SFPP"} {
-          lappend lTests SetToDefaultAll_Save
-        } elseif {$gaSet(rbTestMode) eq "Full" || $gaSet(rbTestMode) eq "MainBoard"} {
+        if {$np=="8SFPP" && $up=="0_0"} {
+          if {$gaSet(rbTestMode) eq "Comp" || $gaSet(rbTestMode) eq "Comp_Half19_8SFPP"} {
+            lappend lTests SetToDefaultAll_Save
+          } elseif {$gaSet(rbTestMode) eq "Full" || $gaSet(rbTestMode) eq "MainBoard"} {
+            lappend lTests SetToDefault
+          }
+        } else {
           lappend lTests SetToDefault
         }
-      } else {
-        lappend lTests SetToDefault
-      }
-      
-      # if {$gaSet(rbTestMode) eq "Partial_444P"} {
-        # ## no Leds_Fan at Ionics for 4SFPP/4SFP4UTP/PTP
-      # } else {
-        # lappend lTests Leds_FAN_conf Leds_FAN
-      # }  
-      ## 10:13 19/07/2023
-      lappend lTests Leds_FAN_conf Leds_FAN
         
-      if {[string match *.12CMB.* $gaSet(DutInitName)]==1} {
-        lappend lTests Combo_PagesSW ID Combo_SFP_ID Combo_UTP_ID
-      }
-      if {$np=="npo" || $np=="2SFPP"} {
-        lappend lTests CloseLicense
-      } 
+        # if {$gaSet(rbTestMode) eq "Partial_444P"} {
+          # ## no Leds_Fan at Ionics for 4SFPP/4SFP4UTP/PTP
+        # } else {
+          # lappend lTests Leds_FAN_conf Leds_FAN
+        # }  
+        ## 10:13 19/07/2023
+        lappend lTests Leds_FAN_conf Leds_FAN
+          
+        if {[string match *.12CMB.* $gaSet(DutInitName)]==1} {
+          lappend lTests Combo_PagesSW ID Combo_SFP_ID Combo_UTP_ID
+        }
+        if {$np=="npo" || $np=="2SFPP"} {
+          lappend lTests CloseLicense
+        } 
 
-      #set ::tmpLocalUCF [clock format [clock seconds] -format  "%Y.%m.%d-%H.%M.%S"]_${gaSet(DutInitName)}_$gaSet(pair).txt
-      #set ret [GetUcFile $gaSet(DutFullName) $::tmpLocalUCF]
-      #puts "BuildTests ret of GetUcFile  $gaSet(DutFullName) $gaSet(DutInitName): <$ret>"
-      #if {$ret=="-1"} {
-      #  set gaSet(fail) "Get User Configuration File Fail"
-      #  return -1
-      #}
-      if {$gaSet(DefaultCF)!="" && $gaSet(DefaultCF)!="c:/aa"} {
-        # if {$ret=="0"} {
-          # set gaSet(fail) "No User Configuration File at Agile"
-          # return -1
-        # }
-        lappend lTests LoadDefaultConfiguration CheckUserDefaultFile
-      }
-      
-      if [IsOptionReqsSerNum] {    
-        set gaSet(enSerNum) 1
-      } else {
-        set gaSet(enSerNum) 0
-      }
-      if {$gaSet(enSerNum) eq "1" } {
-        lappend lTests WriteSerialNumber
-      }
-      
-      if {$::repairMode} {        
-        ## 08:25 13/06/2022 don't do it at David's
-        ## 08:29 22/06/2023 don't do it at AviBi's
-        ## 08:21 26/07/2023 don't do it if repairMode ## [string match *david-ya* [info host]] || [string match *avraham-bi* [info host]]
-      } else {
-        lappend lTests Mac_BarCode 
-      }
-      
-      
-      ## remove unnecessary tests for Complementary
-      if {$np=="8SFPP" && $up=="0_0"} {
-        if {$gaSet(rbTestMode) eq "Comp"} {
-          foreach tst {"BootDownload" "SetDownload" "SoftwareDownload" "DDR" \
-                        "SFP_ID" "DataTransmission_conf" "DataTransmission_run"\
-                        "LoadDefaultConfiguration"} {
-            set lTests [lreplace $lTests [lsearch $lTests $tst]  [lsearch $lTests $tst]]
+        #set ::tmpLocalUCF [clock format [clock seconds] -format  "%Y.%m.%d-%H.%M.%S"]_${gaSet(DutInitName)}_$gaSet(pair).txt
+        #set ret [GetUcFile $gaSet(DutFullName) $::tmpLocalUCF]
+        #puts "BuildTests ret of GetUcFile  $gaSet(DutFullName) $gaSet(DutInitName): <$ret>"
+        #if {$ret=="-1"} {
+        #  set gaSet(fail) "Get User Configuration File Fail"
+        #  return -1
+        #}
+        if {$gaSet(DefaultCF)!="" && $gaSet(DefaultCF)!="c:/aa"} {
+          # if {$ret=="0"} {
+            # set gaSet(fail) "No User Configuration File at Agile"
+            # return -1
+          # }
+          lappend lTests LoadDefaultConfiguration CheckUserDefaultFile
+        }
+        
+        if [IsOptionReqsSerNum] {    
+          set gaSet(enSerNum) 1
+        } else {
+          set gaSet(enSerNum) 0
+        }
+        if {$gaSet(enSerNum) eq "1" } {
+          lappend lTests WriteSerialNumber
+        }
+        
+        if {$::repairMode} {        
+          ## 08:25 13/06/2022 don't do it at David's
+          ## 08:29 22/06/2023 don't do it at AviBi's
+          ## 08:21 26/07/2023 don't do it if repairMode ## [string match *david-ya* [info host]] || [string match *avraham-bi* [info host]]
+        } else {
+          lappend lTests Mac_BarCode 
+        }
+        
+        
+        ## remove unnecessary tests for Complementary
+        if {$np=="8SFPP" && $up=="0_0"} {
+          if {$gaSet(rbTestMode) eq "Comp"} {
+            foreach tst {"BootDownload" "SetDownload" "SoftwareDownload" "DDR" \
+                          "SFP_ID" "DataTransmission_conf" "DataTransmission_run"\
+                          "LoadDefaultConfiguration"} {
+              set lTests [lreplace $lTests [lsearch $lTests $tst]  [lsearch $lTests $tst]]
+            }
+          }
+          if {$gaSet(rbTestMode) eq "Comp_Half19_8SFPP"} {
+            foreach tst {"BootDownload" "SetDownload" "SoftwareDownload" "DDR" \
+                          "SFP_ID" "DataTransmission_conf" "DataTransmission_run"\
+                          "Leds_FAN_conf" "LoadDefaultConfiguration"} {
+              set lTests [lreplace $lTests [lsearch $lTests $tst]  [lsearch $lTests $tst]]
+            }
           }
         }
-        if {$gaSet(rbTestMode) eq "Comp_Half19_8SFPP"} {
-          foreach tst {"BootDownload" "SetDownload" "SoftwareDownload" "DDR" \
-                        "SFP_ID" "DataTransmission_conf" "DataTransmission_run"\
-                        "Leds_FAN_conf" "LoadDefaultConfiguration"} {
-            set lTests [lreplace $lTests [lsearch $lTests $tst]  [lsearch $lTests $tst]]
-          }
-        }
-      }
 
-      if {$gaSet(DutFullName)=="ETX-2I-10G-B_FT/ACDC/4SFPP/4SFP4UTP/PTP"} {
-        if {$gaSet(rbTestMode) eq "Comp_444P"} {
-          foreach tst {"BootDownload" "Pages" "SetDownload" "SoftwareDownload" "FanEepromBurn" "DDR" \
-                        "SetToDefaultWD" "OpenLicense" "ID" "UTP_ID"  "SFP_ID" \
-                        "LoadDefaultConfiguration"} {
-            set lTests [lreplace $lTests [lsearch $lTests $tst]  [lsearch $lTests $tst]]
+        if {$gaSet(DutFullName)=="ETX-2I-10G-B_FT/ACDC/4SFPP/4SFP4UTP/PTP"} {
+          if {$gaSet(rbTestMode) eq "Comp_444P"} {
+            foreach tst {"BootDownload" "Pages" "SetDownload" "SoftwareDownload" "FanEepromBurn" "DDR" \
+                          "SetToDefaultWD" "OpenLicense" "ID" "UTP_ID"  "SFP_ID" \
+                          "LoadDefaultConfiguration"} {
+              set lTests [lreplace $lTests [lsearch $lTests $tst]  [lsearch $lTests $tst]]
+            }
           }
         }
       }
@@ -816,7 +823,9 @@ proc DataTransmission_run {run} {
 # ***************************************************************************
 proc DataTransmissionTestPerf {checkTime} {
   global gaSet
-  Power all on 
+  if !$::uutIsPs {
+    Power all on 
+  }
   foreach {b r p d ps np up} [split $gaSet(dutFam) .] {}
   
   set ret [Wait "Waiting for stabilization" 10 white]

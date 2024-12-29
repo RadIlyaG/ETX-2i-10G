@@ -224,6 +224,7 @@ if [file exists uutInits/$gaSet(DutInitName)] {
 }
 source lib_SQlite.tcl
 source lib_GuiIdTraceOper.tcl
+source lib_PS.tcl
 
 set gaSet(act) 1
 set gaSet(initUut) 1
