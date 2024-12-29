@@ -585,16 +585,19 @@ proc ButRun {} {
       }
     }
     
-    if {![file exists uutInits/$gaSet(DutInitName)]} {
-      set txt "Init file for \'$gaSet(DutFullName)\' is absent"
-      Status  $txt
-      set gaSet(fail) $txt
-      set gaSet(curTest) $gaSet(startFrom)
-      set ret -1
-  #     AddToLog $gaSet(fail)
-      AddToPairLog $gaSet(pair) $gaSet(fail)
+    if $::uutIsPs {
+      ## for PS no need init
+    } else {  
+      if {![file exists uutInits/$gaSet(DutInitName)]} {
+        set txt "Init file for \'$gaSet(DutFullName)\' is absent"
+        Status  $txt
+        set gaSet(fail) $txt
+        set gaSet(curTest) $gaSet(startFrom)
+        set ret -1
+    #     AddToLog $gaSet(fail)
+        AddToPairLog $gaSet(pair) $gaSet(fail)
+      }
     }
-    
     
     if {$ret==0 && $gaSet(relDebMode)=="Debug" && $::repairMode==0} {
       #RLSound::Play beep
