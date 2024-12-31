@@ -45,7 +45,9 @@ proc PS_ID {run} {
   }
   set ret 0  
   
-  foreach {ps} {1 2} { 
+  ## don't check PS2 since it's reference
+  #foreach {ps} {1 2} { }
+  foreach {ps} {1} { 
     Status "PS_ID $ps Test"
     Power all off
     after 3000
@@ -84,13 +86,15 @@ proc PS_ID {run} {
     set gaSet(fail) "Status of PS-1 is \'$ps1Status\'. Should be \'OK\'"
     return -1
   }
-  regexp {2\s+\w+\s+([\s\w]+)\s+} $psStatus - ps2Status
-  set ps2Status [string trim $ps2Status]
-  puts "ps2Status:<$ps2Status>" 
-  if {$ps2Status!="OK"} {
-    set gaSet(fail) "Status of PS-2 is \'$ps2Status\'. Should be \'OK\'"
-    return -1
-  }    
+  
+  ## don't check PS2 since it's reference
+  # regexp {2\s+\w+\s+([\s\w]+)\s+} $psStatus - ps2Status
+  # set ps2Status [string trim $ps2Status]
+  # puts "ps2Status:<$ps2Status>" 
+  # if {$ps2Status!="OK"} {
+    # set gaSet(fail) "Status of PS-2 is \'$ps2Status\'. Should be \'OK\'"
+    # return -1
+  # }    
   
   foreach {b r p d ps np up} [split $gaSet(dutFam) .] {}
   puts "\nSerial Number DutInitName:<$gaSet(DutInitName)> "; update
@@ -108,7 +112,9 @@ proc PS_ID {run} {
         set invPs2 4005      
       }
       puts "\nSerial Number ATT invPs1:<$invPs1> invPs2:<$invPs2>"; update  
-      foreach ps {1 2} {
+      ## don't check PS2 since it's reference
+      #foreach ps {1 2} {}
+      foreach ps {1} {
         set inv [set invPs${ps}]
         puts "ps-$ps inv-$inv"
         set ret [Send $com "exit all\r" $gaSet(prompt)]
@@ -139,8 +145,10 @@ proc PS_ID {run} {
       }       
     }
   }
-
-  foreach ps {2 1} {
+ 
+  ## don't check PS2 since it's reference
+  # foreach ps {2 1} {}
+  foreach ps {1} {
     Power $ps off
     set val [ShowPS $ps]
     puts "val:<$val>"
@@ -208,27 +216,29 @@ proc PS_ID {run} {
   }
   
   RLSound::Play information
-      set txt "Close the screws of both PSs firmly and verify PSs are ON"
-      set res [DialogBoxRamzor -type "OK Cancel" -icon /images/info -title "LED Test" -message $txt -aspect 1000]
-      update
-      if {$res!="OK"} {
-        set gaSet(fail) "PS_ID Test failed"
-        return -1
-      } else {
-        set ret 0
-      }
-      
-      set val [ShowPS 1]
-      #foreach {b r p d psType np up} [split $gaSet(dutFam) .] {}
-      if {$ps_type eq "DC"} {
-        set res [regexp {1\s+DC\s+OK\s+2\s+DC\s+OK} $buffer ma]
-      } elseif {$ps_type eq "AC"} {
-        set res [regexp {1\s+AC\s+OK\s+2\s+AC\s+OK} $buffer ma]
-      }
-      if {$res!=1} {
-        set gaSet(fail) "Status of PSs is not \"1 $psType OK 2 $ps_type OK\""
-        return -1
-      }
+  ## don't check PS2 since it's reference
+  #set txt "Close the screws of both PSs firmly and verify PSs are ON"
+  set txt "Close the screws of PS-1 firmly and verify PSs are ON"
+  set res [DialogBoxRamzor -type "OK Cancel" -icon /images/info -title "LED Test" -message $txt -aspect 1000]
+  update
+  if {$res!="OK"} {
+    set gaSet(fail) "PS_ID Test failed"
+    return -1
+  } else {
+    set ret 0
+  }
+  
+  set val [ShowPS 1]
+  #foreach {b r p d psType np up} [split $gaSet(dutFam) .] {}
+  if {$ps_type eq "DC"} {
+    set res [regexp {1\s+DC\s+OK\s+2\s+DC\s+OK} $buffer ma]
+  } elseif {$ps_type eq "AC"} {
+    set res [regexp {1\s+AC\s+OK\s+2\s+AC\s+OK} $buffer ma]
+  }
+  if {$res!=1} {
+    set gaSet(fail) "Status of PSs is not \"1 $psType OK 2 $ps_type OK\""
+    return -1
+  }
   
   return $ret
 }
@@ -314,7 +324,9 @@ proc PS_DataTransmission_run {run} {
   
   if {$ps=="WDC"} {
     RLSound::Play information
-    set txt "Connect $ps_voltage cables to ETX"
+    ## don't check PS2 since it's reference
+    #set txt "Connect $ps_voltage cables to ETX"
+    set txt "Connect $ps_voltage cables to PS-1"
     set res [DialogBoxRamzor -type "Ok Stop" -icon /images/info -title "Connect power cables" -message $txt]
     if {$res=="Stop"} {
       return -2
@@ -322,7 +334,9 @@ proc PS_DataTransmission_run {run} {
   }
   set ret 0  
   
-  foreach ps {1 2} {
+  ## don't check PS2 since it's reference
+  #foreach ps {1 2} {}
+  foreach ps {1} {
     Power all off
     after 3000
     Power $ps on
@@ -333,8 +347,8 @@ proc PS_DataTransmission_run {run} {
       #set ret [Login]
       if {$ret!=0} {return $ret}
     } 
-    set ret [Wait "Wait for ETX stabilization" 60]
-    if {$ret!=0} {return $ret}
+    #set ret [Wait "Wait for ETX stabilization" 60]
+    #if {$ret!=0} {return $ret}
     set ret [DataTransmission_run $run]
     if {$ret!=0} {
       set ret [Wait "Wait for ETX stabilization" 60]
