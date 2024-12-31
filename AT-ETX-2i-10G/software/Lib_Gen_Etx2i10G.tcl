@@ -738,6 +738,7 @@ proc GetDbrName {mode} {
   
   if [string match {*-PS*} $dbrName] {
     set ::uutIsPs 1
+    RLStatus::Show -msg atp
   } else {
     set ::uutIsPs 0
   }
