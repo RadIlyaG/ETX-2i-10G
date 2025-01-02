@@ -549,7 +549,7 @@ proc PS_IDTest {} {
         if {$ret!=0} {set gaSet(fail) "show status fail"; return $ret}
         # set res [regexp {Serial Number[\s:]+([a-zA-Z\d]+)\sMFG} $buffer ma val]
         set res [regexp {Serial Number[\s:]+([a-zA-Z\d]+)\s} $buffer ma val]
-        if {$res==0} {
+        if {$res==0 || $val=="MFG" || $val=="N/A"} {
           set gaSet(fail) "Fail to get Serial Number of PS-$ps ($inv)"
           return -1
         }
@@ -566,7 +566,30 @@ proc PS_IDTest {} {
           set gaSet(fail) "Serial Number's Length is $sn_len instead of 10 or 16"
           return -1
         }
-        AddToPairLog $gaSet(pair) "PS-$ps Serial Number: $val"        
+        AddToPairLog $gaSet(pair) "PS-$ps Serial Number: $val"    
+
+        if {[package vcompare $sw_norm 6.8.5.4.46]!="-1"} {
+          ## if sw_norm >=6.8.5.4.46
+          if {[lsearch $gaSet(PsCleiCodesL) $gaSet(DutFullName)]=="-1"} {
+            set gaSet(fail) "The \'$gaSet(DutFullName)\' doesn't exist in PsCleiCodesL.txt"  
+            return -1
+          }
+          
+          set res [regexp {CLEI Code[\s:]+([A-Z\d]+)\s} $buffer ma val]
+          if {$res==0} {
+            set gaSet(fail) "Fail to get CLEI Code of PS-$ps ($inv)"
+            return -1
+          }
+          
+          set tblPsClei [lindex $gaSet(PsCleiCodesL) [expr {1 + [lsearch $gaSet(PsCleiCodesL) $gaSet(DutFullName)]}]]
+          puts "\n DutFullName:<$gaSet(DutFullName)> tblPsClei:<$tblPsClei> UutPsClei:<$val>"
+          if {$val != $tblClei} {
+            set gaSet(fail) "The \'CLEI Code\' is $val. Should be $tblClei"  
+            return -1
+          }
+          
+          AddToPairLog $gaSet(pair) "PS-$ps CLEI Code: $val"
+        }    
       }       
     }
   }
@@ -4051,3 +4074,125 @@ proc ExtClkTxTest {mode} {
   set ret [Send $com "con sys clock domain 1 $frc\r" $gaSet(prompt)]
   
 }
+
+# ***************************************************************************
+# PsCleiCode_Config
+# ***************************************************************************
+proc PsCleiCode_Config {} {
+  global gaSet buffer
+  Status "PsCleiCode_Config"
+  set ret [Login]
+  if {$ret!=0} {
+    #set ret [Login]
+    if {$ret!=0} {return $ret}
+  }
+  
+  set com $gaSet(comDut)
+  Send $com "exit all\r" stam 0.25 
+  
+  set gaSet(fail) "Configure for Download PS-CLEI Code file fail"
+  set ret [Send $com "configure router 1\r" (1)]
+  if {$ret!=0} {return $ret}
+  set ret [Send $com "no interface 32\r" "(1)"]
+  if {$ret!=0} {return $ret}
+  set ret [Send $com "interface 1\r" "(1)"]
+  if {$ret!=0} {return $ret}
+  if {$gaSet(pair)=="SE"} {
+    set dutIp 10.10.10.111
+  } else {
+    set dutIp 10.10.10.1[set gaSet(pair)]
+  }
+  set ret [Send $com "address $dutIp\r" "(1)"]
+  if {$ret!=0} {return $ret}
+  set ret [Send $com "bind svi 96\r" "(1)"]
+  if {$ret!=0} {return $ret}
+  set ret [Send $com "no shutdown\r" "(1)"]
+  if {$ret!=0} {return $ret}
+  set ret [Send $com "exit\r" "(1)"]
+  if {$ret!=0} {return $ret}
+  set ret [Send $com "exit\r" ">config"]
+  if {$ret!=0} {return $ret}
+  
+  set ret [Send $com "management\r" ">mngmnt"]
+  if {$ret!=0} {return $ret}
+  set ret [Send $com "snmp\r" ">snmp"]
+  if {$ret!=0} {return $ret}
+  set ret [Send $com "target-params 1\r" "(1)"]
+  if {$ret!=0} {return $ret}
+  set ret [Send $com "message-processing-model snmpv3\r" "(1)"]
+  if {$ret!=0} {return $ret}
+  set ret [Send $com "version usm\r" "(1)"]
+  if {$ret!=0} {return $ret}
+  set ret [Send $com "security name initial level no-auth-no-priv\r" "(1)"]
+  if {$ret!=0} {return $ret}
+  set ret [Send $com "no shutdown\r" "(1)"]
+  if {$ret!=0} {return $ret}
+  set ret [Send $com "exit\r" ">snmp"]
+  if {$ret!=0} {return $ret}
+  
+  set ret [Send $com "target mypc\r" "(mypc)"]
+  if {$ret!=0} {return $ret}
+  set ret [Send $com "target-params 1\r" "(mypc)"]
+  if {$ret!=0} {return $ret}
+  set ret [Send $com "address udp-domain 10.10.10.10\r" "(mypc)"]
+  if {$ret!=0} {return $ret}
+  set ret [Send $com "no shutdown\r" "(mypc)"]
+  if {$ret!=0} {return $ret}
+  set ret [Send $com "tag-list unmasked\r" "(mypc)"]
+  if {$ret!=0} {return $ret}
+  set ret [Send $com "trap-sync-group 1\r" "(mypc)"]
+  if {$ret!=0} {return $ret}
+  
+  Send $com "exit all\r" stam 1
+  
+  return $ret
+}  
+
+# ***************************************************************************
+# PsCleiCode_DownLoad
+# ***************************************************************************
+proc PsCleiCode_DownLoad {} {
+  global gaSet buffer 
+  Status "PsCleiCode_DownLoad"
+  set ret [Login]
+  if {$ret!=0} {
+    #set ret [Login]
+    if {$ret!=0} {return $ret}
+  }
+  
+  set com $gaSet(comDut)
+  Send $com "exit all\r" stam 0.25 
+  
+  set gaSet(fail) "Download PS-CLEI Code file fail"
+  set ret [Send $com "file\r" ">file"]
+  if {$ret!=0} {return $ret}
+  
+  if {[string match {*OD*} $gaSet(DutInitName)]} {
+    set fi ps-clei-file_ETX-2i-10G-ODU_Rev_3_0.txt   
+  } else {
+    set fi ps-clei-file_ETX-2i-10G_Rev_2_0.txt 
+  }  
+  
+  set ret [Send $com "file copy tftp://10.10.10.10/$fi ps-clei\r" "yes/no"]
+  if {$ret!=0} {return $ret}
+  set ret [Send $com "y\r" "successfully" 40]
+  if {$ret!=0} {return $ret}
+  
+  set ret [Send $com "dir\r" "more.."]
+  append ::b $buffer
+  if {$ret!=0} {return $ret}
+  set ret [Send $com "\r" ">file"]
+  append ::b $buffer
+  if {$ret!=0} {return $ret}
+  
+  set buffer $::b
+  
+  set res [regexp {ps-clei\s+[A-Z]+\s+(\d+)\s} $buffer ma val]
+  if {$res==0} {
+    set gaSet(fail) "Read PS-CLEI Code file size fail"
+    return -1
+  }
+  puts "PS-CLEI Code file size: $val"
+
+  return $ret
+}  

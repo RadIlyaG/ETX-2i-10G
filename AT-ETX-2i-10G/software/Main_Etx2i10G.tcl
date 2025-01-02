@@ -103,9 +103,8 @@ proc BuildTests {} {
           }  
         } 
         
-        
-      ## 09/01/2018 07:43:31 All products should be tested with 4 10GbE ports open
-      ## therefor we open the license to all
+        ## 09/01/2018 07:43:31 All products should be tested with 4 10GbE ports open
+        ## therefor we open the license to all
         if {$np=="8SFPP" && $up=="0_0"} {
           ## in Itzik's product there is no License
         } else {
@@ -117,6 +116,11 @@ proc BuildTests {} {
         } else {  
           lappend lTests SetToDefaultWD
         }
+        
+        if {$gaSet(rbTestMode) eq "Full" && [string match {*ATT*} $gaSet(DutInitName)] && [package vcompare $sw_norm "6.8.5.4.46"] >= "0"} {
+          lappend lTests DownLoad_PsCleiCodeFile
+        }
+        
          
         if {[string match *.12CMB.* $gaSet(DutInitName)]==0} {
           ## if a product is NOT CMB, we cheeck ID now
@@ -2095,4 +2099,14 @@ proc stam {} {
 
 }
 
-
+# ***************************************************************************
+# DownLoad_PsCleiCodeFile
+# ***************************************************************************
+proc DownLoad_PsCleiCodeFile {run} {
+  global gaSet 
+  Power all on
+  set ret [PsCleiCode_Config]
+  if {$ret!=0} {return $ret}
+  set ret [PsCleiCode_DownLoad]
+  return $ret 
+}

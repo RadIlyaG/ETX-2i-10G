@@ -127,7 +127,7 @@ proc PS_ID {run} {
         if {$ret!=0} {set gaSet(fail) "show status fail"; return $ret}
         # set res [regexp {Serial Number[\s:]+([a-zA-Z\d]+)\sMFG} $buffer ma val]
         set res [regexp {Serial Number[\s:]+([a-zA-Z\d]+)\s} $buffer ma val]
-        if {$res==0} {
+        if {$res==0 || $val=="MFG" || $val=="N/A"} {
           set gaSet(fail) "Fail to get Serial Number of PS-$ps ($inv)"
           return -1
         }
