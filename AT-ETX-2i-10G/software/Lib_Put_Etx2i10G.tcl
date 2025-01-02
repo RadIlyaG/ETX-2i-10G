@@ -547,7 +547,8 @@ proc PS_IDTest {} {
         if {$ret!=0} {set gaSet(fail) "inventory $inv fail"; return $ret}
         set ret [Send $com "show status\r" ($inv)]
         if {$ret!=0} {set gaSet(fail) "show status fail"; return $ret}
-        set res [regexp {Serial Number[\s:]+([a-zA-Z\d]+)\sMFG} $buffer ma val]
+        # set res [regexp {Serial Number[\s:]+([a-zA-Z\d]+)\sMFG} $buffer ma val]
+        set res [regexp {Serial Number[\s:]+([a-zA-Z\d]+)\s} $buffer ma val]
         if {$res==0} {
           set gaSet(fail) "Fail to get Serial Number of PS-$ps ($inv)"
           return -1
@@ -555,12 +556,14 @@ proc PS_IDTest {} {
         
         set sn_len [string length $val]
         puts "ps-$ps inv-$inv sn:<$val> sn_len:<$sn_len>\n"
-        if {[string is digit $val]==0} {
-          set gaSet(fail) "Serial Number $val is not Digit Number"
-          return -1
-        }
-        if {$sn_len!=10} {
-          set gaSet(fail) "Serial Number's Length is $sn_len instead of 10"
+        
+        # no need check it since the regexp gets letters and digits
+        # if {[string is digit $val]==0} {
+          # set gaSet(fail) "Serial Number $val is not Digit Number"
+          # return -1
+        # }
+        if {$sn_len!=10 && $sn_len!=16} {
+          set gaSet(fail) "Serial Number's Length is $sn_len instead of 10 or 16"
           return -1
         }
         AddToPairLog $gaSet(pair) "PS-$ps Serial Number: $val"        
