@@ -25,6 +25,7 @@ proc BuildTests {} {
     set ret [GetDbrSWAgain]
     if {$ret!=0} {return $ret}
   }
+  set sw_norm [join [regsub -all {[\(\)A-Z]} $gaSet(dbrSW) " "]  . ] ; # 6.8.5(1.27T5) -> 6.8.5.1.27T5
   
   foreach {b r p d ps np up} [split $gaSet(dutFam) .] {}
   if {$gaSet(rbTestMode) eq "BP"} {
@@ -117,7 +118,8 @@ proc BuildTests {} {
           lappend lTests SetToDefaultWD
         }
         
-        if {$gaSet(rbTestMode) eq "Full" && [string match {*ATT*} $gaSet(DutInitName)] && [package vcompare $sw_norm "6.8.5.4.46"] >= "0"} {
+        if {($gaSet(rbTestMode) eq "Full" || $gaSet(rbTestMode) eq "MainBoard") && \
+            [string match {*ATT*} $gaSet(DutInitName)] && [package vcompare $sw_norm "6.8.5.4.46"] >= "0"} {
           lappend lTests DownLoad_PsCleiCodeFile
         }
         

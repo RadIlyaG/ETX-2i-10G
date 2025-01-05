@@ -1,0 +1,40 @@
+Power Supply CLEI Code File
+Version: 3.0
+Customer: AT&T
+Number of entries: 7
+PS 1
+Type: DC
+PS model: ETX-2I-10G-B-PS/H/DC/ODU
+CLEI code: INPSAG4VTA
+PS model display: ETX-2I-10G-PS_ATT/H/DC/ODU
+PS 2
+Type: DC
+PS model: ETX-2I-10G-B-PS/H/DC/ODU/IONICS
+CLEI code: INPSAG4VTA
+PS model display: ETX-2I-10G-PS_ATT/H/DC/ODU
+PS 3
+Type: DC
+PS model: ETX-2I-10G-ODU-PSID/DC
+CLEI code: INPSAG4VTA
+PS model display: ETX-2I-10G-PS_ATT/H/DC/ODU
+PS 4
+Type: DC
+PS model: ETX-2I-10G-PS_ATT/H/DC/ODU
+CLEI code: INPSAG4VTA
+PS model display: ETX-2I-10G-PS_ATT/H/DC/ODU
+PS 5
+Type: DC
+PS model: ETX-2I-10G-PS/H/WDC/ODU
+CLEI code: INPSAJJVAA
+PS model display: ETX-2I-10G-PS_ATT/H/WDC/ODU
+PS 6
+Type: DC
+PS model: ETX-2I-10G-PS_ATT/H/WDC/ODU
+CLEI code: INPSAJJVAA
+PS model display: ETX-2I-10G-PS_ATT/H/WDC/ODU
+PS 7
+Type: DC
+PS model: ETX-2I-10G-ODU-PSID/WDC
+CLEI code: INPSAJJVAA
+PS model display: ETX-2I-10G-PS_ATT/H/WDC/ODU
+Signature: umuHP9PyfVeVMkx0sSMkSQ_20Ecmbk_QiA6lPuDxBBc=

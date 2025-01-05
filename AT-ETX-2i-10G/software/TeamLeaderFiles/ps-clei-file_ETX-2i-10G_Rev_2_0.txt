@@ -1,0 +1,60 @@
+Power Supply CLEI Code File
+Version: 2.0
+Customer: AT&T
+Number of entries: 11
+PS 1
+Type: DC
+PS model: ETX-2I-10G/TYPE3/PS/DC
+CLEI code: INPSAG3VTA
+PS model display: ETX-2I-10G-PS_ATT/DC
+PS 2
+Type: DC
+PS model: ETX-220A/TYPE3/PS/DC
+CLEI code: INPSAG3VTA
+PS model display: ETX-2I-10G-PS_ATT/DC
+PS 3
+Type: DC
+PS model: ETX-2I-10G-PS_ATT/DC
+CLEI code: INPSAG3VTA
+PS model display: ETX-2I-10G-PS_ATT/DC
+PS 4
+Type: AC
+PS model: ETX-2I-10G/TYPE3/PS/AC
+CLEI code: INPSAG2VTA
+PS model display: ETX-2I-10G-PS_ATT/AC
+PS 5
+Type: AC
+PS model: ETX-2I-10G-PS_ATT/AC
+CLEI code: INPSAG2VTA
+PS model display: ETX-2I-10G-PS_ATT/AC
+PS 6
+Type: DC
+PS model: PS100DC-12V-I2C
+CLEI code: INPSAG3VTB
+PS model display: ETX-2I-10G-PS_ATT/DC
+PS 7
+Type: DC
+PS model: PS100W-DC-12-RE-LD
+CLEI code: INPSAG3VTB
+PS model display: ETX-2I-10G-PS_ATT/DC
+PS 8
+Type: AC
+PS model: PS100AC-12V-I2C
+CLEI code: INPSAG2VTB
+PS model display: ETX-2I-10G-PS_ATT/AC
+PS 9
+Type: AC
+PS model: PS100W-AC-12-RE-LD
+CLEI code: INPSAG2VTB
+PS model display: ETX-2I-10G-PS_ATT/AC
+PS 10
+Type: DC
+PS model: ETX-2I-10G/TYPE3/PS/WDC
+CLEI code: INPSAJBVTA
+PS model display: ETX-2I-10G-PS_ATT/WDC
+PS 11
+Type: DC
+PS model: ETX-2I-10G-PS_ATT/WDC
+CLEI code: INPSAJBVTA
+PS model display: ETX-2I-10G-PS_ATT/WDC
+Signature: zGb3QanzfyCUMk9yxl4lTE2JdcbaF-Ype5YMdt6UUb8=

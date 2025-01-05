@@ -2251,6 +2251,7 @@ proc LoadCleiCodesFile {} {
     }
   close $id  
   
+  set gaSet(PsCleiCodesL) [list] 
   set id [open  ./TeamLeaderFiles/PsCleiCodes.txt r]
     while {[gets $id line] >= 0} {
       set line [string trim $line]

@@ -549,8 +549,12 @@ proc PS_IDTest {} {
         if {$ret!=0} {set gaSet(fail) "show status fail"; return $ret}
         # set res [regexp {Serial Number[\s:]+([a-zA-Z\d]+)\sMFG} $buffer ma val]
         set res [regexp {Serial Number[\s:]+([a-zA-Z\d]+)\s} $buffer ma val]
-        if {$res==0 || $val=="MFG" || $val=="N/A"} {
+        if {$res==0} {
           set gaSet(fail) "Fail to get Serial Number of PS-$ps ($inv)"
+          return -1
+        }
+        if {$val=="MFG" || $val=="N/A"} {
+          set gaSet(fail) "PS-$ps ($inv) hasn't Serial Number"
           return -1
         }
         
@@ -580,15 +584,16 @@ proc PS_IDTest {} {
             set gaSet(fail) "Fail to get CLEI Code of PS-$ps ($inv)"
             return -1
           }
+          AddToPairLog $gaSet(pair) "PS-$ps CLEI Code: $val"
           
           set tblPsClei [lindex $gaSet(PsCleiCodesL) [expr {1 + [lsearch $gaSet(PsCleiCodesL) $gaSet(DutFullName)]}]]
           puts "\n DutFullName:<$gaSet(DutFullName)> tblPsClei:<$tblPsClei> UutPsClei:<$val>"
-          if {$val != $tblClei} {
-            set gaSet(fail) "The \'CLEI Code\' is $val. Should be $tblClei"  
+          if {$val != $tblPsClei} {
+            set gaSet(fail) "The \'CLEI Code\' is $val. Should be $tblPsClei"  
             return -1
           }
           
-          AddToPairLog $gaSet(pair) "PS-$ps CLEI Code: $val"
+          
         }    
       }       
     }
@@ -4097,12 +4102,13 @@ proc PsCleiCode_Config {} {
   if {$ret!=0} {return $ret}
   set ret [Send $com "interface 1\r" "(1)"]
   if {$ret!=0} {return $ret}
+  set ret [Send $com "shutdown\r" "(1)"]
   if {$gaSet(pair)=="SE"} {
     set dutIp 10.10.10.111
   } else {
     set dutIp 10.10.10.1[set gaSet(pair)]
   }
-  set ret [Send $com "address $dutIp\r" "(1)"]
+  set ret [Send $com "address $dutIp/24\r" "(1)"]
   if {$ret!=0} {return $ret}
   set ret [Send $com "bind svi 96\r" "(1)"]
   if {$ret!=0} {return $ret}
@@ -4119,6 +4125,8 @@ proc PsCleiCode_Config {} {
   if {$ret!=0} {return $ret}
   set ret [Send $com "target-params 1\r" "(1)"]
   if {$ret!=0} {return $ret}
+  set ret [Send $com "shutdown\r" "(1)"]
+  if {$ret!=0} {return $ret}
   set ret [Send $com "message-processing-model snmpv3\r" "(1)"]
   if {$ret!=0} {return $ret}
   set ret [Send $com "version usm\r" "(1)"]
@@ -4130,17 +4138,20 @@ proc PsCleiCode_Config {} {
   set ret [Send $com "exit\r" ">snmp"]
   if {$ret!=0} {return $ret}
   
+  set ret [Send $com "no target mypc\r" ">snmp"]
+  if {$ret!=0} {return $ret}
   set ret [Send $com "target mypc\r" "(mypc)"]
   if {$ret!=0} {return $ret}
   set ret [Send $com "target-params 1\r" "(mypc)"]
   if {$ret!=0} {return $ret}
   set ret [Send $com "address udp-domain 10.10.10.10\r" "(mypc)"]
   if {$ret!=0} {return $ret}
-  set ret [Send $com "no shutdown\r" "(mypc)"]
-  if {$ret!=0} {return $ret}
+  
   set ret [Send $com "tag-list unmasked\r" "(mypc)"]
   if {$ret!=0} {return $ret}
   set ret [Send $com "trap-sync-group 1\r" "(mypc)"]
+  if {$ret!=0} {return $ret}
+  set ret [Send $com "no shutdown\r" "(mypc)"]
   if {$ret!=0} {return $ret}
   
   Send $com "exit all\r" stam 1
@@ -4172,10 +4183,19 @@ proc PsCleiCode_DownLoad {} {
   } else {
     set fi ps-clei-file_ETX-2i-10G_Rev_2_0.txt 
   }  
+  set tail ${gaSet(pair)}_$fi
   
-  set ret [Send $com "file copy tftp://10.10.10.10/$fi ps-clei\r" "yes/no"]
+  set ret [Delete_File_From_Temp ps-clei-file $tail PsCleiCode_DownLoad]
+  if {$ret!=0} {return $ret}
+  
+  
+  file copy -force ./TeamLeaderFiles/$fi c:/download/temp/$tail
+  set ret [Send $com "copy tftp://10.10.10.10/$tail ps-clei\r" "yes/no"]
   if {$ret!=0} {return $ret}
   set ret [Send $com "y\r" "successfully" 40]
+  if {$ret!=0} {return $ret}
+  
+  set ret [Delete_File_From_Temp ps-clei-file $tail PsCleiCode_DownLoad]
   if {$ret!=0} {return $ret}
   
   set ret [Send $com "dir\r" "more.."]
@@ -4196,3 +4216,17 @@ proc PsCleiCode_DownLoad {} {
 
   return $ret
 }  
+proc Delete_File_From_Temp {file_title tail proc_name} {
+  global gaSet
+  catch {file delete -force c:/download/temp/$tail} cres
+  puts "Delete_File_From_Temp $cres"
+  after 2000
+  if [file exists c:/download/temp/$tail] {
+    if [catch {file delete -force c:/download/temp/$tail} cres] {
+      set gaSet(fail) "The $file_title (c:/download/temp/$tail) can't be deleted"
+      puts "[MyTime] $proc_name. The file c:/download/temp/$tail can't be deleted. cres:<$cres>"
+      return -1
+    }
+  }
+  return 0
+}
