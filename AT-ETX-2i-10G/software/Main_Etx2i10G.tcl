@@ -10,6 +10,9 @@ proc BuildTests {} {
   }
   puts "\n[MyTime] BuildTests DutInitName:$gaSet(DutInitName)\n"
   
+  if ![info exist ::uutIsPs] {
+    set ::uutIsPs 0
+  }
   if $::uutIsPs {
     PS_RetriveDutFam
   } else {
