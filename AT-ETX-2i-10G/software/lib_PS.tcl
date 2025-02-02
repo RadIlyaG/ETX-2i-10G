@@ -148,7 +148,26 @@ proc PS_ID {run} {
           set gaSet(fail) "Serial Number's Length is $sn_len instead of 10 or 16"
           return -1
         }
-        AddToPairLog $gaSet(pair) "PS-$ps Serial Number: $val"        
+        AddToPairLog $gaSet(pair) "PS-$ps Serial Number: $val"  
+
+        if {[lsearch $gaSet(PsCleiCodesL) $gaSet(DutFullName)]=="-1"} {
+          set gaSet(fail) "The \'$gaSet(DutFullName)\' doesn't exist in PsCleiCodesL.txt"  
+          return -1
+        }
+        
+        set res [regexp {CLEI Code[\s:]+([A-Z\d]+)\s} $buffer ma val]
+        if {$res==0} {
+          set gaSet(fail) "Fail to get CLEI Code of PS-$ps ($inv)"
+          return -1
+        }
+        AddToPairLog $gaSet(pair) "PS-$ps CLEI Code: $val"
+        
+        set tblPsClei [lindex $gaSet(PsCleiCodesL) [expr {1 + [lsearch $gaSet(PsCleiCodesL) $gaSet(DutFullName)]}]]
+        puts "\n DutFullName:<$gaSet(DutFullName)> tblPsClei:<$tblPsClei> UutPsClei:<$val>"
+        if {$val != $tblPsClei} {
+          set gaSet(fail) "The \'CLEI Code\' is $val. Should be $tblPsClei"  
+          return -1
+        }        
       }       
     }
   }
