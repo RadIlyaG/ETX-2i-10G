@@ -40,7 +40,7 @@ proc BuildTests {} {
       set lTests WriteCleiCode
     } else {   
       if $::uutIsPs {
-        set lTests [list PS_ID PS_DataTransmission_conf PS_DataTransmission_run]
+        set lTests [list PS_ID  PS_DataTransmission_run]; # PS_DataTransmission_conf
       } else {      
         set lTests [list BootDownload]
         if {$gaSet(rbTestMode) eq "Comp_Half19_8SFPP"} {
@@ -572,7 +572,7 @@ proc DateTime {run} {
 proc DataTransmission_conf {run} {
   global gaSet
   Power all on    
-  set ret [DataTransmissionSetup]
+  set ret [DataTransmissionSetup 1]
   return $ret
 } 
 

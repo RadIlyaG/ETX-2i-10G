@@ -791,7 +791,7 @@ proc DateTime_Test {} {
 # ***************************************************************************
 # DataTransmissionSetup
 # ***************************************************************************
-proc DataTransmissionSetup {} {
+proc DataTransmissionSetup {save_yes_no} {
   global gaSet
   set ret [Login]
   if {$ret!=0} {
@@ -811,7 +811,7 @@ proc DataTransmissionSetup {} {
   set cf $gaSet([set b]CF) 
   set cfTxt "$b"
       
-  set ret [DownloadConfFile $cf $cfTxt 1 $com]
+  set ret [DownloadConfFile $cf $cfTxt $save_yes_no $com]
   if {$ret!=0} {return $ret}
     
   return $ret

@@ -327,7 +327,7 @@ proc PS_DataTransmission_conf {run} {
   
   foreach {b r p d ps np up} [split $gaSet(dutFam) .] {}
   set gaSet(19BCF) "C:/AT-ETX-2i-10G/ConfFiles/8sfpp-data.txt"
-  set ret [DataTransmissionSetup]
+  set ret [DataTransmissionSetup 0]
   return $ret
 }
 
@@ -368,13 +368,15 @@ proc PS_DataTransmission_run {run} {
     Power $ps on
     set ret [Wait "Wait for Power ON" 30]
     if {$ret!=0} {return $ret}
-    set ret [Login]
-    if {$ret!=0} {
-      #set ret [Login]
-      if {$ret!=0} {return $ret}
-    } 
+    # set ret [Login]
+    # if {$ret!=0} {
+      # #set ret [Login]
+      # if {$ret!=0} {return $ret}
+    # } 
+    
+    set ret [PS_DataTransmission_conf $run]
     #set ret [Wait "Wait for ETX stabilization" 60]
-    #if {$ret!=0} {return $ret}
+    if {$ret!=0} {return $ret}
     set ret [DataTransmission_run $run]
     if {$ret!=0} {
       set ret [Wait "Wait for ETX stabilization" 60]
