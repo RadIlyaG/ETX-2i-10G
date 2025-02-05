@@ -1017,7 +1017,7 @@ proc RetriveDutFam {{dutInitName ""}} {
 #       set gaSet(dutFam) $b.R.$p.$d.$ps.$np.$up  
 #     }
 #   }
-  if {[string match *.PTP.* $dutInitName]==1} {
+  if {[string match *.PTP.* $dutInitName]==1 || [string match *.G.* $dutInitName]==1} {
     foreach {b r p d ps np up} [split $gaSet(dutFam) .] {
       set gaSet(dutFam) $b.$r.P.$d.$ps.$np.$up  
     }
