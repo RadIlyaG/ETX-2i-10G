@@ -802,7 +802,9 @@ proc DataTransmission_run {run} {
         } else {
           return $ret
         }
-      } 
+      } elseif {$ret==0} {
+        break
+      }
     }
   } 
   if {$ret!=0} {return $ret}
