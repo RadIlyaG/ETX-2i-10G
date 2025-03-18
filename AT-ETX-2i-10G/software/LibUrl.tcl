@@ -5,7 +5,7 @@ package require json
 ::http::register https 8445 [list tls::socket -tls1 1]
 package require md5
 
-package provide RLWS 1.4
+package provide RLWS 1.5
 
 namespace eval RLWS { 
 
@@ -48,6 +48,9 @@ proc ::RLWS::UpdateDB {barcode uutName hostDescription  date time status  failTe
 proc ::RLWS::UpdateDB2 {barcode uutName hostDescription  date time status  failTestsList failDescription dealtByServer traceID poNumber {data1 ""} {data2 ""} {data3 ""}} {
   set dbPath "//prod-svm1/tds/Temp/SQLiteDB/"
   set dbName "JerAteStats.db" 
+  if {$data1==""} {
+    set data1 [info host]
+  }
   foreach f {uutName hostDescription failTestsList failDescription dealtByServer data1 data2 data3} {
     set url_$f [::RLWS::_convertToUrl [set $f]]
   }

@@ -2453,6 +2453,10 @@ proc neGetUcFile {dbrName tmpLocalUCF} {
 # ***************************************************************************
 proc LY_wait {} {
   global gaSet
+  
+  # 11:14 17/03/2025
+  #return 0
+  
   set LY_wait_list [list "ETX-2I-10G_LY.ACR.24SFP.tcl" "ETX-2I-10G_LY.ACR.2SFPP.24SFP.tcl" \
     "ETX-2I-10G_LY.ACR.4SFPP.24SFP.tcl" "ETX-2I-10G_LY.DCR.12SFP12UTP.tcl" \
     "ETX-2I-10G_LY.DCR.24SFP.tcl" "ETX-2I-10G_LY.DCR.2SFPP.24SFP.tcl" \
@@ -2486,3 +2490,57 @@ proc LY_wait {} {
   puts "\nLY_wait DutInitName:<$gaSet(DutInitName)> dbrSW:<$gaSet(dbrSW)> wait_option:<$wait_option>\n"
   return $wait_option
 }
+
+# ***************************************************************************
+# Check_RxRate
+# ***************************************************************************
+proc Check_RxRate {} {
+  global gaSet
+  
+  set ret [Check_RxRate_ports]
+  if {$ret!=0} {
+    set maxTr 15
+    set stSec [clock seconds]
+    for {set tr 1} {$tr <= $maxTr} {incr tr} {
+      #puts "\nCheck_RxRate tr:$tr"
+      set nowSec [clock seconds]
+      set runSec [expr {$nowSec - $stSec}]
+      set ret [Wait "After $runSec sec wait for Bits Received Rate ($tr/$maxTr)" 30 white]
+      if {$ret!=0} {return $ret}
+      set nowSec [clock seconds]
+      set runSec [expr {$nowSec - $stSec}]
+      Status "Read Rx_Rate after $runSec"
+      set ret [Check_RxRate_ports]  
+      
+      puts "\nCheck_RxRate tr:$tr ret::$ret\n"
+      if {$ret!=0} {
+        if {$ret=="-2"} {return $ret}
+      } elseif {$ret==0} {
+        break
+      }
+    }
+  } 
+  return $ret
+}
+
+# ***************************************************************************
+# Check_RxRate_ports
+# ***************************************************************************
+proc Check_RxRate_ports {} {
+  global gaSet
+  foreach {b r p d ps np up} [split $gaSet(dutFam) .] {}
+  
+  set BitsReceivedRate_10G [Etx220_GetBitsReceivedRate 1] 
+  if {$np=="8SFPP" && $up=="0_0"} {
+    set BitsReceivedRate_1G NA
+  } else {
+    set BitsReceivedRate_1G [Etx220_GetBitsReceivedRate 5] 
+  }
+  if {$BitsReceivedRate_10G!=0 && $BitsReceivedRate_1G!=0} {
+    set ret 0
+  } else {
+    set ret -1
+  }
+  puts "Check_RxRate ret:$ret BitsReceivedRate_10G:$BitsReceivedRate_10G BitsReceivedRate_1G:$BitsReceivedRate_1G"
+  return $ret
+}  

@@ -49,4 +49,17 @@ proc Etx220Check {port} {
   return $ret
 }
 
+# ***************************************************************************
+# Etx220_GetBitsReceivedRate
+# ***************************************************************************
+proc Etx220_GetBitsReceivedRate {port} {
+  global gaSet gMessage aRes
+  puts "Etx220_GetBitsReceivedRate $port .. [MyTime] "; update
+  RL10GbGen::Read $gaSet(id220) $port $port aRes
+  set ret [RL10GbGen::Check $gaSet(id220) $port $port aRes]
+  set BitsReceivedRate [expr {$aRes(1.strm.[set port].BitsReceivedRate)}]
+  #puts "\nEtx220_GetBitsReceivedRate $port .. BitsReceivedRate:<$BitsReceivedRate>"
+  return $BitsReceivedRate
+}
+
 

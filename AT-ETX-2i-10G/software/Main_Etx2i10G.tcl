@@ -781,9 +781,34 @@ proc DataTransmission_run {run} {
   } else {
     Etx220Config 5 $1GlineRate
   }
+  
+  Etx220Start 1
+  if {$np=="8SFPP" && $up=="0_0"} {
+    ## no 1 G Ports
+  } else {
+    Etx220Start 5
+  } 
+  set ret [Wait "Wait for Generatop Start" 5 white] 
+  set ret [Check_RxRate]
+  Etx220Stop 1
+  if {$np=="8SFPP" && $up=="0_0"} {
+    ## no 1 G Ports
+  } else {
+    Etx220Stop 5
+  } 
+  if {$ret!=0} {return $ret}
+  set ret [Wait "Wait for Generatop Stop" 5 white]  
+  
+  Etx220Config 1 $10GlineRate
+  if {$np=="8SFPP" && $up=="0_0"} {
+    ## no 1 G Ports
+  } else {
+    Etx220Config 5 $1GlineRate
+  }
   set ret [DataTransmissionTestPerf 10]  
+  puts "prev DataTransmission_run ret:$ret\n"
   if {$ret!=0} {
-    for {set tr 1} {$tr <= 5} {incr tr} {
+    for {set tr 1} {$tr <= 10} {incr tr} {
       puts "\nDataTransmission_run tr:$tr"
       Etx220Config 1 $10GlineRate
       if {$np=="8SFPP" && $up=="0_0"} {
@@ -791,17 +816,20 @@ proc DataTransmission_run {run} {
       } else {
         Etx220Config 5 $1GlineRate
       }
-      set ret [Wait "Waiting for data stabilization" 10 white]
-      if {$ret!=0} {return $ret}
+      #set ret [Wait "Waiting for data stabilization" 10 white]
+      #if {$ret!=0} {return $ret}
       set ret [DataTransmissionTestPerf 10]  
-      puts "DataTransmission_run tr:$tr ret::$ret\n"
+      puts "DataTransmission_run tr:$tr ret:$ret\n"
       if {$ret!=0} {
-        if [LY_wait] {
-          set ret [Wait "Wait for LY" 40]
-          if {$ret!=0} {return $ret}
-        } else {
-          return $ret
-        }
+        # 11:00 18/03/2025
+        #set ret [Wait "Waiting for data stabilization" 40 white]
+        #if {$ret!=0} {return $ret}
+        # if [LY_wait] {
+          # set ret [Wait "Wait for LY" 40]
+          # if {$ret!=0} {return $ret}
+        # } else {
+          # return $ret
+        # }
       } elseif {$ret==0} {
         break
       }
@@ -855,7 +883,8 @@ proc DataTransmissionTestPerf {checkTime} {
     ## no 1 G Ports
   } else {
     Etx220Stop 5
-  }  
+  } 
+  set ret [Wait "Wait for Generatop Stop" 5 white]  
   set ret [Etx220Check 1]
   if {$ret!=0} {return $ret}
   if {$np=="8SFPP" && $up=="0_0"} {
@@ -1065,6 +1094,15 @@ proc Leds_FAN {run} {
     set ret 0
   } 
   
+  # 10:59 18/03/2025
+  # if [LY_wait] {
+    # set ret [Wait "Wait for LY" 300]
+    # if {$ret!=0} {return $ret}
+  # } 
+  set ret [Check_RxRate]
+  if {$ret!=0} {return $ret} 
+  
+  
   ## 10/03/2021 15:23:48 set txt "1. Check 0.95V\n"
   set txt ""
   
@@ -1075,12 +1113,7 @@ proc Leds_FAN {run} {
     set tstLedState OFF ; # 21/11/2018 09:45:38
   }
   
-  if [LY_wait] {
-    set ret [Wait "Wait for LY" 300]
-    if {$ret!=0} {return $ret}
-  }  
   
- 
   if {$np=="8SFPP" && $up=="0_0" && ($gaSet(rbTestMode) eq "Comp") } {
     set txt1 "Verify that:\n\
   GREEN \'LINK\' and ORANGE \'ACT\' leds of \'Port 7\' are ON and Blinking respectively\n"
@@ -1131,7 +1164,8 @@ proc Leds_FAN {run} {
   
   if {$res!="OK"} {
     set gaSet(fail) "LED Test failed"
-    if [LY_wait] {
+    # 10:59 18/03/2025if [LY_wait] {}
+    if 1 {
       set trQty 10
       for {set tr 1} {$tr <= $trQty} {incr tr} {
         set res [DialogBoxRamzor -type [list "OK" "Repeat ($tr/$trQty)" "Fail"] -icon /images/question -title "LEDs_FAN Test" -message $txt]
