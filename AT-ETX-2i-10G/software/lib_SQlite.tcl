@@ -73,7 +73,16 @@ proc SQliteAddLine {} {
   }
   
   if ![info exists gaSet(1.traceId)] {set gaSet(1.traceId) ""}
-  if {$gaSet(1.traceId)==""} {
+  
+  ## Take the last TraceID from TCC DataBase  08:20 18/03/2025
+  #if {$gaSet(1.traceId)==""} { 
+  #  if ![catch {gaSet(dataBase) eval {select TraceID, max(Date || ' ' || Time) from tbl where Barcode=$barcode group by TraceID}} res] {
+  #    foreach {traceID maxDateTime} $res {}
+  #    set gaSet(1.traceId) $traceID
+  #  }
+  #} 
+  
+  if {$gaSet(1.traceId)==""} {    
     set poNumber ""
     set traceID ""
   } else {
@@ -122,14 +131,14 @@ proc SQliteAddLine {} {
 #   SQliteClose
   
   set id [open c:/logs/logsStatus.txt a+]
-    puts $id "$barcode,$uut,$hostDescription,$date,$tim,$status,$failTestsList,$failReason,$operator  res:<$res>"
+    puts $id "$barcode,$uut,$hostDescription,$date,$tim,$status,$failTestsList,$failReason,$operator,$traceID,$poNumber res:<$res>"
   close $id  
   
   if ![string match *passed* $res] {
     if [catch {open //prod-svm1/tds/temp/DbLocked/[regsub \/ $hostDescription .]_$gaSet(pair).txt a+} id] {
       puts "[MyTime] $id"
     } else {
-      puts $id "$barcode,$uut,$hostDescription,$date,$tim,$status,$failTestsList,$failReason,$operator  res:<$res>"   
+      puts $id "$barcode,$uut,$hostDescription,$date,$tim,$status,$failTestsList,$failReason,$operator,$traceID,$poNumber  res:<$res>"   
       close $id
     }
   }
