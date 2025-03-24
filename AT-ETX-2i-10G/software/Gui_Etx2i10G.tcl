@@ -370,7 +370,7 @@ proc About {} {
   } else {
     set date 14.11.2016 
   }
-  DialogBox -title "About the Tester" -icon info -type ok  -font {{Lucida Console} 9} -message "ATE software upgrade\n$date"
+  DialogBox -title "About the Tester" -justify left -icon info -type ok  -font {{Lucida Console} 9} -message "ATE software upgrade\n$date"
   #DialogBox -title "About the Tester" -icon info -type ok\
           -message "The software upgrated at 14.11.2016"
 }
