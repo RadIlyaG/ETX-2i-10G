@@ -1692,9 +1692,10 @@ proc RetriveFansCheckJ {} {
       puts "if3.2"
       set fans 2
       set res [regexp {st\s+([\d\.\-]+)\s+([\d\.]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+} $buffer ma A B D F G]
-    } elseif {[string match *B.19.* $gaSet(DutInitName)] || \
+    } elseif {[string match *B.19.* $gaSet(DutInitName)]     || \
               [string match *B_TWC.19.* $gaSet(DutInitName)] || \
-              [string match *B_OFK.19.* $gaSet(DutInitName)]} {
+              [string match *B_OFK.19.* $gaSet(DutInitName)] || \
+              [string match *B_LY.19.* $gaSet(DutInitName)] } {
       puts "if4"
       set fans 2
       set res [regexp {st\s+([\d\.\-]+)\s+([\d\.]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+} $buffer ma A B D F G]
