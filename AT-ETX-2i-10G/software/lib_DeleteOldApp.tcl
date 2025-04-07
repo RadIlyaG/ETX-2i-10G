@@ -166,6 +166,10 @@ proc DeleteOldApp {} {
     if {[string match -nocase {6.7.1(0.127)_SFR} [file tail $fol]]} {
       catch {file delete -force $fol}
     }
+    
+    if {[string match -nocase {6.7.1(0.131)_cov} [file tail $fol]]} {
+      catch {file delete -force $fol}
+    }
   }
 }
 
