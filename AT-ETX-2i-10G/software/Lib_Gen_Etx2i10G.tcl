@@ -973,7 +973,7 @@ proc RetriveDutFam {{dutInitName ""}} {
       set gaSet(dutFam) Half19.0.0.0.0.0.0
     }
   }
-  if {$dutInitName == "ETX-2I-10G_COV.ACR.4SFPP.24SFP.tcl"} {
+  if {$dutInitName == "ETX-2I-10G_COV.ACR.4SFPP.24SFP.tcl" || $dutInitName == "ETX-2I-10G_CVI.ACR.4SFPP.24SFP.tcl"} {
     puts "if 07.1"
     set gaSet(dutFam) 19.0.0.0.0.0.0
   }
@@ -1142,6 +1142,9 @@ proc DownloadConfFile {cf cfTxt save com} {
         }
         if {[string match *2i10G-COV-* $line]} {
           set gaSet(prompt) "2i10G-COV-"
+        }
+        if {[string match *2i10G-UNIFIE-DEF-V1* $line]} {
+          set gaSet(prompt) "2i10G-UNIFIE-DEF-V1"
         }
         set ::reduceSpaces 0
         if {[string match {*login-message*} $line]} {

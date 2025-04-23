@@ -1119,6 +1119,12 @@ proc Login {} {
     puts "login lo:A0D ret:<$ret>" ; update
     return 0
   }
+  if {[string match *2i10G-UNIFIE-DEF-V1* $buffer]} {
+    set ret 0
+    set gaSet(prompt) "2i10G-UNIFIE-DEF-V1"
+    puts "login lo:A0E ret:<$ret>" ; update
+    return 0
+  }
   if {[string match *user>* $buffer]} {
     Send $com su\r stam 0.25
     puts "login user1 prmpt:<$gaSet(prompt)>"
@@ -1243,6 +1249,11 @@ proc Login {} {
         set ret 0
         set gaSet(prompt) "2i10G-COV-"
         puts "login lo:C0D ret:<$ret>" ; update
+      }
+      if {[string match *i10G-UNIFIE-DEF-V1* $buffer]} {
+        set ret 0
+        set gaSet(prompt) "2i10G-UNIFIE-DEF-V1"
+        puts "login lo:C0E ret:<$ret>" ; update
       }
     }
   }  
