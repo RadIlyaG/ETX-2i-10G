@@ -406,12 +406,14 @@ proc PS_IDTest {} {
     
   set sw_norm [join  [regsub -all {[\(\)A-Z]} $sw " "]  . ] ; # 6.8.5(1.27T5) -> 6.8.5.1.27T5
   puts "DutInitName:<$gaSet(DutInitName)> sw:<$sw> sw_norm:<$sw_norm>"; update
-  if {([string match {*ATT*} $gaSet(DutInitName)]           || \
-       [string match {*_C.*} $gaSet(DutInitName)]           || \
-       [string match {*_BRSD.*} $gaSet(DutInitName)]        || \
-       [string match {*_VO.*} $gaSet(DutInitName)]          || \
-       [string match {ETX-2I-10G_LY.*} $gaSet(DutInitName)] || \
-       [string match {ETX-2I-10G-B_LY.*} $gaSet(DutInitName)]) && \
+  if {([string match {*ATT*} $gaSet(DutInitName)]             || \
+       [string match {*_C.*} $gaSet(DutInitName)]             || \
+       [string match {*_BRSD.*} $gaSet(DutInitName)]          || \
+       [string match {*_VO.*} $gaSet(DutInitName)]            || \
+       [string match {ETX-2I-10G_LY.*} $gaSet(DutInitName)]   || \
+       [string match {ETX-2I-10G-B_LY.*} $gaSet(DutInitName)] || \
+       [string match {ETX-2I-10G_VT.*} $gaSet(DutInitName)] || \
+       [string match {ETX-2I-10G-B_VT.*} $gaSet(DutInitName)]) && \
        [package vcompare $sw_norm 6.7.1.0.15]!="-1"} {
     ## if sw_norm >=6.7.1.0.15
     
@@ -455,6 +457,9 @@ proc PS_IDTest {} {
     if {[string match {ETX-2I-10G_LY.*} $gaSet(DutInitName)] || [string match {ETX-2I-10G-B_LY.*} $gaSet(DutInitName)]} {
       set max_sn_len 10       
     }  
+    if {[string match {ETX-2I-10G_VT.*} $gaSet(DutInitName)] || [string match {ETX-2I-10G-B_VT.*} $gaSet(DutInitName)]} {
+      set max_sn_len 10       
+    }
     
     if {$man_sn_len!=$max_sn_len} {
       set gaSet(fail) "The length of the \'Serial Number\' is $man_sn_len. Should be $max_sn_len"  
