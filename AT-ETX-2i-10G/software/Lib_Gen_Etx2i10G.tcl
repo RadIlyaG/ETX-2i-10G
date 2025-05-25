@@ -781,6 +781,8 @@ proc GetDbrName {mode} {
   #Status ""
   update
   if {$mode=="full"} {
+    if {[info exists gaSet(dutFam)]==0 && $::uutIsPs==0} {RetriveDutFam}
+  
     if !$::uutIsPs {
       set ::tmpLocalUCF c:/temp/[clock format [clock seconds] -format  "%Y.%m.%d-%H.%M.%S"]_${gaSet(DutInitName)}_$gaSet(pair).txt
       #set ret [GetUcFile $gaSet(DutFullName) $::tmpLocalUCF]
