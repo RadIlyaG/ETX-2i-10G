@@ -1,7 +1,7 @@
 set gaSet(sw)          "??"
 set gaSet(dbrSW)       "6.8.5(1.44)"
 set gaSet(swPack)      "SW3794"
-set gaSet(dbrBVerSw)   "SW3735"
+set gaSet(dbrBVerSw)   "SW3636"
 set gaSet(dbrBVer)     "B1.19"
 set gaSet(cpld)        "??"
 set gaSet(DutFullName) "ETX-2I-10G/19/H/ACDC/8SFPP/PTP"
