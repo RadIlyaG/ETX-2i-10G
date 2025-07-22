@@ -11,8 +11,8 @@ switch -exact -- $gaSet(pair) {
       set gaSet(pioBoxSerNum) FT5PFBRA  
   }
   2 {
-      set gaSet(comDut)      9;  #9
-      set gaSet(com220)      7;  #8
+      set gaSet(comDut)      8; #9;  #9
+      set gaSet(com220)      10; #7;  #8
       set gaSet(comAux1)   stam
       set gaSet(comAux2)   stam
       set gaSet(comGpib)   stam

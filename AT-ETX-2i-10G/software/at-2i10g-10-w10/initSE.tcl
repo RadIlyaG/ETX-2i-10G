@@ -1,12 +1,13 @@
-set gaGui(xy) +295+46
-set gaSet(entDUT) "ETX-2I-10G-B_VO/19/ACR/4SFPP/4S4U"
-set gaSet(DutInitName) "ETX-2I-10G-B_VO.19.ACR.4SFPP.4S4U.tcl"
+set gaGui(xy) +605+158
+set gaSet(entDUT) "ETX-2I-10G-B_TWC/8.5/AC/8SFPP/LPK8"
+set gaSet(DutInitName) "ETX-2I-10G-B_TWC.8.5.AC.8SFPP.LPK8.tcl"
 set gaSet(performShortTest) "0"
 set gaSet(eraseTitle) "0"
 set gaSet(ddrMultyQty) "5"
 set gaSet(scopeModel) "DSOX1102A"
-set gaSet(enSerNum) "1"
+set gaSet(enSerNum) "0"
 set gaSet(enJat) "0"
 set gaSet(enPll) "0"
 set gaSet(rbTestMode) "Full"
 set gaSet(enVneNum) "0"
+set gaSet(Etx220exists) "1"

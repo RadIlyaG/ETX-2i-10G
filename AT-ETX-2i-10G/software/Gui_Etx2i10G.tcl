@@ -707,6 +707,9 @@ proc ButRun {} {
     set gRelayState red
     IPRelay-LoopRed
     
+  ## 08:47 22/07/2025
+  Ramzor red on
+    
   if {$ret==0} {
     RLSound::Play pass
     Status "Done"  #00d700 ; #green
