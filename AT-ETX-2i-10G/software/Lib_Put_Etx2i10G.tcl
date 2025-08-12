@@ -579,8 +579,21 @@ proc PS_IDTest {} {
 
         if {[package vcompare $sw_norm 6.8.5.4.46]!="-1"} {
           ## if sw_norm >=6.8.5.4.46
-          if {[lsearch $gaSet(PsCleiCodesL) $gaSet(DutFullName)]=="-1"} {
-            set gaSet(fail) "The \'$gaSet(DutFullName)\' doesn't exist in PsCleiCodesL.txt"  
+          set res [regexp {Model Name[\s:]+([A-Z\d\-\_\/]+)\s} $buffer ma val]
+          if {$res==0} {
+            set gaSet(fail) "Fail to get Model Name of PS-$ps ($inv)"
+            return -1
+          }
+          set val [string trim $val]
+          AddToPairLog $gaSet(pair) "PS-$ps Model Name: $val"
+          set model_name $val
+          
+          # if {[lsearch $gaSet(PsCleiCodesL) $gaSet(DutFullName)]=="-1"} {
+            # set gaSet(fail) "The \'$gaSet(DutFullName)\' doesn't exist in PsCleiCodesL.txt"  
+            # return -1
+          # }
+          if {[lsearch $gaSet(PsCleiCodesL) $model_name]=="-1"} {
+            set gaSet(fail) "The \'$model_name\' doesn't exist in PsCleiCodesL.txt"  
             return -1
           }
           
@@ -591,14 +604,13 @@ proc PS_IDTest {} {
           }
           AddToPairLog $gaSet(pair) "PS-$ps CLEI Code: $val"
           
-          set tblPsClei [lindex $gaSet(PsCleiCodesL) [expr {1 + [lsearch $gaSet(PsCleiCodesL) $gaSet(DutFullName)]}]]
+          #set tblPsClei [lindex $gaSet(PsCleiCodesL) [expr {1 + [lsearch $gaSet(PsCleiCodesL) $gaSet(DutFullName)]}]]
+          set tblPsClei [lindex $gaSet(PsCleiCodesL) [expr {1 + [lsearch $gaSet(PsCleiCodesL) $model_name]}]]
           puts "\n DutFullName:<$gaSet(DutFullName)> tblPsClei:<$tblPsClei> UutPsClei:<$val>"
           if {$val != $tblPsClei} {
             set gaSet(fail) "The \'CLEI Code\' is $val. Should be $tblPsClei"  
             return -1
-          }
-          
-          
+          }                
         }    
       }       
     }
