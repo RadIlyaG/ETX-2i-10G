@@ -604,8 +604,8 @@ proc PS_IDTest {} {
           }
           AddToPairLog $gaSet(pair) "PS-$ps CLEI Code: $val"
           
-          #set tblPsClei [lindex $gaSet(PsCleiCodesL) [expr {1 + [lsearch $gaSet(PsCleiCodesL) $gaSet(DutFullName)]}]]
-          set tblPsClei [lindex $gaSet(PsCleiCodesL) [expr {1 + [lsearch $gaSet(PsCleiCodesL) $model_name]}]]
+          set tblPsClei [lindex $gaSet(PsCleiCodesL) [expr {1 + [lsearch $gaSet(PsCleiCodesL) $gaSet(DutFullName)]}]]
+          #set tblPsClei [lindex $gaSet(PsCleiCodesL) [expr {1 + [lsearch $gaSet(PsCleiCodesL) $model_name]}]]
           puts "\n DutFullName:<$gaSet(DutFullName)> tblPsClei:<$tblPsClei> UutPsClei:<$val>"
           if {$val != $tblPsClei} {
             set gaSet(fail) "The \'CLEI Code\' is $val. Should be $tblPsClei"  
