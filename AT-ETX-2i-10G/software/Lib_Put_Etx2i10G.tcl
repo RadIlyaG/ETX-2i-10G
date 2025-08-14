@@ -579,6 +579,9 @@ proc PS_IDTest {} {
 
         if {[package vcompare $sw_norm 6.8.5.4.46]!="-1"} {
           ## if sw_norm >=6.8.5.4.46
+          
+          ## 08:46 14/08/2025 meanwhile don't use PS's Model
+          if 0 {
           set res [regexp {Model Name[\s:]+([A-Z\d\-\_\/]+)\s} $buffer ma val]
           if {$res==0} {
             set gaSet(fail) "Fail to get Model Name of PS-$ps ($inv)"
@@ -587,15 +590,16 @@ proc PS_IDTest {} {
           set val [string trim $val]
           AddToPairLog $gaSet(pair) "PS-$ps Model Name: $val"
           set model_name $val
+          }
           
-          # if {[lsearch $gaSet(PsCleiCodesL) $gaSet(DutFullName)]=="-1"} {
-            # set gaSet(fail) "The \'$gaSet(DutFullName)\' doesn't exist in PsCleiCodesL.txt"  
-            # return -1
-          # }
-          if {[lsearch $gaSet(PsCleiCodesL) $model_name]=="-1"} {
-            set gaSet(fail) "The \'$model_name\' doesn't exist in PsCleiCodesL.txt"  
+          if {[lsearch $gaSet(PsCleiCodesL) $gaSet(DutFullName)]=="-1"} {
+            set gaSet(fail) "The \'$gaSet(DutFullName)\' doesn't exist in PsCleiCodesL.txt"  
             return -1
           }
+          # if {[lsearch $gaSet(PsCleiCodesL) $model_name]=="-1"} {
+            # set gaSet(fail) "The \'$model_name\' doesn't exist in PsCleiCodesL.txt"  
+            # return -1
+          # }
           
           set res [regexp {CLEI Code[\s:]+([A-Z\d]+)\s} $buffer ma val]
           if {$res==0} {
