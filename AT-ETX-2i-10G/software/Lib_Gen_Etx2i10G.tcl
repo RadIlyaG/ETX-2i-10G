@@ -236,6 +236,9 @@ proc SaveUutInit {fil} {
     puts $id "set gaSet($indx) \"$gaSet($indx)\""
   }
   
+  if ![info exists gaSet(askTraceId)] {set gaSet(askTraceId) 1}
+  puts $id "set gaSet(askTraceId)        \"$gaSet(askTraceId)\""
+  
   #puts $id "set gaSet(macIC)      \"$gaSet(macIC)\""
   close $id
 }  

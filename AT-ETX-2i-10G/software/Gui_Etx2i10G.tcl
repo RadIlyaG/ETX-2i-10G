@@ -910,6 +910,10 @@ proc GuiInventory {} {
     if ![info exists gaSet([set indx]CF)] {set gaSet([set indx]CF) c:/aa}
     set gaTmpSet([set indx]CF)  $gaSet([set indx]CF)
   }
+  
+  if ![info exists gaSet(askTraceId)] {set gaSet(askTraceId) 1}
+  set gaTmpSet(askTraceId) $gaSet(askTraceId)
+  
   foreach {b r p d ps np up} [split $gaSet(dutFam) .] {}
   
   set base .topHwInit
@@ -971,6 +975,11 @@ proc GuiInventory {} {
     set fr  [frame $base.frUcf -bd 2 -relief groove]
       set gaGui(chbUcf) [ttk::checkbutton $fr.chbUcf -text "User Default Configuration File" -variable ::chbUcf -command {ToggleUCF}]
       pack $gaGui(chbUcf)  -pady 1 -padx 3 -anchor w 
+    pack $fr -fill x -pady 3
+    
+    set fr  [frame $base.frAskTrId -bd 2 -relief groove]
+      set gaGui(chbAskTraceId) [ttk::checkbutton $fr.chbAskTraceId -text "Ask for TraceID" -variable gaTmpSet(askTraceId)]
+      pack $gaGui(chbAskTraceId)  -pady 1 -padx 3 -anchor w 
     pack $fr -fill x -pady 3
   }
   #pack [Separator $base.sep3 -orient horizontal] -fill x -padx 2 -pady 3
