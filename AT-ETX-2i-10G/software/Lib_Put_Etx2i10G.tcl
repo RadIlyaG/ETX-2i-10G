@@ -2773,7 +2773,8 @@ proc FanStatusTest {} {
     }
     set ret [Send $com "\r" $gaSet(prompt)]
     if {$ret!=0} {return $ret}
-    if [regexp {Laser Temperature \(Celsius\)[\s\:]+([\d\.]+)\sC} $buffer m val] {
+    #if [regexp {Laser Temperature \(Celsius\)[\s\:]+([\d\.]+)\sC} $buffer m val] {}
+    if [regexp {Laser Temperature \(Celsius\)[\s\:]+([\d\.]+)\s} $buffer m val] {
       set lsr [string trim $val]
       AddToPairLog $gaSet(pair) "$m"
     } else {
