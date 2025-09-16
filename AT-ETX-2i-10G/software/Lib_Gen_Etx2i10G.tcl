@@ -850,6 +850,15 @@ proc GetDbrName {mode} {
   }
   puts ""
   
+  if {$gaSet(DutFullName)=="ETX-2I-10G-B_ATT/H/DC/ODU/8SFPP" || \
+      $gaSet(DutFullName)=="ETX-2I-10G-B_ATT/H/DCR/ODU/8SFPP" || \
+      $gaSet(DutFullName)=="ETX-2I-10G_ATT/H/DCR/ODU/8SFPP" } {
+    set ::ODU_ATT_WDC 1    
+  } else {
+    set ::ODU_ATT_WDC 0 
+  }
+  
+  
   focus -force $gaGui(curTest)
   if {$ret==0} {
     Status "Ready"

@@ -103,8 +103,12 @@ proc SQliteAddLine {} {
 
   for {set tr 1} {$tr <= 6} {incr tr} {
     #if [catch {UpdateDB $barcode $uut $hostDescription $date $tim-$gaSet(ButRunTime) $status $failTestsList $failReason $operator} res] {}
-    if [catch {::RLWS::UpdateDB2 $barcode $uut $hostDescription $date $tim-$gaSet(ButRunTime) $status $failTestsList $failReason $operator $traceID $poNumber "" "" ""} res] {
-      set res "Try${tr}_fail.$res"
+    #if [catch {::RLWS::UpdateDB2 $barcode $uut $hostDescription $date $tim-$gaSet(ButRunTime) $status $failTestsList $failReason $operator $traceID $poNumber "" "" ""} res] {}
+    foreach {ret resTxt} [::RLWS::UpdateDB2  $barcode $uut $hostDescription \
+            $date $tim-$gaSet(ButRunTime) $status $failTestsList $failReason $operator\
+            $traceId $po_num [info host] "" ""] {}
+    if {$ret!=0} {
+      set res "Try${tr}_fail.$resTxt"
       puts "[MyTime] Web DataBase is not updated. Try:<$tr>. Res:<$res>" ; update
       after [expr {int(rand()*3000+60)}] 
     } else {
@@ -168,9 +172,12 @@ proc AddLine {} {
   set operator "ILYA GINZBURG"
   
   for {set tr 1} {$tr <= 6} {incr tr} {
-    if [catch {UpdateDB $barcode $uut $hostDescription $date $tim-$gaSet(ButRunTime) $status $failTestsList $failReason $operator} res] {
-      set res "Try${tr}_fail.$res"
-      puts "[MyTime] Web DataBase is not updated. Try:<$tr>. Res:<$res>" ; update
+    #if [catch {UpdateDB $barcode $uut $hostDescription $date $tim-$gaSet(ButRunTime) $status $failTestsList $failReason $operator} res] {}
+    foreach {ret resTxt} [::RLWS::UpdateDB2 $barcode $uut $hostDescription \
+      $date $tim-$gaSet(ButRunTime) $status $failTestsList $failReason $operator traceID poNumber "" "" ""] {}
+    if {$ret!="0"} {    
+      set res "Try${tr}_fail.$resTxt"
+      puts "[MyTime] Web DataBase is not updated. Try:<$tr>. resTxt:<$resTxt>" ; update
       after [expr {int(rand()*3000+60)}] 
     } else {
       puts "[MyTime] Web DataBase is updated well!"
@@ -187,6 +194,7 @@ proc AddLine {} {
       close $id
     }
   }
+  return $ret
 }
 # ***************************************************************************
 # MyTime

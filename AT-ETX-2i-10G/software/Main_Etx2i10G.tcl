@@ -460,8 +460,15 @@ proc DyingGasp_conf {run} {
   if {$ret!=0} {return $ret}
   
   Power all off
-  after 1000
-  Power all on
+  after 3000
+  Power 2 on
+  # if !$::ODU_ATT_WDC {
+    # Power 2 on
+  # }
+  
+  # Power all off
+  # after 1000
+  # Power all on
   set ret [Wait "Wait UUT up" 30 white]
   if {$ret!=0} {return $ret}
   
@@ -1424,6 +1431,11 @@ proc SetToDefault {run} {
 proc SetToDefaultWD {run} {
   global gaSet gaGui
   Power all on
+  if $::ODU_ATT_WDC {
+    Power all off
+    after 3000
+    Power 2 on
+  } 
   set ret [FactDefault std wd]
   if {$ret!=0} {return $ret}
   
@@ -1530,7 +1542,14 @@ proc MacSwID {run} {
 # ***************************************************************************
 proc DDR {run} {
   global gaSet
-  Power all on
+  #Power all on
+  
+  if $::ODU_ATT_WDC {
+    Power all off
+    after 3000
+    Power 2 on
+  }
+  
   set ret [DdrTest 1]
   return $ret
 }
@@ -1562,6 +1581,19 @@ proc DDR_multi {run} {
 # BootDownload
 # ***************************************************************************
 proc BootDownload {run} {
+  Power all off
+  after 3000
+  if $::ODU_ATT_WDC {
+    RLSound::Play information
+    set txt "Connect 48VDC cables"
+    set res [DialogBoxRamzor -type "Ok Stop" -icon /images/info -title "WDC connections"\
+      -message $txt]
+    if {$res=="Stop"} {
+      return -2
+    }
+  }
+  Power 1 on
+  
   set ret [Boot_Download]
   if {$ret!=0} {return $ret}
   
@@ -1915,9 +1947,23 @@ proc Load_Jat_Pll {run} {
 proc DyingGasp_Log {run} {
   set ret [Dyigasp_ClearLog]
   if {$ret!=0} {return $ret}
+  
   Power all off
   after 3000
-  Power all on
+  if $::ODU_ATT_WDC {
+    RLSound::Play information
+    set txt "Connect 24VDC cables"
+    set res [DialogBoxRamzor -type "Ok Stop" -icon /images/info -title "WDC connections"\
+      -message $txt]
+    if {$res=="Stop"} {
+      return -2
+    }
+  }
+  Power 1 on
+  
+  # Power all off
+  # after 3000
+  # Power all on
   set ret [Wait "Wait UUT up" 30 white]
   if {$ret!=0} {return $ret}
   set ret [Dyigasp_ReadLog]
