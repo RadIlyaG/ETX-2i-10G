@@ -3,8 +3,11 @@
 # ***************************************************************************
 proc EntryBootMenu {} {
   global gaSet buffer
+  set proc_name [lindex [info level 0] 0]
+  set proc_parent_name [lindex [info level 1] 0]
+  
   set com $gaSet(comDut)
-  puts "[MyTime] EntryBootMenu"; update
+  puts "\n[MyTime] $proc_name parent:$proc_parent_name"; update
   set ret [Send $com \r\r "\[boot\]:" 2]
   if {$ret==0} {return $ret}
   set ret [Send $com \r\r "\[boot\]:" 2]
@@ -16,7 +19,18 @@ proc EntryBootMenu {} {
   foreach {b r p d ps np up} [split $gaSet(dutFam) .] {}
   Power all off
   RLTime::Delay 2
-  Power all on
+  
+  if {$proc_parent_name=="Combo_PagesSW"} {
+    Power all on
+  } else {
+    if {$::ODU_ATT_WDC==1} {
+      Power 1 on
+    } else {
+      Power all on
+    }
+  }
+  #Power all on
+    
   RLTime::Delay 2
   Status "Entry to Boot Menu"
   set gaSet(fail) "Entry to Boot Menu fail"
@@ -3459,7 +3473,7 @@ proc Dyigasp_ReadLog {} {
   }
   
   Status "Dyigasp ReadLog "
-  Power all on
+  ## Power all on
   set ret [Login]
   if {$ret!=0} {
     #set ret [Login]
@@ -3497,7 +3511,7 @@ proc Dyigasp_ReadLog {} {
 proc PtpClock_conf_perf {} {
   global gaSet buffer
   Status "PtpClock_conf Test"
-  Power all on
+  ## Power all on
   set ret [Login]
   if {$ret!=0} {
     #set ret [Login]
@@ -3520,7 +3534,7 @@ proc PtpClock_conf_perf {} {
 proc PtpClock_run_perf {} {
   global gaSet buffer
   Status "PtpClock_run Test"
-  Power all on
+  ## Power all on
   set sec1 [clock seconds]
   set ret [Login]
   if {$ret!=0} {

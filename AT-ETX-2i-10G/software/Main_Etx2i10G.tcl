@@ -461,8 +461,12 @@ proc DyingGasp_conf {run} {
   
   Power all off
   after 3000
-  Power 2 on
-  # if !$::ODU_ATT_WDC {
+  if {$::ODU_ATT_WDC=="InDoor"} {
+    Power all on
+  } else {  
+    Power 2 on
+  }
+  # if {$::ODU_ATT_WDC==0} {
     # Power 2 on
   # }
   
@@ -1431,7 +1435,7 @@ proc SetToDefault {run} {
 proc SetToDefaultWD {run} {
   global gaSet gaGui
   Power all on
-  if $::ODU_ATT_WDC {
+  if {$::ODU_ATT_WDC==1} {
     Power all off
     after 3000
     Power 2 on
@@ -1544,7 +1548,7 @@ proc DDR {run} {
   global gaSet
   #Power all on
   
-  if $::ODU_ATT_WDC {
+  if {$::ODU_ATT_WDC==1} {
     Power all off
     after 3000
     Power 2 on
@@ -1583,7 +1587,7 @@ proc DDR_multi {run} {
 proc BootDownload {run} {
   Power all off
   after 3000
-  if $::ODU_ATT_WDC {
+  if {$::ODU_ATT_WDC==1} {
     RLSound::Play information
     set txt "Connect 48VDC cables"
     set res [DialogBoxRamzor -type "Ok Stop" -icon /images/info -title "WDC connections"\
@@ -1592,7 +1596,11 @@ proc BootDownload {run} {
       return -2
     }
   }
-  Power 1 on
+  if {$::ODU_ATT_WDC=="InDoor"} {
+    Power all on
+  } else {  
+    Power 1 on
+  }
   
   set ret [Boot_Download]
   if {$ret!=0} {return $ret}
@@ -1950,7 +1958,7 @@ proc DyingGasp_Log {run} {
   
   Power all off
   after 3000
-  if $::ODU_ATT_WDC {
+  if {$::ODU_ATT_WDC==1} {
     RLSound::Play information
     set txt "Connect 24VDC cables"
     set res [DialogBoxRamzor -type "Ok Stop" -icon /images/info -title "WDC connections"\
@@ -1959,7 +1967,12 @@ proc DyingGasp_Log {run} {
       return -2
     }
   }
-  Power 1 on
+  if {$::ODU_ATT_WDC=="InDoor"} {
+    Power all on
+  } else {  
+    Power 1 on
+  }
+  
   
   # Power all off
   # after 3000
@@ -1975,6 +1988,7 @@ proc DyingGasp_Log {run} {
 proc PtpClock_conf {run} {
   set ret 0
   #set ret [FactDefault std noWD]
+  Power all on
   if {$ret!=0} {return $ret}
   set ret [PtpClock_conf_perf]
   return $ret
@@ -1984,6 +1998,7 @@ proc PtpClock_conf {run} {
 # PtpClock_run
 # ***************************************************************************
 proc PtpClock_run {run} {
+  Power all on
   set ret [Wait "PTP Clock Recovering" 10 white]
   set ret [PtpClock_run_perf]
   if {$ret!=0} {

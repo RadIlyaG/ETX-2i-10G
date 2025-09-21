@@ -534,7 +534,10 @@ proc MyWaitFor {com expected testEach timeout} {
 # ***************************************************************************
 proc Power {ps state} {
   global gaSet gaGui 
-  puts "[MyTime] Power $ps $state"
+  set proc_name [lindex [info level 0] 0]
+  set proc_parent_name [lindex [info level 1] 0]
+  set proc_grand_name [lindex [info level 2] 0]
+  puts "\n[MyTime] $proc_name $ps $state , proc_parent_name:$proc_parent_name proc_grand_name:$proc_grand_name"
 #   RLSound::Play information
 #   DialogBox -type OK -message "Turn $ps $state"
 #   return 0
@@ -854,8 +857,11 @@ proc GetDbrName {mode} {
       $gaSet(DutFullName)=="ETX-2I-10G-B_ATT/H/DCR/ODU/8SFPP" || \
       $gaSet(DutFullName)=="ETX-2I-10G_ATT/H/DCR/ODU/8SFPP" } {
     set ::ODU_ATT_WDC 1    
-  } else {
+  } elseif {[string match *OD* $gaSet(DutFullName)]} {
+    ## all other OutDoors
     set ::ODU_ATT_WDC 0 
+  } else {
+    set ::ODU_ATT_WDC "InDoor"
   }
   
   
@@ -2616,4 +2622,8 @@ proc Power_usb_relay {ps state} {
     }
   }
   return 0
+}
+
+proc RetriveProcName {} {
+  
 }
