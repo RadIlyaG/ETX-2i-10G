@@ -1656,6 +1656,13 @@ proc Pages {run} {
 # SoftwareDownload
 # ***************************************************************************
 proc SoftwareDownload {run} {
+  Power all on
+  if {$::ODU_ATT_WDC==1 || $::ODU_ATT_WDC==0} {
+    Power all off
+    after 3000
+    Power 1 on
+  }
+    
   set ret [SetSWDownload]
   if {$ret!=0} {return $ret}
   
@@ -2029,6 +2036,15 @@ proc DoorSwitchAppDownload {run} {
 # DoorSwitchTest
 # ***************************************************************************
 proc DoorSwitchTest {run} {
+  global gaSet
+  Power all on
+  if {[string match "*[lindex [info level 0] 0]*" $gaSet(startFrom)]} {  
+    if {$::ODU_ATT_WDC==1 || $::ODU_ATT_WDC==0} {
+      Power all off
+      after 3000
+      Power 1 on
+    }
+  }
   set ret [DoorSwitchTestPerf]
   if {$ret!=0} {return $ret}
   return $ret

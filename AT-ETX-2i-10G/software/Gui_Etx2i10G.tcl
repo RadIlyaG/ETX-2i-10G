@@ -675,7 +675,10 @@ proc ButRun {} {
     catch {unset gaSet(dnfvMac2)}
     
     set ret 0
-    GuiPower all 1 ; ## power ON before OpenRL
+    ### 14:54 21/09/2025
+    ### each test will power on
+    ## GuiPower all 1 ; ## power ON before OpenRL
+    
     set gaSet(plEn) 0
     if {$ret==0} {
        if {$ret==0} {
