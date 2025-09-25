@@ -1640,9 +1640,9 @@ proc Pages {run} {
     AddToPairLog $gaSet(pair) "Page1: $p1_5, Page2: $p2_14"
     if {$p1_5=="01" && $p2_14=="0C"} {
       set ret 0
-    } elseif {($p1_5=="02" || $p1_5=="03") && ($p2_14=="1C" || $p2_14=="1D")} {
+    } elseif {($p1_5=="02" || $p1_5=="03") && ($p2_14=="1C" || $p2_14=="1D" || $p2_14=="0D")} {
       set ret 0
-    } elseif {$p1_5=="04" && $p2_14=="1E"} {
+    } elseif {$p1_5=="04" && ($p2_14=="1E" || $p2_14=="0E")} {
       set ret 0
     } else {
       set gaSet(fail) "Mismatch between Page1: $p1_5 to Page2: $p2_14"
