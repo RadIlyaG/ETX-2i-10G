@@ -464,11 +464,8 @@ proc DyingGasp_conf {run} {
   if {$::ODU_ATT_WDC=="InDoor"} {
     Power all on
   } else {  
-    Power 2 on
-  }
-  # if {$::ODU_ATT_WDC==0} {
-    # Power 2 on
-  # }
+    Power 1 on
+  }  
   
   # Power all off
   # after 1000
@@ -763,6 +760,15 @@ proc Combo_UTP_ID {run} {
 # ***************************************************************************
 proc DataTransmission_run {run} {
   global gaSet gRelayState
+  
+  Power all on
+  # if {[string match "*[lindex [info level 0] 0]*" $gaSet(startFrom)]} {} 
+  if {$::ODU_ATT_WDC==1} {
+    Power all off
+    after 3000
+    Power 2 on
+  }
+  
   Status "Init GENERATOR"
   set ret [RL10GbGen::Init $gaSet(id220)]  
   if {$ret!=0} {
@@ -791,6 +797,12 @@ proc DataTransmission_run {run} {
     ## no 1 G Ports
   } else {
     Etx220Config 5 $1GlineRate
+  }
+  
+  set ret [Login]
+  if {$ret!=0} {
+    #set ret [Login]
+    if {$ret!=0} {return $ret}
   }
   
   Etx220Start 1
@@ -873,9 +885,11 @@ proc DataTransmission_run {run} {
 # ***************************************************************************
 proc DataTransmissionTestPerf {checkTime} {
   global gaSet
-  if !$::uutIsPs {
-    Power all on 
-  }
+  
+  ## the Power turned in DataTransmission_run
+  # if !$::uutIsPs {
+    # Power all on 
+  # }
   foreach {b r p d ps np up} [split $gaSet(dutFam) .] {}
   
   set ret [Wait "Waiting for stabilization" 10 white]
@@ -1435,11 +1449,11 @@ proc SetToDefault {run} {
 proc SetToDefaultWD {run} {
   global gaSet gaGui
   Power all on
-  if {$::ODU_ATT_WDC==1} {
-    Power all off
-    after 3000
-    Power 2 on
-  } 
+  # if {$::ODU_ATT_WDC==1} {
+    # Power all off
+    # after 3000
+    # Power 2 on
+  # } 
   set ret [FactDefault std wd]
   if {$ret!=0} {return $ret}
   
@@ -1546,13 +1560,13 @@ proc MacSwID {run} {
 # ***************************************************************************
 proc DDR {run} {
   global gaSet
-  #Power all on
+  Power all on
   
-  if {$::ODU_ATT_WDC==1} {
-    Power all off
-    after 3000
-    Power 2 on
-  }
+  # if {$::ODU_ATT_WDC==1} {
+    # Power all off
+    # after 3000
+    # Power 2 on
+  # }
   
   set ret [DdrTest 1]
   return $ret
@@ -1623,6 +1637,13 @@ proc SetDownload {run} {
 # ***************************************************************************
 proc Pages {run} {
   global gaSet buffer gaGet
+  
+  # set proc_name [lindex [info level 0] 0]
+  # set proc_parent_name [lindex [info level 1] 0]
+  # if {[string match "*[lindex [info level 0] 0]*" $gaSet(startFrom)]} { 
+
+  # }    
+  
   set ret [EntryBootMenu]
   if {$ret!=0} {return $ret}
   
@@ -1656,10 +1677,27 @@ proc Pages {run} {
 # SoftwareDownload
 # ***************************************************************************
 proc SoftwareDownload {run} {
-  Power all on
-  if {$::ODU_ATT_WDC==1 || $::ODU_ATT_WDC==0} {
-    Power all off
-    after 3000
+  global gaSet
+  
+  if {[string match "*[lindex [info level 0] 0]*" $gaSet(startFrom)]} { 
+    if {$::ODU_ATT_WDC==1 || $::ODU_ATT_WDC==0} {
+      Power all off
+      after 3000
+    }
+    if {$::ODU_ATT_WDC==1} {
+      RLSound::Play information
+      set txt "Connect 48VDC cables"
+      set res [DialogBoxRamzor -type "Ok Stop" -icon /images/info -title "WDC connections"\
+        -message $txt]
+      if {$res=="Stop"} {
+        return -2
+      }
+    }
+  } 
+  
+  if {$::ODU_ATT_WDC=="InDoor"} {
+    Power all on
+  } else {  
     Power 1 on
   }
     
@@ -2038,13 +2076,13 @@ proc DoorSwitchAppDownload {run} {
 proc DoorSwitchTest {run} {
   global gaSet
   Power all on
-  if {[string match "*[lindex [info level 0] 0]*" $gaSet(startFrom)]} {  
-    if {$::ODU_ATT_WDC==1 || $::ODU_ATT_WDC==0} {
-      Power all off
-      after 3000
-      Power 1 on
-    }
+  # if {[string match "*[lindex [info level 0] 0]*" $gaSet(startFrom)]} {} 
+  if {$::ODU_ATT_WDC==1 || $::ODU_ATT_WDC==0} {
+    Power all off
+    after 3000
+    Power 2 on
   }
+
   set ret [DoorSwitchTestPerf]
   if {$ret!=0} {return $ret}
   return $ret
