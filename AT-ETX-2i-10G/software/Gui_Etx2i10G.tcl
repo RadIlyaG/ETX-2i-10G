@@ -675,9 +675,7 @@ proc ButRun {} {
     catch {unset gaSet(dnfvMac2)}
     
     set ret 0
-    ### 14:54 21/09/2025
-    ### each test will power on
-    ## GuiPower all 1 ; ## power ON before OpenRL
+    GuiPower all 1 ; ## power ON before OpenRL
     
     set gaSet(plEn) 0
     if {$ret==0} {
@@ -1680,8 +1678,12 @@ proc ToggleTestMode {} {
   $gaSet(statBarShortTest) configure -bg yellow -text $let ; #"[string index $gaSet(rbTestMode) 0]"
   BuildTests
   if {$gaSet(rbTestMode) eq "On_Off"} {
-    DialogBoxRamzor -title "Power OFF and ON" -type OK \
-      -message "Use the \'UUT's barcode\' entry to define the Power OFF-ON cycles quantity"
+    DialogBox -title "Power OFF and ON" -type OK  -bg yellow -font {TkDefaultFont 11}\
+      -message "Use the \'UUT's barcode\' entry to define the following:\n\n\
+      * Power OFF-ON cycles quantity\n\
+      * OFF duration in seconds (default=5)\n\
+      * StopOnFail (default=no)\n\n\
+      For example: 100 5 yes"  -justify left
   }
 }
 # ***************************************************************************
