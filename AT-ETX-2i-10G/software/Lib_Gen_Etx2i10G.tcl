@@ -2556,6 +2556,7 @@ proc Check_RxRate {} {
       
       puts "\nCheck_RxRate tr:$tr ret::$ret\n"
       if {$ret!=0} {
+        set gaSet(fail) "Bits Received Rate = 0"
         if {$ret=="-2"} {return $ret}
       } elseif {$ret==0} {
         break
