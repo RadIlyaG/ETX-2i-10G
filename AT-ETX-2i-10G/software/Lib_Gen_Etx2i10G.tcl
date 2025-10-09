@@ -979,7 +979,8 @@ proc RetriveDutFam {{dutInitName ""}} {
     puts "if 04"
     ## 07/08/2022 New naming format
     set gaSet(dutFam) 19B.0.0.0.0.0.0
-  } elseif {[regexp {10G\.19\.H?\.?[AD]CR?\.8S?F?P?P}  $dutInitName]} {
+  } elseif {[regexp {10G\.19\.H?\.?[AD]CR?\.8S?F?P?P}  $dutInitName] ||\
+            [regexp {10G_?F?T?R?\.19\.H?\.?[AD]CR?\.8S?F?P?P}  $dutInitName]} {
     puts "if 05"
     ## 08/11/2022 New naming format
     set gaSet(dutFam) 19B.0.0.0.0.0.0
@@ -993,7 +994,8 @@ proc RetriveDutFam {{dutInitName ""}} {
       set gaSet(dutFam) Half19.0.0.0.0.0.0
     }
   }
-  if {$dutInitName == "ETX-2I-10G_COV.ACR.4SFPP.24SFP.tcl" || $dutInitName == "ETX-2I-10G_CVI.ACR.4SFPP.24SFP.tcl"} {
+  if {$dutInitName == "ETX-2I-10G_COV.ACR.4SFPP.24SFP.tcl" || \
+      $dutInitName == "ETX-2I-10G_CVI.ACR.4SFPP.24SFP.tcl"} {
     puts "if 07.1"
     set gaSet(dutFam) 19.0.0.0.0.0.0
   }
@@ -1733,7 +1735,8 @@ proc RetriveFansCheckJ {} {
     set checkJ yes
     set res [regexp {st\s+([\d\.\-]+)\s+([\d\.]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([\d\.]+)\s+([\d\.]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+} $buffer ma A B D F G x1 J C E H I]    
   }
-  if {$gaSet(DutInitName) == "ETX-2I-10G.19.H.ACDC.8SFPP.PTP.tcl"} {
+  if {$gaSet(DutInitName) == "ETX-2I-10G.19.H.ACDC.8SFPP.PTP.tcl" ||\
+      $gaSet(DutInitName) == "ETX-2I-10G_FTR.19.H.DCR.8SFPP.K04.tcl"} {
     puts "if6.1" 
     set fans 4
     set checkJ yes
