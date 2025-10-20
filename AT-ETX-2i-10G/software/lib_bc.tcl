@@ -265,7 +265,12 @@ proc ReadBarcode {} {
   # if {[regexp {ODU?\.8} $gaSet(DutInitName)]==1} { 
     # set readTrace 0
   # }
-  if {[lsearch $gaSet(noTraceL) $gaSet(DutFullName)]!="-1"} {
+  
+  # 11:42 12/10/2025
+  # if {[lsearch $gaSet(noTraceL) $gaSet(DutFullName)]!="-1"} {
+    # set readTrace 0
+  # } 
+  if {$gaSet(askTraceId)=="No"} {
     set readTrace 0
   } else {
     if {[string match *BootDownload* $gaSet(startFrom)] || [string match *Pages* $gaSet(startFrom)]} {

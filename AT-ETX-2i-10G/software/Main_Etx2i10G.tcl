@@ -299,6 +299,7 @@ proc BuildTests {} {
   
   set gaSet(startFrom) [lindex $glTests 0]
   $gaGui(startFrom) configure -values $glTests -height [llength $glTests]
+  puts "BuildTests glTests:$glTests\n"
   
   return {}
 }
@@ -1276,17 +1277,18 @@ proc Leds_FAN {run} {
         set ret 0
       }
       
-      if {$b=="19" || ($b=="19B" && $np=="8SFPP" && $up=="0_0") || \
-          ($b=="19B" && [string match *.ACDC.* $gaSet(DutInitName)]) || \
-          ($b=="19B" && [string match *.ACAC.* $gaSet(DutInitName)]) || \
-          ($b=="19B" && [string match *.DCDC.* $gaSet(DutInitName)]) || \
-          ($b=="19B" && [string match *B_*.ACR.* $gaSet(DutInitName)])|| \
-          ($b=="19B" && [string match *B_*.DCR.* $gaSet(DutInitName)])|| \
-          ($b=="19B" && [string match *B.19.ACR.* $gaSet(DutInitName)])|| \
-          ($b=="19B" && [string match *B.19.DCR.* $gaSet(DutInitName)])|| \
-          ($b=="19B" && [string match *B_VT.19.NULL.* $gaSet(DutInitName)])|| \
-          ($b=="19B" && [string match *B.19.NULL.* $gaSet(DutInitName)])} {
-        
+      # 10:32 12/10/2025
+      # if {$b=="19" || ($b=="19B" && $np=="8SFPP" && $up=="0_0") || \
+          # ($b=="19B" && [string match *.ACDC.* $gaSet(DutInitName)]) || \
+          # ($b=="19B" && [string match *.ACAC.* $gaSet(DutInitName)]) || \
+          # ($b=="19B" && [string match *.DCDC.* $gaSet(DutInitName)]) || \
+          # ($b=="19B" && [string match *B_*.ACR.* $gaSet(DutInitName)])|| \
+          # ($b=="19B" && [string match *B_*.DCR.* $gaSet(DutInitName)])|| \
+          # ($b=="19B" && [string match *B.19.ACR.* $gaSet(DutInitName)])|| \
+          # ($b=="19B" && [string match *B.19.DCR.* $gaSet(DutInitName)])|| \
+          # ($b=="19B" && [string match *B_VT.19.NULL.* $gaSet(DutInitName)])|| \
+          # ($b=="19B" && [string match *B.19.NULL.* $gaSet(DutInitName)])} {}
+       if {$gaSet(PSUsAreRemovable)=="Yes"} {           
         # if {$np=="8SFPP" && $up=="0_0" && $gaSet(rbTestMode) eq "MainBoard" || \
             # $np=="8SFPP" && $up=="0_0" && [regexp {ODU?\.8} $gaSet(DutInitName)]==1 && $gaSet(rbTestMode) eq "Full"} {}
         if {$np=="8SFPP" && $up=="0_0" && $gaSet(rbTestMode) eq "MainBoard"} {    
@@ -1545,7 +1547,6 @@ proc LoadDefaultConfiguration {run} {
   return $ret
 }
  
-
 # ***************************************************************************
 # MacSwID
 # ***************************************************************************
@@ -1615,6 +1616,8 @@ proc BootDownload {run} {
   } else {  
     Power 1 on
   }
+  
+  Wait "Wait for Boot up" 10 white
   
   set ret [Boot_Download]
   if {$ret!=0} {return $ret}

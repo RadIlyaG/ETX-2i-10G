@@ -259,6 +259,7 @@ proc WritePages {} {
       return -1    
     } else {
       puts "Page-$page is OK. <$res>"; update
+      AddToPairLog $gaSet(pair) $gaGet(page$page)
     }    
 	}
 	

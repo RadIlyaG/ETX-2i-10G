@@ -506,12 +506,15 @@ proc PS_IDTest {} {
         return -1
       }
       
+      ## 15:19 12/10/2025
       ## 08:45 20/04/2023
-      if {[lsearch $gaSet(CleiCodesL) $gaSet(DutFullName)]=="-1"} {
-        set gaSet(fail) "The \'$gaSet(DutFullName)\' doesn't exist in CleiCodes.txt"  
-        return -1
-      }
-      set tblClei [lindex $gaSet(CleiCodesL) [expr {1 + [lsearch $gaSet(CleiCodesL) $gaSet(DutFullName)]}]]
+      # if {[lsearch $gaSet(CleiCodesL) $gaSet(DutFullName)]=="-1"} {
+        # set gaSet(fail) "The \'$gaSet(DutFullName)\' doesn't exist in CleiCodes.txt"  
+        # return -1
+      # }
+      # set tblClei [lindex $gaSet(CleiCodesL) [expr {1 + [lsearch $gaSet(CleiCodesL) $gaSet(DutFullName)]}]]
+      
+      set tblClei $gaSet(CleiCode)
       puts "\n DutFullName:<$gaSet(DutFullName)> tblClei:<$tblClei> Clei:<$val>"
       if {$val != $tblClei} {
         set gaSet(fail) "The \'CLEI Code\' is $val. Should be $tblClei"  
@@ -2811,38 +2814,53 @@ proc FanStatusTest {} {
     return -1
   }
   puts "fanSt:$fanSt"
-  if {$np=="8SFPP" && $up=="0_0" && [regexp {ODU?\.8} $gaSet(DutInitName)]==1 && \
-      $fanSt eq "-" && $gaSet(rbTestMode) eq "Full"} {
-    ## no fans in OutDoor       
-  } else {
-    if {$b=="Half19" || $b=="Half19B"} {
-      if {$fanSt!="1 OK"} {
-        set gaSet(fail) "FAN Status is \'$fanSt\'"
-        return -1
-      }
-    } elseif {$b=="19"} { 
-      if {$fanSt!="1 OK 2 OK 3 OK 4 OK"} {
-        set gaSet(fail) "FAN Status is \'$fanSt\'"
-        return -1
-      }
-    } elseif {$b=="19B"} { 
-      if {$np=="8SFPP" && $up=="0_0" && \
-          ([string match *B.19.H.* $gaSet(DutInitName)]    || [string match *B.19.N.* $gaSet(DutInitName)] ||\
-           [string match *B_C.19.H.* $gaSet(DutInitName)]  || [string match *B_ATT.H.* $gaSet(DutInitName)] ||\
-           [string match *.19.H.* $gaSet(DutInitName)]     || \
-           [string match *ATT.19.HN.* $gaSet(DutInitName)] || [string match *B_ATT.19.HN.* $gaSet(DutInitName)])} {
-        if {$fanSt!="1 OK 2 OK 3 OK 4 OK"} {
-          set gaSet(fail) "FAN Status is \'$fanSt\'"
-          return -1
-        }
-      } else {
-        if {$fanSt!="1 OK 2 OK"} {
-          set gaSet(fail) "FAN Status is \'$fanSt\'"
-          return -1
-        }
-      }
-    }
+  
+  ## 10:49 12/10/2025
+  if {$gaSet(FansQty)==0} {
+    ## no fans
+  } elseif {$gaSet(FansQty)==1 && $fanSt!="1 OK"} {
+    set gaSet(fail) "FAN Status is \'$fanSt\'"
+    return -1
+  } elseif {$gaSet(FansQty)==2 && $fanSt!="1 OK 2 OK"} {
+    set gaSet(fail) "FAN Status is \'$fanSt\'"
+    return -1
+  } elseif {$gaSet(FansQty)==4 && $fanSt!="1 OK 2 OK 3 OK 4 OK"} {
+    set gaSet(fail) "FAN Status is \'$fanSt\'"
+    return -1
   }
+  
+  # if {$np=="8SFPP" && $up=="0_0" && [regexp {ODU?\.8} $gaSet(DutInitName)]==1 && \
+      # $fanSt eq "-" && $gaSet(rbTestMode) eq "Full"} {
+    # ## no fans in OutDoor       
+  # } else {        
+    # if {$b=="Half19" || $b=="Half19B"} {
+      # if {$fanSt!="1 OK"} {
+        # set gaSet(fail) "FAN Status is \'$fanSt\'"
+        # return -1
+      # }
+    # } elseif {$b=="19"} { 
+      # if {$fanSt!="1 OK 2 OK 3 OK 4 OK"} {
+        # set gaSet(fail) "FAN Status is \'$fanSt\'"
+        # return -1
+      # }
+    # } elseif {$b=="19B"} { 
+      # if {$np=="8SFPP" && $up=="0_0" && \
+          # ([string match *B.19.H.* $gaSet(DutInitName)]    || [string match *B.19.N.* $gaSet(DutInitName)] ||\
+           # [string match *B_C.19.H.* $gaSet(DutInitName)]  || [string match *B_ATT.H.* $gaSet(DutInitName)] ||\
+           # [string match *.19.H.* $gaSet(DutInitName)]     || \
+           # [string match *ATT.19.HN.* $gaSet(DutInitName)] || [string match *B_ATT.19.HN.* $gaSet(DutInitName)])} {
+        # if {$fanSt!="1 OK 2 OK 3 OK 4 OK"} {
+          # set gaSet(fail) "FAN Status is \'$fanSt\'"
+          # return -1
+        # }
+      # } else {
+        # if {$fanSt!="1 OK 2 OK"} {
+          # set gaSet(fail) "FAN Status is \'$fanSt\'"
+          # return -1
+        # }
+      # }
+    # }
+  # }
   
   Send $com "exit all\r" stam 0.25 
   Send $com "logon\r" stam 0.25 

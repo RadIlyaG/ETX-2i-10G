@@ -891,29 +891,39 @@ proc GuiInventory {} {
   array unset gaTmpSet
   
   if {![file exists uutInits/$gaSet(DutInitName)]} {
-    set parL [list sw licDir dbrSW swPack dbrBVerSw dbrBVer cpld]
+    set parL [list sw licDir dbrSW swPack dbrBVerSw dbrBVer cpld  boxType FansQty \
+        SensorsSch PSUsAreRemovable askTraceId CleiCode]
     foreach par $parL {
       set gaSet($par) ??
       set gaTmpSet($par) ??
     }
-    foreach indx {Boot SW DGasp ExtClk Default 19 Half19 19SyncE Half19SyncE 19BSyncE Half19BSyncE Aux1 Aux2 19B Half19B} { 
+    # if ![info exists gaSet(CleiCode)] {set gaSet(CleiCode) NA}
+    # set gaTmpSet(CleiCode) $gaSet(CleiCode)
+    
+    foreach indx {Boot SW DGasp ExtClk Default 19 Half19 19SyncE Half19SyncE \
+        19BSyncE Half19BSyncE Aux1 Aux2 19B Half19B} { 
       set gaSet([set indx]CF)  c:/aa
       set gaTmpSet([set indx]CF)  c:/aa
     }
   }
   
-  set parL [list sw licDir dbrSW swPack dbrBVerSw dbrBVer cpld]
+  set parL [list sw licDir dbrSW swPack dbrBVerSw dbrBVer cpld boxType FansQty \
+      SensorsSch PSUsAreRemovable askTraceId CleiCode]
   foreach par $parL {
     if ![info exists gaSet($par)] {set gaSet($par) ??}
     set gaTmpSet($par) $gaSet($par)
   }
-  foreach indx {Boot SW DGasp ExtClk Default 19 Half19 19SyncE Half19SyncE 19BSyncE Half19BSyncE Aux1 Aux2 19B Half19B} { 
+  # if ![info exists gaSet(CleiCode)] {set gaSet(CleiCode) NA}
+  # set gaTmpSet(CleiCode) $gaSet(CleiCode)
+  
+  foreach indx {Boot SW DGasp ExtClk Default 19 Half19 19SyncE Half19SyncE \
+      19BSyncE Half19BSyncE Aux1 Aux2 19B Half19B} { 
     if ![info exists gaSet([set indx]CF)] {set gaSet([set indx]CF) c:/aa}
     set gaTmpSet([set indx]CF)  $gaSet([set indx]CF)
   }
   
-  if ![info exists gaSet(askTraceId)] {set gaSet(askTraceId) 1}
-  set gaTmpSet(askTraceId) $gaSet(askTraceId)
+  # if ![info exists gaSet(askTraceId)] {set gaSet(askTraceId) Yes}
+  # set gaTmpSet(askTraceId) $gaSet(askTraceId)
   
   foreach {b r p d ps np up} [split $gaSet(dutFam) .] {}
   
@@ -925,7 +935,7 @@ proc GuiInventory {} {
   wm title $base "Inventory of $gaSet(DutFullName)"
   
   set indx 0
-  if {$gaSet(dutBox)=="19" || $gaSet(dutBox)=="Half19" || $gaSet(dutBox)=="19B" || $gaSet(dutBox)=="Half19B"} {
+  #if {$gaSet(dutBox)=="19" || $gaSet(dutBox)=="Half19" || $gaSet(dutBox)=="19B" || $gaSet(dutBox)=="Half19B"} {}
     set fr [frame $base.frSwVer -bd 0 -relief groove]
       pack [Label $fr.labSW  -text "SW Ver" -width 15] -pady 1 -padx 2 -anchor w -side left
       pack [Entry $fr.cbSW -justify center -width 45 -state disabled -editable 0 -textvariable gaTmpSet(dbrSW)] -pady 1 -padx 2 -anchor w -side left
@@ -946,12 +956,12 @@ proc GuiInventory {} {
 #       pack [Label $fr.labCpld  -text "CPLD" -width 15] -pady 1 -padx 2 -anchor w -side left
 #       pack [Entry $fr.cbCpld -justify center -editable 1 -textvariable gaTmpSet(cpld)] -pady 1 -padx 2 -anchor w -side left
 #     pack $fr  -anchor w
-  }
+  #{}
   
   pack [Separator $base.sep[incr inx] -orient horizontal] -fill x -padx 2 -pady 3
   
   set txtWidth 37
-  if {$gaSet(dutBox)=="19" || $gaSet(dutBox)=="Half19" || $gaSet(dutBox)=="19B" || $gaSet(dutBox)=="Half19B"} {
+  #if {$gaSet(dutBox)=="19" || $gaSet(dutBox)=="Half19" || $gaSet(dutBox)=="19B" || $gaSet(dutBox)=="Half19B"} {}
     foreach indx {Boot SW 19 Half19  19B Half19B DGasp ExtClk 19SyncE Half19SyncE 19BSyncE Half19BSyncE Aux1 Aux2} {
       if {$indx==$gaSet(dutBox) || $indx=="DGasp" || $indx=="ExtClk" || $indx=="${gaSet(dutBox)}SyncE" || $indx=="Aux1" || $indx=="Aux2" || $indx=="Boot" || $indx=="SW" || $indx=="Default"} {
         if {$p!="P" && ($indx=="ExtClk" || $indx=="${gaSet(dutBox)}SyncE" || $indx=="Aux1" || $indx=="Aux2")} {
@@ -978,13 +988,57 @@ proc GuiInventory {} {
       pack $gaGui(chbUcf)  -pady 1 -padx 3 -anchor w 
     pack $fr -fill x -pady 3
     
-    set fr  [frame $base.frAskTrId -bd 2 -relief groove]
-      set gaGui(chbAskTraceId) [ttk::checkbutton $fr.chbAskTraceId -text "Ask for TraceID" -variable gaTmpSet(askTraceId)]
-      pack $gaGui(chbAskTraceId)  -pady 1 -padx 3 -anchor w 
+    # pack [Separator $base.sep[incr inx] -orient horizontal] -fill x -padx 2 -pady 3
+    
+    # set fr  [frame $base.frAskTrId -bd 2 -relief groove]
+      # set gaGui(chbAskTraceId) [ttk::checkbutton $fr.chbAskTraceId -text "Ask for TraceID" -variable gaTmpSet(askTraceId)]
+      # pack $gaGui(chbAskTraceId)  -pady 1 -padx 3 -anchor w 
+    # pack $fr -fill x -pady 3
+    
+    set fr  [frame $base.frBoxType -bd 2 -relief groove]
+      set lblBoxType [ttk::label $fr.lblBoxType  -text "Box Type"] 
+      set gaGui(cmbBoxType) [ttk::combobox $fr.cmbBoxType -textvariable gaTmpSet(boxType) \
+        -values [list 19 19B Half19 Half19B] -justify center]
+      
+      set lblFansQty [ttk::label $fr.lblFansQty  -text "Fans Qty"] 
+      set gaGui(cmbFansQty) [ttk::combobox $fr.cmbFansQty -textvariable gaTmpSet(FansQty) \
+        -values [list 0 1 2 4]  -justify center]
+        
+      set lblSensorsSch [ttk::label $fr.lblSensorsSch  -text "Sensors Scheme"] 
+      set gaGui(cmbSensorsSch) [ttk::combobox $fr.cmbSensorsSch -textvariable gaTmpSet(SensorsSch) \
+        -values [list [list A B D F X X] [list A B D F G X] [list A B D F G X X C E H I X] [list A B D F G X J C E H I X]] \
+        -justify center]
+        
+      set lblPSUsAreRemovable [ttk::label $fr.lblPSUsAreRemovable  -text "PSUs are removable"] 
+      set gaGui(cmbPSUsAreRemovable) [ttk::combobox $fr.cmbPSUsAreRemovable -textvariable gaTmpSet(PSUsAreRemovable) \
+        -values [list Yes No]  -justify center]
+        
+      set lblAskTraceId [ttk::label $fr.lblAskTraceId  -text "Ask for TraceID"] 
+      set gaGui(cmbAskTraceId) [ttk::combobox $fr.cmbAskTraceId -textvariable gaTmpSet(askTraceId) \
+        -values [list Yes No]  -justify center]
+        
+      set lblCleiCode [ttk::label $fr.lblCleiCode  -text "Clei Code"] 
+      set gaGui(cmbCleiCode) [ttk::combobox $fr.cmbCleiCode -textvariable gaTmpSet(CleiCode) \
+        -values [list NA INMK810ARA INMK910ARA INMLA00ARA INMLB00ARA INMLC00ARA	INMLD00ARA \
+                         INMLE00ARA INMLF00ARA INMJY00DRA INMH610GRA INMJZ00DRA	INMJ100DRA \
+                         INMJ100DRA	INMJ300DRA INMJ400DRA INMJ500DRA INMJ600DRA INMJ700DRA \
+                         INMJ800DRA INMJ900DRB INMKG00ARB INMJ500DRA INMJ600DRA INMJ700DRA \
+                         INMJ800DRA INMLK00ARA INMLL00ARA INMLL00ARA INMMF10FRA]  -justify center]
+      
+      grid $lblBoxType $gaGui(cmbBoxType) -pady 1
+      grid $lblFansQty $gaGui(cmbFansQty) -pady 1
+      grid $lblSensorsSch $gaGui(cmbSensorsSch) -pady 1
+      grid $lblPSUsAreRemovable $gaGui(cmbPSUsAreRemovable) -pady 1
+      grid $lblAskTraceId $gaGui(cmbAskTraceId) -pady 1
+      grid $lblCleiCode $gaGui(cmbCleiCode) -pady 1
+      
     pack $fr -fill x -pady 3
-  }
+  #{}
   #pack [Separator $base.sep3 -orient horizontal] -fill x -padx 2 -pady 3
   
+  pack [frame $base.frBut0 ] -pady 1 -anchor w
+    pack [ttk::button $base.frBut0.butTestNewOption -text TestNewOption -command TestNewOption -width 17] -side left -padx 2
+    
   pack [frame $base.frBut ] -pady 4 -anchor e
     pack [ttk::button $base.frBut.butImp -text Import -command ButImportInventory -width 7] -side right -padx 6
     pack [ttk::button $base.frBut.butCanc -text Cancel -command ButCancInventory -width 7] -side right -padx 6

@@ -236,8 +236,23 @@ proc SaveUutInit {fil} {
     puts $id "set gaSet($indx) \"$gaSet($indx)\""
   }
   
-  if ![info exists gaSet(askTraceId)] {set gaSet(askTraceId) 1}
-  puts $id "set gaSet(askTraceId)        \"$gaSet(askTraceId)\""
+  if ![info exists gaSet(askTraceId)] {set gaSet(askTraceId) Yes}
+  puts $id "set gaSet(askTraceId) \"$gaSet(askTraceId)\""
+  
+  if ![info exists gaSet(boxType)] {set gaSet(boxType) 19}
+  puts $id "set gaSet(boxType) \"$gaSet(boxType)\""
+  
+  if ![info exists gaSet(FansQty)] {set gaSet(FansQty) 1}
+  puts $id "set gaSet(FansQty) \"$gaSet(FansQty)\""
+  
+  if ![info exists gaSet(SensorsSch)] {set gaSet(SensorsSch) "A B D F X X"}
+  puts $id "set gaSet(SensorsSch) \"$gaSet(SensorsSch)\""
+  
+  if ![info exists gaSet(PSUsAreRemovable)] {set gaSet(PSUsAreRemovable) Yes}
+  puts $id "set gaSet(PSUsAreRemovable) \"$gaSet(PSUsAreRemovable)\""
+  
+  if ![info exists gaSet(CleiCode)] {set gaSet(CleiCode) NA}
+  puts $id "set gaSet(CleiCode) \"$gaSet(CleiCode)\""
   
   #puts $id "set gaSet(macIC)      \"$gaSet(macIC)\""
   close $id
@@ -764,6 +779,14 @@ proc GetDbrName {mode} {
   }
   puts "GetDbrName ::uutIsPs:<$::uutIsPs>"
   
+  ## 10:03 12/10/2025  dlete prevous values
+  #set parL [list sw licDir dbrSW swPack dbrBVerSw dbrBVer cpld boxType FansQty SensorsSch PSUsAreRemovable askTraceId]
+  set parL [list boxType FansQty SensorsSch PSUsAreRemovable askTraceId CleiCode]
+  foreach par $parL {
+    set gaSet($par) ??
+  }   
+  #set gaSet(CleiCode) NA 
+  
   if {[file exists uutInits/$gaSet(DutInitName)]} {
     source uutInits/$gaSet(DutInitName)  
     if {$gaSet(DefaultCF)=="" || $gaSet(DefaultCF)=="c:/aa"} {  
@@ -782,10 +805,15 @@ proc GetDbrName {mode} {
       set gaSet($v) 0
     } 
   } 
+      
   wm title . "$gaSet(pair) : $gaSet(DutFullName)"
   pack forget $gaGui(frFailStatus)
   #Status ""
   update
+  
+  ## 15/10/2025 10:38:09
+  set gaSet(1.barcode1) $barcode
+  
   if {$mode=="full"} {
     if {[info exists gaSet(dutFam)]==0 && $::uutIsPs==0} {RetriveDutFam}
   
@@ -864,6 +892,26 @@ proc GetDbrName {mode} {
     set ::ODU_ATT_WDC "InDoor"
   }
   
+  set parL [list boxType FansQty SensorsSch PSUsAreRemovable askTraceId CleiCode]
+  set emptyParams "" ; #[list]
+  foreach par $parL {
+    if {$gaSet($par)=="??"} {
+      append emptyParams "$par \n"
+    }
+  }
+  if {[llength $emptyParams]>0} {
+    set gaSet(fail) "Define in INIT:\n\n$emptyParams"
+    RLSound::Play fail
+    Status "Test FAIL"  red
+    DialogBoxRamzor -aspect 2000 -type Ok -message $gaSet(fail) -icon images/error -title "INIT Problem"
+    pack $gaGui(frFailStatus)  -anchor w
+    $gaSet(runTime) configure -text ""
+    $gaGui(startFrom) configure -text "" -values [list]
+    set glTests [list]
+    set gaSet(curTest) ""
+    set ret -3
+  }  
+  
   
   focus -force $gaGui(curTest)
   if {$ret==0} {
@@ -921,6 +969,12 @@ proc RetriveDutFam {{dutInitName ""}} {
     set dutInitName $gaSet(DutInitName)
   }
   puts "RetriveDutFam $dutInitName"
+  
+  # 11:28 12/10/2025
+  if {[info exist gaSet(boxType)] && $gaSet(boxType)!="??"} {
+    set gaSet(dutFam) $gaSet(boxType).0.0.0.0.0.0
+  
+  } else {
   if {[string match *10G-B* $dutInitName]==1 || [string match *10G_C* $dutInitName]==1} {
     puts "if 01"
     if {[string match *B.AC.* $dutInitName]==1 || \
@@ -1006,6 +1060,7 @@ proc RetriveDutFam {{dutInitName ""}} {
   if {$dutInitName == "ETX-2I-10G.19.H.ACDC.8SFPP.PTP.tcl"} {
     puts "if 07.3"
     set gaSet(dutFam) 19.0.0.0.0.0.0
+  }
   }
   
   set npo npo
@@ -1659,11 +1714,32 @@ proc UpdateSourceScripts {} {
 # ***************************************************************************
 proc RetriveFansCheckJ {} {
   global buffer gaSet
-  puts "RetriveFansCheckJ dutFam:$gaSet(dutFam) DutInitName:$gaSet(DutInitName)"
+  puts "\nRetriveFansCheckJ dutFam:$gaSet(dutFam) DutInitName:$gaSet(DutInitName)"
   foreach {b r p d ps np up} [split $gaSet(dutFam) .] {}
   if ![info exists buffer] {set buffer NA}
 
   foreach vv {A B D F G C E H I J checkJ} {set $vv na}
+  
+  # 10:34 12/10/2025
+  set fans $gaSet(FansQty)
+  set res 0
+  if {$gaSet(SensorsSch)=="A B D F X X"} {
+    puts "ss01"
+    set res [regexp {st\s+([\d\.\-]+)\s+([\d\.]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+} $buffer ma A B D F]
+  } elseif {$gaSet(SensorsSch)=="A B D F G X"} {
+    puts "ss02"
+    set res [regexp {st\s+([\d\.\-]+)\s+([\d\.]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+} $buffer ma A B D F G]
+  } elseif {$gaSet(SensorsSch)=="A B D F G X X C E H I X"} {
+    puts "ss03"
+    set checkJ no
+    set res [regexp {st\s+([\d\.\-]+)\s+([\d\.]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([\d\.]+)\s+([\d\.]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+} $buffer ma A B D F G x1 J C E H I] 
+  } elseif {$gaSet(SensorsSch)=="A B D F G X J C E H I X"} {
+    puts "ss04"
+    set checkJ yes
+    set res [regexp {st\s+([\d\.\-]+)\s+([\d\.]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([\d\.]+)\s+([\d\.]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+} $buffer ma A B D F G x1 J C E H I] 
+  }
+  puts "ST fans-$fans checkJ-$checkJ res-$res"
+  
   if {($np=="8SFPP" && $up=="0_0" && [string match *B.8.5.* $gaSet(DutInitName)]) || \
        $b=="Half19B" || $b=="Half19"} {
     puts "if1"
@@ -1742,7 +1818,7 @@ proc RetriveFansCheckJ {} {
     set checkJ yes
     set res [regexp {st\s+([\d\.\-]+)\s+([\d\.]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([\d\.]+)\s+([\d\.]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+} $buffer ma A B D F G x1 J C E H I] 
   }
-  puts "ST fans-$fans checkJ-$checkJ"
+  puts "ST fans-$fans checkJ-$checkJ res-$res"
   if {$res==0} {
     set gaSet(fail) "Read ST fail"
     return -1
@@ -1811,10 +1887,11 @@ proc PrepareDwnlJatPll {} {
 # ***************************************************************************
 proc TestNewOption {{opt ""}} {
   global gaSet
+  console eval {.console see end}
   if {$opt==""} {
     set opt $gaSet(DutFullName)
   }
-  puts "TestNewOption $opt"
+  puts "\n\nTestNewOption $opt"
   set initName  [regsub -all / $opt .].tcl
   set gaSet(DutInitName) $initName
   set ret [RetriveDutFam $gaSet(DutInitName)]
@@ -1829,6 +1906,29 @@ proc TestNewOption {{opt ""}} {
   if {$ret!=0} {
     puts "gaSet(fail): $gaSet(fail)"
   }
+  
+  foreach {b r p d ps np up} [split $gaSet(dutFam) .] {}
+  puts "\n $gaSet(DutFullName) BoxType: $b"
+  
+  LoadNoTraceFile
+  LoadCleiCodesFile
+  
+  set noTraceIndx [lsearch $gaSet(noTraceL) $gaSet(DutFullName)]
+  if {$noTraceIndx=="-1"} {
+    set AskTraceCmb "Yes"
+  } else {
+    set AskTraceCmb "No"
+  }
+  set CleiCodesIndx [lsearch $gaSet(CleiCodesL) $gaSet(DutFullName)]
+  if {$CleiCodesIndx=="-1"} {
+    set CleiCodeCmb "NA"
+  } else {
+    set CleiCodeCmb [lindex $gaSet(CleiCodesL) [expr {1 + $CleiCodesIndx}]]
+  }
+  puts "\n $gaSet(DutFullName) noTraceIndx: $noTraceIndx AskTraceCmb: $AskTraceCmb"
+  puts "\n $gaSet(DutFullName) CleiCodesIndx: $CleiCodesIndx CleiCodeCmb: $CleiCodeCmb"
+  update
+  console eval {.console see end}
 }
 
 # ***************************************************************************
