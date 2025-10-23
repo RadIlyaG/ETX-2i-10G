@@ -258,6 +258,8 @@ set gaSet(cleiCodeMode) 0
   
 DeleteOldTeFiles
 DeleteOldCaptConsFiles
+DeleteTmpTmpFiles
+DeleteOldAgileUserConfFiles
 
 GUI
 ## 07:39 16/05/2024 BuildTests

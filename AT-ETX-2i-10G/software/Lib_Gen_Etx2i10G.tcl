@@ -2731,3 +2731,46 @@ proc Power_usb_relay {ps state} {
 proc RetriveProcName {} {
   
 }
+
+# ***************************************************************************
+# NewInitTool
+# ***************************************************************************
+proc NewInitTool {} {
+  set initsFolder [pwd]/uutInits
+  set initsL [glob -nocomplain -type f $initsFolder/*]
+  foreach init $initsL {
+    set id [open $init RDONLY]
+    close $id
+    after 250
+  }
+  return [llength $initsL]
+}
+
+# ***************************************************************************
+# DeleteTmpTmpFiles
+# ***************************************************************************
+proc DeleteTmpTmpFiles {} {
+  puts "\n[MyTime] DeleteTmpTmpFiles"; update
+  set qty 0
+  foreach fi [glob -nocomplain c:/tmpTmp/*.txt] {
+    file delete -force $fi
+    incr qty
+  }
+  puts "[MyTime] $qty files deleted\n"; update
+}
+# ***************************************************************************
+# DeleteOldAgileUserConfFiles
+# ***************************************************************************
+proc DeleteOldAgileUserConfFiles {} {
+  global gaSet
+  puts "\n[MyTime] DeleteOldAgileUserConfFiles"; update
+  set qty 0
+  set daysAgo [clock add [clock seconds] -4 days]
+  foreach fi [glob -nocomplain c:/temp/*.tcl_${gaSet(pair)}.txt] {
+    if {[file mtime $fi]<$daysAgo} {
+      file delete -force $fi
+      incr qty
+    }  
+  }
+  puts "[MyTime] $qty files deleted\n"; update
+}
