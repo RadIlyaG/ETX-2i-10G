@@ -30,8 +30,8 @@ DeleteOldUserDef
 set host_name  [info host]
 if {[string match *avraham-bi* $host_name] || [string match *david-ya* $host_name] || \
     [string match *ofer-m-* $host_name] || [string match *shlomi-as* $host_name] || \
-    [string match *efraim-b* $host_name]} {
-  set ::repairMode 1
+    [string match *efraim-b* $host_name] || [string match *doron-eli* $host_name]} {
+  set ::repairMode 1 
 } else {
   set ::repairMode 0
 }
