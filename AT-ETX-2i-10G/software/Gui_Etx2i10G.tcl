@@ -648,7 +648,7 @@ proc ButRun {} {
     }
   }
   if {$ret==0} {
-     if !$::repairMode {
+     if {$gaSet(radNet)==1 && $::repairMode==0} {
        AddToPairLog $gaSet(pair) " $gaSet(operatorID) $gaSet(operator)"
      }
 
