@@ -2896,10 +2896,11 @@ proc FanStatusTest {} {
   
   set lvv [RetriveFansCheckJ]
   if {$lvv=="-1"} {return $lvv}
-  set lvv [string trimright $lvv "_"]
-  foreach {A B D F G C E H I J fans checkJ} [split $lvv _]  {}
+  #set lvv [string trimright $lvv "_"]
+  #foreach {A B D F G C E H I J fans checkJ} [split $lvv _]  {}
+  foreach {A B D F G C E H I J fans checkJ} [split $lvv]  {}
   foreach vv {A B D F G C E H I J fans checkJ} {
-    puts "FanStatusTest $vv [set $vv]"      
+    puts "FanStatusTest $vv <[set $vv]>"      
   }
   
   if {$np=="8SFPP" && $up=="0_0" && [regexp {ODU?\.8} $gaSet(DutInitName)]==1} {
@@ -2982,7 +2983,11 @@ proc FanStatusTest {} {
     if {$checkJ=="yes" && ($J<$minJ || $J>$maxJ)} {
       set gaSet(fail) "J is $J. Should be between $minJ and $maxJ"
       return -1  
+    } else {
+      puts "checkJ=<$checkJ> J==$J minJ=$minJ maxJ=$maxJ"
     }
+  } else {
+    puts "fans != 4"
   }
   
   set ret 0

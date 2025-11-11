@@ -1738,95 +1738,98 @@ proc RetriveFansCheckJ {} {
     set checkJ yes
     set res [regexp {st\s+([\d\.\-]+)\s+([\d\.]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([\d\.]+)\s+([\d\.]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+} $buffer ma A B D F G x1 J C E H I] 
   }
-  puts "ST fans-$fans checkJ-$checkJ res-$res"
+  puts "ST fans-<$fans> checkJ-<$checkJ> res-<$res>"
   
-  if {($np=="8SFPP" && $up=="0_0" && [string match *B.8.5.* $gaSet(DutInitName)]) || \
-       $b=="Half19B" || $b=="Half19"} {
-    puts "if1"
-    set fans 1
-    set res [regexp {st\s+([\d\.\-]+)\s+([\d\.]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+} $buffer ma A B D F]
-  } elseif {$b=="19B" && $np!="8SFPP" && $up!="0_0"} {
-    puts "if2"
-    set fans 2
-    set res [regexp {st\s+([\d\.\-]+)\s+([\d\.]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+} $buffer ma A B D F G]
-  } elseif {$np=="8SFPP" && $up=="0_0"} {
-    puts "if3.0"
-    if {[string match *B.19.N.* $gaSet(DutInitName)]     || \
-        [string match *B.19.H.* $gaSet(DutInitName)]     || \
-        [string match *B_C.19.H.* $gaSet(DutInitName)]   || \
-        [string match *B_ATT.H.* $gaSet(DutInitName)]    || \
-        [string match *10G_ATT.H.* $gaSet(DutInitName)]  || \
-        [string match *B.H.DCR* $gaSet(DutInitName)]     || \
-        [string match *_C.19.H.* $gaSet(DutInitName)]    || \
-        [string match *_C.H.DR.OD.* $gaSet(DutInitName)] || \
-        [string match *.19.H.* $gaSet(DutInitName)] || \
-        [string match *B.H.DC.OD* $gaSet(DutInitName)] || \
-        [string match *B_BRSD.H.AR.OD* $gaSet(DutInitName)] || \
-        [string match *10G_FTR.19.HN.DCR.8SFPP.K04N* $gaSet(DutInitName)]  || \
-        [string match *B.H.ACR* $gaSet(DutInitName)] || \
-        [string match *B_FTR.H.DCR* $gaSet(DutInitName)]        } {
-      ## 26/05/2022 added *10G_ATT.H.*
-      if {$np=="8SFPP" && $up=="0_0" && [regexp {ODU?\.8} $gaSet(DutInitName)]==1} {
-        puts "if3.1.1"
-        set fans 0
-        set checkJ no
-        foreach vv {D F G C E H I J fans checkJ} {
-          set $vv NA
-        }
-        set res [regexp {st\s+([\d\.\-]+)\s+([\d\.]+)\s+} $buffer ma A B]
-      } else {
-        puts "if3.1"
-        set fans 4
-        set checkJ no
-        set res [regexp {st\s+([\d\.\-]+)\s+([\d\.]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([\d\.]+)\s+([\d\.]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+} $buffer ma A B D F G x1 J C E H I] 
-      }
-    } elseif {[string match *B_C.19.DR.* $gaSet(DutInitName)] || \
-              [string match *B_ATT.19.* $gaSet(DutInitName)]  || \
-              [string match *10G_ATT.19.* $gaSet(DutInitName)] || \
-              [string match *_C.19.DR.* $gaSet(DutInitName)] || \
-              [string match *_EIR.19.ACR.* $gaSet(DutInitName)] || \
-              [string match *_EIR.19.DCR.* $gaSet(DutInitName)] || \
-              [string match *_GC.19.ACR.4SFPP4SFP.* $gaSet(DutInitName)] || \
-              [string match *_GCS.19.ACR.4SFPP4SFP.* $gaSet(DutInitName)] || \
-              [string match *_GCN.19.ACR.4SFPP4SFP.* $gaSet(DutInitName)]} {
-      ## 26/05/2022 added *10G_ATT.19.*
-      puts "if3.2"
-      set fans 2
-      set res [regexp {st\s+([\d\.\-]+)\s+([\d\.]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+} $buffer ma A B D F G]
-    } elseif {[string match *B.19.* $gaSet(DutInitName)]     || \
-              [string match *B_TWC.19.* $gaSet(DutInitName)] || \
-              [string match *B_OFK.19.* $gaSet(DutInitName)] || \
-              [string match *B_LY.19.* $gaSet(DutInitName)] } {
-      puts "if4"
-      set fans 2
-      set res [regexp {st\s+([\d\.\-]+)\s+([\d\.]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+} $buffer ma A B D F G]
-    } elseif {[regexp {10G\.19\.[AD]CR?\.8S?F?P?P}  $gaSet(DutInitName)]} {
-      puts "if4.1"
-      set res [regexp {st\s+([\d\.\-]+)\s+([\d\.]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+} $buffer ma A B D F G]
-      set fans 2
-    }
-  } elseif {$b=="19"} {
-    puts "if5"
-    set fans 4
-    set checkJ yes
-    set res [regexp {st\s+([\d\.\-]+)\s+([\d\.]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([\d\.]+)\s+([\d\.]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+} $buffer ma A B D F G x1 J C E H I]    
-  }
-  if {$gaSet(DutInitName) == "ETX-2I-10G.19.H.ACDC.8SFPP.PTP.tcl" ||\
-      $gaSet(DutInitName) == "ETX-2I-10G_FTR.19.H.DCR.8SFPP.K04.tcl"} {
-    puts "if6.1" 
-    set fans 4
-    set checkJ yes
-    set res [regexp {st\s+([\d\.\-]+)\s+([\d\.]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([\d\.]+)\s+([\d\.]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+} $buffer ma A B D F G x1 J C E H I] 
-  }
-  puts "ST fans-$fans checkJ-$checkJ res-$res"
+  # 09:45 11/11/2025
+  # if {($np=="8SFPP" && $up=="0_0" && [string match *B.8.5.* $gaSet(DutInitName)]) || \
+       # $b=="Half19B" || $b=="Half19"} {
+    # puts "if1"
+    # set fans 1
+    # set res [regexp {st\s+([\d\.\-]+)\s+([\d\.]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+} $buffer ma A B D F]
+  # } elseif {$b=="19B" && $np!="8SFPP" && $up!="0_0"} {
+    # puts "if2"
+    # set fans 2
+    # set res [regexp {st\s+([\d\.\-]+)\s+([\d\.]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+} $buffer ma A B D F G]
+  # } elseif {$np=="8SFPP" && $up=="0_0"} {
+    # puts "if3.0"
+    # if {[string match *B.19.N.* $gaSet(DutInitName)]     || \
+        # [string match *B.19.H.* $gaSet(DutInitName)]     || \
+        # [string match *B_C.19.H.* $gaSet(DutInitName)]   || \
+        # [string match *B_ATT.H.* $gaSet(DutInitName)]    || \
+        # [string match *10G_ATT.H.* $gaSet(DutInitName)]  || \
+        # [string match *B.H.DCR* $gaSet(DutInitName)]     || \
+        # [string match *_C.19.H.* $gaSet(DutInitName)]    || \
+        # [string match *_C.H.DR.OD.* $gaSet(DutInitName)] || \
+        # [string match *.19.H.* $gaSet(DutInitName)] || \
+        # [string match *B.H.DC.OD* $gaSet(DutInitName)] || \
+        # [string match *B_BRSD.H.AR.OD* $gaSet(DutInitName)] || \
+        # [string match *10G_FTR.19.HN.DCR.8SFPP.K04N* $gaSet(DutInitName)]  || \
+        # [string match *B.H.ACR* $gaSet(DutInitName)] || \
+        # [string match *B_FTR.H.DCR* $gaSet(DutInitName)]        } {
+      # ## 26/05/2022 added *10G_ATT.H.*
+      # if {$np=="8SFPP" && $up=="0_0" && [regexp {ODU?\.8} $gaSet(DutInitName)]==1} {
+        # puts "if3.1.1"
+        # set fans 0
+        # set checkJ no
+        # foreach vv {D F G C E H I J fans checkJ} {
+          # set $vv NA
+        # }
+        # set res [regexp {st\s+([\d\.\-]+)\s+([\d\.]+)\s+} $buffer ma A B]
+      # } else {
+        # puts "if3.1"
+        # set fans 4
+        # set checkJ no
+        # set res [regexp {st\s+([\d\.\-]+)\s+([\d\.]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([\d\.]+)\s+([\d\.]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+} $buffer ma A B D F G x1 J C E H I] 
+      # }
+    # } elseif {[string match *B_C.19.DR.* $gaSet(DutInitName)] || \
+              # [string match *B_ATT.19.* $gaSet(DutInitName)]  || \
+              # [string match *10G_ATT.19.* $gaSet(DutInitName)] || \
+              # [string match *_C.19.DR.* $gaSet(DutInitName)] || \
+              # [string match *_EIR.19.ACR.* $gaSet(DutInitName)] || \
+              # [string match *_EIR.19.DCR.* $gaSet(DutInitName)] || \
+              # [string match *_GC.19.ACR.4SFPP4SFP.* $gaSet(DutInitName)] || \
+              # [string match *_GCS.19.ACR.4SFPP4SFP.* $gaSet(DutInitName)] || \
+              # [string match *_GCN.19.ACR.4SFPP4SFP.* $gaSet(DutInitName)]} {
+      # ## 26/05/2022 added *10G_ATT.19.*
+      # puts "if3.2"
+      # set fans 2
+      # set res [regexp {st\s+([\d\.\-]+)\s+([\d\.]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+} $buffer ma A B D F G]
+    # } elseif {[string match *B.19.* $gaSet(DutInitName)]     || \
+              # [string match *B_TWC.19.* $gaSet(DutInitName)] || \
+              # [string match *B_OFK.19.* $gaSet(DutInitName)] || \
+              # [string match *B_LY.19.* $gaSet(DutInitName)] } {
+      # puts "if4"
+      # set fans 2
+      # set res [regexp {st\s+([\d\.\-]+)\s+([\d\.]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+} $buffer ma A B D F G]
+    # } elseif {[regexp {10G\.19\.[AD]CR?\.8S?F?P?P}  $gaSet(DutInitName)]} {
+      # puts "if4.1"
+      # set res [regexp {st\s+([\d\.\-]+)\s+([\d\.]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+} $buffer ma A B D F G]
+      # set fans 2
+    # }
+  # } elseif {$b=="19"} {
+    # puts "if5"
+    # set fans 4
+    # set checkJ yes
+    # set res [regexp {st\s+([\d\.\-]+)\s+([\d\.]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([\d\.]+)\s+([\d\.]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+} $buffer ma A B D F G x1 J C E H I]    
+  # }
+  # if {$gaSet(DutInitName) == "ETX-2I-10G.19.H.ACDC.8SFPP.PTP.tcl" ||\
+      # $gaSet(DutInitName) == "ETX-2I-10G_FTR.19.H.DCR.8SFPP.K04.tcl"} {
+    # puts "if6.1" 
+    # set fans 4
+    # set checkJ yes
+    # set res [regexp {st\s+([\d\.\-]+)\s+([\d\.]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([\d\.]+)\s+([\d\.]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+} $buffer ma A B D F G x1 J C E H I] 
+  # }
+  puts "ST fans-<$fans> checkJ-<$checkJ> res-<$res>"
   if {$res==0} {
     set gaSet(fail) "Read ST fail"
     return -1
   }
+  set lvv [list]
   foreach vv {A B D F G C E H I J fans checkJ} {
-    puts "ST fans-$fans $vv [set $vv]"
+    puts "ST fans-$fans $vv <[set $vv]>"
     AddToPairLog $gaSet(pair) "$vv [set $vv]"
-    lappend lvv [set $vv]_
+    #lappend lvv [set $vv]_
+    lappend lvv [set $vv]
   }
   return $lvv
 }
