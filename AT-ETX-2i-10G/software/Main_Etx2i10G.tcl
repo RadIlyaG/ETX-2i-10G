@@ -861,24 +861,22 @@ proc DataTransmission_run {run} {
   } 
   if {$ret!=0} {return $ret}
   
-  Etx220Config 1 $10GlineRate
-  if {$np=="8SFPP" && $up=="0_0"} {
-    ## no 1 G Ports
-  } else {
-    Etx220Config 5 $1GlineRate
+  ## 07:55 12/11/2025
+  for {set tr 1} {$tr <= 2} {incr tr} {
+    Etx220Config 1 $10GlineRate
+    if {$np=="8SFPP" && $up=="0_0"} {
+      ## no 1 G Ports
+    } else {
+      Etx220Config 5 $1GlineRate
+    }
+    
+    set ret [DataTransmissionTestPerf 120]  
+    puts "DataTransmission_run tr:$tr ret:$ret\n"
+    if {$ret==0} {
+      break
+    }
   }
-  set ret [DataTransmissionTestPerf 120]  
-  if {$ret!=0} {
-#     Etx220Config 1 $10GlineRate
-#     Etx220Config 5 $1GlineRate
-#     set ret [DataTransmissionTestPerf 10]  
-#     if {$ret!=0} {return $ret}
-#     
-#     Etx220Config 1 $10GlineRate
-#     Etx220Config 5 $1GlineRate
-#     set ret [DataTransmissionTestPerf 120]  
-#     if {$ret!=0} {return $ret}
-  } 
+  
   return $ret
 }
 # ***************************************************************************
@@ -886,6 +884,7 @@ proc DataTransmission_run {run} {
 # ***************************************************************************
 proc DataTransmissionTestPerf {checkTime} {
   global gaSet
+  puts "\n[MyTime] DataTransmissionTestPerf $checkTime"
   
   ## the Power turned in DataTransmission_run
   # if !$::uutIsPs {
