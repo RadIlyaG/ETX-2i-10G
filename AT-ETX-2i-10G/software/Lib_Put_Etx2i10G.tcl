@@ -2950,10 +2950,13 @@ proc FanStatusTest {} {
     }
   }
   
-  if {$D=="FF"} {
-    set gaSet(fail) "D is $D"
-    return -1  
+  if {$fans!=0} {
+	if {$D=="FF"} {
+	  set gaSet(fail) "D is $D"
+	  return -1  
+	}
   }
+  
   if {$fans==4} {
     if {$E=="FF"} {
       set gaSet(fail) "E is $E"
@@ -2961,10 +2964,13 @@ proc FanStatusTest {} {
     }
   }
   
-  if {$F=="FFFF"} {
-    set gaSet(fail) "F is $F"
-    return -1  
+  if {$fans!=0} {
+	if {$F=="FFFF"} {
+	  set gaSet(fail) "F is $F"
+	  return -1  
+	}
   }
+  
   if {$fans==2 || $fans==4} {
     if {$G=="FFFF"} {
       set gaSet(fail) "G is $G"

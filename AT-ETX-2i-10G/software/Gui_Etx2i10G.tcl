@@ -1006,7 +1006,7 @@ proc GuiInventory {} {
         
       set lblSensorsSch [ttk::label $fr.lblSensorsSch  -text "Sensors Scheme"] 
       set gaGui(cmbSensorsSch) [ttk::combobox $fr.cmbSensorsSch -textvariable gaTmpSet(SensorsSch) \
-        -values [list [list A B D F X X] [list A B D F G X] [list A B D F G X X C E H I X] [list A B D F G X J C E H I X]] \
+        -values [list [list A B X X X X] [list A B D F X X] [list A B D F G X] [list A B D F G X X C E H I X] [list A B D F G X J C E H I X]] \
         -justify center]
         
       set lblPSUsAreRemovable [ttk::label $fr.lblPSUsAreRemovable  -text "PSUs are removable"] 

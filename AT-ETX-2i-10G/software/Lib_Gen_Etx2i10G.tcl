@@ -1737,6 +1737,9 @@ proc RetriveFansCheckJ {} {
     puts "ss04"
     set checkJ yes
     set res [regexp {st\s+([\d\.\-]+)\s+([\d\.]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([\d\.]+)\s+([\d\.]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+([0-9A-F]+)\s+} $buffer ma A B D F G x1 J C E H I] 
+  } elseif {$gaSet(SensorsSch)=="A B X X X X"} {
+    puts "ss05"
+    set res [regexp {st\s+([\d\.\-]+)\s+([\d\.]+)\s+} $buffer ma A B]
   }
   puts "ST fans-<$fans> checkJ-<$checkJ> res-<$res>"
   
