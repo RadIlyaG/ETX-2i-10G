@@ -11,7 +11,7 @@ switch -exact -- $gaSet(pair) {
       set gaSet(pioBoxSerNum) FTLSWXB  
   }
   2 {
-      set gaSet(comDut)      5
+      set gaSet(comDut)      15; #5
       set gaSet(com220)      6
       set gaSet(comAux1)   NA
       set gaSet(comAux2)   NA
