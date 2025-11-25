@@ -173,8 +173,10 @@ package require RLEH
 package require RLTime
 package require RLStatus
 package require RL10GbGen; #RLEtxGen
-package require RLUsbPio
-package require RLUsbMmux
+if !$::repairMode {
+  package require RLUsbPio
+  package require RLUsbMmux
+}
 package require RLSound  
 package require RLCom
 RLSound::Open ; # [list failbeep fail.wav passbeep pass.wav beep warning.wav]
