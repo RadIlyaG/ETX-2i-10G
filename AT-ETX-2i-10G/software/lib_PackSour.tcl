@@ -141,7 +141,8 @@ if 1 {
     
   set ret [TesterAutoSync full]
   
-  if {$gaSet(radNet)} {
+  # 08:21 09/12/2025 if {$gaSet(radNet)} {}
+  if 0 {
     package require RLAutoUpdate
     set s2 [file normalize W:/winprog/ATE]
     set d2 [file normalize $::RadAppsPath]
