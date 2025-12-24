@@ -4292,6 +4292,9 @@ proc PsCleiCode_DownLoad {} {
 
   return $ret
 }  
+# ************************************************************
+# Delete_File_From_Temp
+# ************************************************************
 proc Delete_File_From_Temp {file_title tail proc_name} {
   global gaSet
   catch {file delete -force c:/download/temp/$tail} cres
@@ -4305,4 +4308,84 @@ proc Delete_File_From_Temp {file_title tail proc_name} {
     }
   }
   return 0
+}
+
+# ***************************************************************************
+# Read_CLI_serialNumber
+# ***************************************************************************
+proc Read_CLI_serialNumber {} {
+  puts "[MyTime] Read_CLI_serialNumber"
+  global gaSet buffer
+  set ret [Login]
+  if {$ret!=0} {
+    #set ret [Login]
+    if {$ret!=0} {return [list $ret "Logon fail"]}
+  }
+  Status "Reading CLI Serial Number"
+  set com $gaSet(comDut)
+  Send $com "exit all\r" stam 0.25 
+ 
+  #set gaSet(fail) "show device-information fail"
+  set ret [Send $com "exit all\r" $gaSet(prompt)]
+  if {$ret!=0} {return [list $ret "show device-information fail"]}
+  set ret [Send $com "config system\r" $gaSet(prompt)]
+  if {$ret!=0} {return [list $ret "show device-information fail"]}
+  Send $com "show device-information\r\r" system
+  puts "buffer:<$buffer>"; update
+  
+  set cliSerNum ""
+  set ma ""
+  set val ""
+  set res [regexp {Manufacturer Serial Number[\s\:]+([\w\s]+)\s} $buffer ma val]
+  puts "Manufacturer Serial Number res:$res ma:$ma val:$val"
+  set cliSerNum [string trim $val]
+  
+  if {$res==0} {
+    #set gaSet(fail) "No \'Manufacturer Serial Number\' field"  
+    return [list -1 "No \'Manufacturer Serial Number\' field"]
+  }
+  if {$val=="Unavailable" || $val=="Error" || $val=="Not Available"} {
+    #set gaSet(fail) "The \'Manufacturer Serial Number\' is \'$val\'"  
+    return [list -1 "The \'Manufacturer Serial Number\' is \'$val\'" ]
+  }
+  
+  set max_sn_len 10
+  set man_sn_len [string length $cliSerNum]
+  if {$man_sn_len!=$max_sn_len} {
+    #set gaSet(fail) "The length of the \'Serial Number\' is $man_sn_len. Should be $max_sn_len"  
+    return [list -1 "The length of the \'Serial Number\' is $man_sn_len. Should be $max_sn_len"] 
+  }
+  if {[string is digit $val]==0} {
+    set gaSet(fail) "The \'Serial Number\' ($val) is wrong. Should be only digits"  
+    return [list -1 "The \'Serial Number\' ($val) is wrong. Should be only digits"]
+  }
+  #AddToPairLog $gaSet(pair) "Manufacturer Serial Number: $cliSerNum"
+  set gaSet(fail) ""
+  return [list 0 $cliSerNum]
+}
+
+# ***************************************************************************
+# Read_Page_serialNumber
+# ***************************************************************************
+proc Read_Page_serialNumber {} {
+  global gaSet buffer
+  puts "Read_Page_serialNumber"
+  set gaSet(fail)  ""
+  set com $gaSet(comDut)
+  
+  set ret [EntryBootMenu]
+  if {$ret!=0} {
+    #set gaSet(fail) "Can't entry into the boot"
+    return [list $ret "Can't entry into the boot"]
+  }
+  
+  Send $com "d2 00\r" boot 2
+  
+  regexp {Page 0:\s+([0-9\.A-Z]+)\s} $buffer ma val
+  set pageSN ""
+  foreach he [lrange [split $val .] 3 7] {
+    append pageSN $he
+  }
+  
+  return [list 0 $pageSN]
 }

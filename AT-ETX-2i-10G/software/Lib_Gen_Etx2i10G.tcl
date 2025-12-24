@@ -228,13 +228,13 @@ proc SaveUutInit {fil} {
     }
     puts $id "set gaSet([set indx]CF) \"$gaSet([set indx]CF)\""
   }
-  foreach indx {licDir} {
-    if ![info exists gaSet($indx)] {
-      puts "SaveUutInit fil:$SaveUutInit gaSet($indx) doesn't exist!"
-      set gaSet($indx) ???
-    }
-    puts $id "set gaSet($indx) \"$gaSet($indx)\""
-  }
+  # foreach indx {licDir} {
+    # if ![info exists gaSet($indx)] {
+      # puts "SaveUutInit fil:$SaveUutInit gaSet($indx) doesn't exist!"
+      # set gaSet($indx) ???
+    # }
+    # puts $id "set gaSet($indx) \"$gaSet($indx)\""
+  # }
   
   if ![info exists gaSet(askTraceId)] {set gaSet(askTraceId) Yes}
   puts $id "set gaSet(askTraceId) \"$gaSet(askTraceId)\""

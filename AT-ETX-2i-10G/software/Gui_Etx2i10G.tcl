@@ -891,8 +891,8 @@ proc GuiInventory {} {
   array unset gaTmpSet
   
   if {![file exists uutInits/$gaSet(DutInitName)]} {
-    set parL [list sw licDir dbrSW swPack dbrBVerSw dbrBVer cpld  boxType FansQty \
-        SensorsSch PSUsAreRemovable askTraceId CleiCode]
+    set parL [list sw  dbrSW swPack dbrBVerSw dbrBVer cpld  boxType FansQty \
+        SensorsSch PSUsAreRemovable askTraceId CleiCode] ; #licDir
     foreach par $parL {
       set gaSet($par) ??
       set gaTmpSet($par) ??
@@ -907,8 +907,8 @@ proc GuiInventory {} {
     }
   }
   
-  set parL [list sw licDir dbrSW swPack dbrBVerSw dbrBVer cpld boxType FansQty \
-      SensorsSch PSUsAreRemovable askTraceId CleiCode]
+  set parL [list sw  dbrSW swPack dbrBVerSw dbrBVer cpld boxType FansQty \
+      SensorsSch PSUsAreRemovable askTraceId CleiCode]; # licDir
   foreach par $parL {
     if ![info exists gaSet($par)] {set gaSet($par) ??}
     set gaTmpSet($par) $gaSet($par)
@@ -1072,7 +1072,7 @@ proc BrowseCF {txt f} {
 # ***************************************************************************
 # BrowseLic
 # ***************************************************************************
-proc BrowseLic {} {
+proc neBrowseLic {} {
   global gaTmpSet
   set gaTmpSet(licDir) [tk_chooseDirectory -title "Choose Licence file location" -initialdir "c:\\Download"]
   focus -force .topHwInit
