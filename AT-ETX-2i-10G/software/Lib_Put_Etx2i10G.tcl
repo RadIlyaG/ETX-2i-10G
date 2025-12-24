@@ -4336,8 +4336,11 @@ proc Read_CLI_serialNumber {} {
   set cliSerNum ""
   set ma ""
   set val ""
-  set res [regexp {Manufacturer Serial Number[\s\:]+([\w\s]+)\s} $buffer ma val]
-  puts "Manufacturer Serial Number res:$res ma:$ma val:$val"
+  set res [regexp {Manufacturer Serial Number[\s\:]+([\w\s]+)\sConnectors} $buffer ma val]
+  if {$res==0} {
+      set res [regexp {Manufacturer Serial Number[\s\:]+([\w\s]+)\s} $buffer ma val]
+  }
+  puts "Manufacturer Serial Number res:$res ma:$ma val:<$val>"
   set cliSerNum [string trim $val]
   
   if {$res==0} {
