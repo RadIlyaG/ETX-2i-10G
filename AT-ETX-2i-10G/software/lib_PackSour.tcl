@@ -26,6 +26,7 @@ if [file exists Mains_Etx2i10G.tcl] {
 source lib_DeleteOldApp.tcl
 DeleteOldApp
 DeleteOldUserDef
+source lib_Syncthing.tcl
 
 set host_name  [info host]
 if {[string match *avraham-bi* $host_name] || [string match *david-ya* $host_name]  || \
@@ -106,8 +107,28 @@ if 1 {
     # java.exe -jar c:/RadApps/AutoSyncApp.jar "//prod-svm1/tds/AT-Testers/JER_AT/ilya/TCL/ETX-2i-10G/AT-ETX-2i-10G C:/AT-ETX-2i-10G //prod-svm1/tds/AT-Testers/JER_AT/ilya/TCL/ETX-2i-10G/download C:/download" "-noCheckFiles{init*.tcl skipped.txt *.db}" "-noCheckDirs{temp tmpFiles OLD old}"
     # Measure-Command {$foo = java.exe -jar c:/RadApps/AutoSyncApp.jar "//prod-svm1/tds/AT-Testers/JER_AT/ilya/TCL/ETX-2i-10G/AT-ETX-2i-10G C:/AT-ETX-2i-10G //prod-svm1/tds/AT-Testers/JER_AT/ilya/TCL/ETX-2i-10G/download C:/download" "-noCheckFiles{init*.tcl skipped.txt *.db}" "-noCheckDirs{temp tmpFiles OLD old}"} ; $foo 
     
-    set ret [RLAutoSync::AutoSync $sdL -noCheckFiles {init*.tcl skipped.txt *.db Mains_Etx2i10G.tcl} \
-        -noCheckDirs {temp tmpFiles OLD old} -jarLocation $::RadAppsPath \
+    if 1 {
+      set r_temp //prod-svm1/temp/IlyaG/[file tail [file dirname [pwd]]]
+      source LibEmail.tcl
+      foreach {ret resTxt} [CheckSyncthingLocalAdditions [list $d1 $d2] $emailL $r_temp] {} ; #$d1 
+      puts "SyTh ret:<$ret>"
+      puts "SyTh resTxt:<$resTxt>"
+      set return_list "ret:<$ret>\nresTxt:<$resTxt>"
+      if {$ret=="-1"} {
+        send_smtp_mail ilya_g@rad.com -subject "Message from Tester [string toupper [info host]]" \
+          -body $return_list
+        if 0 {
+          set res [tk_messageBox -icon error -type yesno -title "AutoSync"\
+          -message "The AutoSync process did not perform successfully.\n\n\
+          Do you want to continue? "]
+          if {$res=="no"} {
+            exit
+          }
+        }
+      }
+    }
+    set ret [RLAutoSync::AutoSync $sdL -noCheckFiles {init*.tcl skipped.txt *.db Mains_Etx2i10G.tcl .stignore} \
+        -noCheckDirs {temp tmpFiles OLD old .stfolder} -jarLocation $::RadAppsPath \
         -javaLocation $gaSet(javaLocation) -emailL $emailL -putsCmd 1 -radNet $gaSet(radNet)]
     #console show
     puts "ret:<$ret>"
