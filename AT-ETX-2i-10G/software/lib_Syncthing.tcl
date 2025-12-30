@@ -4,6 +4,7 @@ package require json
 # ***************************************************************************
 # CheckSyncthingLocalAdditions
 # path="c:\temp\TDS_AutomaticTesters_2i"
+# ***************************************************************************
 if 0 {
 
 set d1 [file normalize  C:/AT-ETX-2i]
@@ -15,7 +16,7 @@ puts "SyTh ret:<$ret>"
 puts "SyTh resTxt:<$resTxt>"
 
 }
-# ***************************************************************************
+
 proc CheckSyncthingLocalAdditions {folders emailL r_temp} {
   global changed_count changed_list conflict_fs_count conflict_fs_list api_url when_changed_list
   set sync_port "8384"
