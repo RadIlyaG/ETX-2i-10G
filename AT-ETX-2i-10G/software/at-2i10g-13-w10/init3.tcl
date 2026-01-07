@@ -1,4 +1,4 @@
-set gaGui(xy) +471+702
+set gaGui(xy) +417+503
 set gaSet(entDUT) "ETX-2I-10G-B_ATT/H/DCR/ODU/8SFPP"
 set gaSet(DutInitName) "ETX-2I-10G-B_ATT.H.DCR.ODU.8SFPP.tcl"
 set gaSet(performShortTest) "0"

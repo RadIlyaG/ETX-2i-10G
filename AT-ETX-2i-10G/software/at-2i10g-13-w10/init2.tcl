@@ -1,6 +1,6 @@
-set gaGui(xy) +277+396
-set gaSet(entDUT) "ETX-2I-10G-PS_ATT/H/WDC/ODU"
-set gaSet(DutInitName) "ETX-2I-10G-PS_ATT.H.WDC.ODU.tcl"
+set gaGui(xy) +471+250
+set gaSet(entDUT) "ETX-2I-10G-B_ATT/H/DCR/ODU/8SFPP"
+set gaSet(DutInitName) "ETX-2I-10G-B_ATT.H.DCR.ODU.8SFPP.tcl"
 set gaSet(performShortTest) "0"
 set gaSet(eraseTitle) "0"
 set gaSet(ddrMultyQty) "5"
