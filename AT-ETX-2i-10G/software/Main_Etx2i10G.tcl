@@ -1009,29 +1009,31 @@ proc Leds_FAN_conf {run} {
     if {$ret!=0} {return $ret}
   }
   
-  set ret [RL10GbGen::Init $gaSet(id220)]  
-  if {$ret!=0} {
-    set gaSet(fail) "Init GENERATOR fail"
-    return $ret
-  } 
-  
-  switch -exact -- $b {
-    19 {
-      set 10GlineRate 50%
-      set 1GlineRate  50%
+  if {$gaSet(Etx220exists)} {      
+    set ret [RL10GbGen::Init $gaSet(id220)]  
+    if {$ret!=0} {
+      set gaSet(fail) "Init GENERATOR fail"
+      return $ret
+    } 
+    
+    switch -exact -- $b {
+      19 {
+        set 10GlineRate 50%
+        set 1GlineRate  50%
+      }
+      Half19 - Half19B - 19B {
+        set 10GlineRate 90%
+        set 1GlineRate  100%
+      }
     }
-    Half19 - Half19B - 19B {
-      set 10GlineRate 90%
-      set 1GlineRate  100%
-    }
+    Status "Config GENERATOR"
+    
+    Etx220Config 1 $10GlineRate
+    Etx220Config 5 $1GlineRate
+    
+    Etx220Start 1
+    Etx220Start 5
   }
-  Status "Config GENERATOR"
-  
-  Etx220Config 1 $10GlineRate
-  Etx220Config 5 $1GlineRate
-  
-  Etx220Start 1
-  Etx220Start 5
   
   return $ret
 }
