@@ -475,8 +475,9 @@ proc PS_IDTest {} {
       set max_sn_len 10       
     }
     
-    if {$man_sn_len!=$max_sn_len} {
-      set gaSet(fail) "The length of the \'Serial Number\' is $man_sn_len. Should be $max_sn_len"  
+    if {$man_sn_len!=$max_sn_len} {    
+      # 08:23 20/01/2026set gaSet(fail) "The length of the \'Serial Number\' is $man_sn_len. Should be 10 or 16"  
+      set gaSet(fail) "Serial Number length $man_sn_len is invalid. Allowed: 10, 16"
       return -1
     }
     if {[string is digit $val]==0} {
@@ -588,8 +589,19 @@ proc PS_IDTest {} {
           # set gaSet(fail) "Serial Number $val is not Digit Number"
           # return -1
         # }
-        if {$sn_len!=10 && $sn_len!=16} {
-          set gaSet(fail) "Serial Number's Length is $sn_len instead of 10 or 16"
+        
+        # 08:02 20/01/2026
+        set max_sn_len_list [list 10 16]
+        ## The external vendor PS serial number has a fixed length of 14 characters.
+        set max_sn_len_list [lsort [concat $max_sn_len_list 14]]
+        
+        # if {$sn_len!=10 && $sn_len!=16} {
+          # set gaSet(fail) "Serial Number's Length is $sn_len instead of 10 or 16"
+          # return -1
+        # }
+        if {[lsearch $max_sn_len_list $sn_len]=="-1"} {
+          set txt1 [join [split $max_sn_len_list] " , "]
+          set gaSet(fail) "Serial Number length $sn_len is invalid. Allowed: $txt1"
           return -1
         }
         AddToPairLog $gaSet(pair) "PS-$ps Serial Number: $val"    
