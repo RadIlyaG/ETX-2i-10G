@@ -630,18 +630,40 @@ proc PS_IDTest {} {
             # return -1
           # }
           
+          set res [regexp {HW Ver[\s:]+([\.\d]+)\s} $buffer ma hw]
+          if {$res==0} {
+            set gaSet(fail) "Fail to get HW Ver of PS-$ps ($inv)"
+            return -1
+          }
+          set hw [string trim $hw]
+          puts "\n DutFullName hw:<$hw>"
+          AddToPairLog $gaSet(pair) "PS-$ps HW Ver: $hw"
+          
           set res [regexp {CLEI Code[\s:]+([A-Z\d]+)\s} $buffer ma val]
           if {$res==0} {
             set gaSet(fail) "Fail to get CLEI Code of PS-$ps ($inv)"
             return -1
           }
-          AddToPairLog $gaSet(pair) "PS-$ps CLEI Code: $val"
+          set uutPsClei [string trim $val]
+          AddToPairLog $gaSet(pair) "PS-$ps CLEI Code: $uutPsClei"
           
           set tblPsClei [lindex $gaSet(PsCleiCodesL) [expr {1 + [lsearch $gaSet(PsCleiCodesL) $gaSet(DutFullName)]}]]
           #set tblPsClei [lindex $gaSet(PsCleiCodesL) [expr {1 + [lsearch $gaSet(PsCleiCodesL) $model_name]}]]
-          puts "\n DutFullName:<$gaSet(DutFullName)> tblPsClei:<$tblPsClei> UutPsClei:<$val>"
-          if {$val != $tblPsClei} {
-            set gaSet(fail) "The \'CLEI Code\' is $val. Should be $tblPsClei"  
+          
+          set res [regexp "$gaSet(DutFullName)\(\[A-Z0-9\\-\\.\\s\]+\)" $gaSet(PsCleiCodesL) ma val]
+          if {$res==0} {
+            set gaSet(fail) "Fail to read CLEI Code of $gaSet(DutFullName) from PsCleiCodes.txt"
+            return -1
+          }
+          set val [join $val " "]
+          # ETX-2I-10G-B_ATT/19/HN/DC/8SFPP 0 INPSAJBVTA 1.0 INPSAG3VTB
+          ## if hw==0   tblPsClei==INPSAJBVTA
+          ## if hw==1.0 tblPsClei==INPSAG3VTB
+          set tblPsClei [lindex $val [expr {1 + [lsearch $val $hw]}]]          
+          
+          puts "\n DutFullName:<$gaSet(DutFullName)> tblPsClei:<$tblPsClei> hw:<$hw> UutPsClei:<$uutPsClei>"
+          if {$uutPsClei != $tblPsClei} {
+            set gaSet(fail) "The \'CLEI Code\' is $uutPsClei. Should be $tblPsClei"  
             return -1
           }                
         }    

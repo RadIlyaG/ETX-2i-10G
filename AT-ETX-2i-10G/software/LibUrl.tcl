@@ -5,7 +5,7 @@ package require json
 ::http::register https 8445 [list tls::socket -tls1 1]
 package require md5
 
-package provide RLWS 1.9
+package provide RLWS 1.10
 
 namespace eval RLWS { 
 
@@ -2262,14 +2262,18 @@ proc ::RLWS::_macExtantCheck {mac id_number} {
     #puts "\nresTxt:<$resTxt>\n"
     set id_lbl_indx [lsearch $resTxt "id"]
     if {$id_lbl_indx=="-1"} {return [list -1 "No id field when q003"]}
-    foreach {o_id_title o_id mac_title mac_val imei_title imei_val} $resTxt {
-      set secretForDel [string tolower [md5::md5 -hex MACREG@RAD_WS${o_id}]]
-      set url $RLWS::MRserverUR/q002_delete_mac_extant/
-      set query [::http::formatQuery macID $o_id HAND $secretForDel]
-      if $::RLWS::debugWS {puts "\nDelete $o_id connected to ID_NUMBER $id_number"}
-      foreach {ret resTxt} [::RLWS::_operateWS $url $query "Delete Connected to $id_number"] {}
-      if $::RLWS::debugWS {puts "** ret after q002_delete_mac_extant: <$ret> <$resTxt>"}
-      if [string match {*-100*} $resTxt] {return [list -1 -100]}
+    #foreach {o_id_title o_id mac_title mac_val imei_title imei_val} $resTxt {}
+    #set o_id [lindex $resTxt [expr {$id_lbl_indx + 1}]]
+    foreach {cont} [regexp -all -inline {id\s\d+} $resTxt] {
+      foreach {o_id_title o_id} $cont {
+        set secretForDel [string tolower [md5::md5 -hex MACREG@RAD_WS${o_id}]]
+        set url $RLWS::MRserverUR/q002_delete_mac_extant/
+        set query [::http::formatQuery macID $o_id HAND $secretForDel]
+        if $::RLWS::debugWS {puts "\nDelete $o_id connected to ID_NUMBER $id_number"}
+        foreach {ret resTxt} [::RLWS::_operateWS $url $query "Delete Connected to $id_number"] {}
+        if $::RLWS::debugWS {puts "** ret after q002_delete_mac_extant: <$ret> <$resTxt>"}
+        if [string match {*-100*} $resTxt] {return [list -1 -100]}
+      }
     }
   }
   
@@ -2283,7 +2287,8 @@ proc ::RLWS::_macExtantCheck {mac id_number} {
   if {$resTxt!=""} {
     set id_lbl_indx [lsearch $resTxt "id"]
     if {$id_lbl_indx=="-1"} {return [list -1 "No id field when q001"]}
-    foreach {o_id_title o_id id_num_title id_num_val imei_title imei_val} $resTxt {
+    set o_id [lindex $resTxt [expr {$id_lbl_indx + 1}]]
+    #foreach {o_id_title o_id id_num_title id_num_val imei_title imei_val} $resTxt {}
       set secretForDel [string tolower [md5::md5 -hex MACREG@RAD_WS${o_id}]]
       set url $RLWS::MRserverUR/q002_delete_mac_extant/
       set query [::http::formatQuery macID $o_id HAND $secretForDel]
@@ -2293,7 +2298,7 @@ proc ::RLWS::_macExtantCheck {mac id_number} {
       if $::RLWS::debugWS {puts "* ret after q002_delete_mac_extant: <$ret> <$resTxt>"}
       if [string match {*-100*} $resTxt] {return [list -1 -100]}
       if {$ret!=0} {return [list $ret $resTxt]}
-    }
+    
   }
   
   return [list $ret ""]

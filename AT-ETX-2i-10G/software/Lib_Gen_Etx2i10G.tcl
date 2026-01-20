@@ -2411,7 +2411,7 @@ proc LoadCleiCodesFile {} {
       set line [string trim $line]
       if {[string length $line] != 0} {
         #lappend gaSet(CleiCodesL) $line
-        set gaSet(PsCleiCodesL) [concat $gaSet(PsCleiCodesL) $line]
+        set gaSet(PsCleiCodesL) [concat $gaSet(PsCleiCodesL) $line #]
       }
     }
   close $id  
