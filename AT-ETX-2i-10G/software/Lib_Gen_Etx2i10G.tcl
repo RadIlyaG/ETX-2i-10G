@@ -2783,5 +2783,11 @@ proc DeleteOldAgileUserConfFiles {} {
       incr qty
     }  
   }
+  foreach fi [glob -nocomplain c:/temp/20*_${gaSet(pair)}.txt] {
+    if {[file mtime $fi]<$daysAgo} {
+      file delete -force $fi
+      incr qty
+    }  
+  }
   puts "[MyTime] $qty files deleted\n"; update
 }
