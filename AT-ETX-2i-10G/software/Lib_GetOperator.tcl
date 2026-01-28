@@ -151,7 +151,18 @@ proc FillDB {fi qty} {
 # ***************************************************************************
 # GetOperRad
 # ***************************************************************************
-proc GetOperRad {gn empId} {
+proc GetOperRad {gn empId} {  
+  set ti [time {foreach {ret resTxt} [::RLWS::Get_EmpName $empId] {} }]
+  if {$ret!=0} {
+    set gaSet(fail) $resTxt
+    return "Employee Not Found!"
+  }
+  set empName $resTxt
+  puts "GetOperRad $gn $empId ($ti) $empName" ; update  
+  return $empName 
+}
+
+proc neGetOperRad {gn empId} {
   #puts "GetOperRad $gn $empId" ; update
   if {![file exists $gn/GetEmpName.exe]} {
     tk_messageBox -type ok -icon error -message "GetEmpName.exe doesn't exist"
